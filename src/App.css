@@ -1,38 +1,387 @@
+:root{
+  /* Dark Theme Colors */
+  --dark-primary-color: #0A2647;
+  --dark-secondary-color: #144272;
+  --dark-teritiary-color: #205295;
+  --dark-quaternary-color: #2C74B3;
+
+  /* Light Theme Colors */
+  --light-primary-color: #F7FBFC;
+  --light-secondary-color: #D6E6F2;
+  --light-teritiary-color: #B9D7EA;
+  --light-quaternary-color: #769FCD;
+
+  
+}
+
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
   min-height: 100vh;
+}
+
+#light{
+  background: linear-gradient(280deg, var(--light-primary-color), var(--light-quaternary-color) );
+}
+
+#dark{
+  background: linear-gradient(280deg, var(--dark-primary-color), var(--dark-secondary-color) );
+}
+.panel{
+  padding: 50px;
+}
+
+.switch{
+  padding: 50px;
   display: flex;
-  flex-direction: column;
+  justify-content: left;
+  align-items: center;
+}
+
+.switch label {
+  margin-right: 10px;
+}
+
+#light .switch label {
+  color: #100C34;
+
+}
+
+#dark .switch label {
+  color: #ffffff;
+}
+
+#dark .normalText {
+  color:var(--light-primary-color);
+  font-family:  'Antic Slab', serif;
+}
+#light .normalText {
+  color: var(--dark-primary-color);
+  font-family:  'Antic Slab', serif;
+}
+
+.marginSpace{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+
+
+#dark .card{
+  box-shadow: 1px 1px 20px #06203d59; 
+  background: linear-gradient(280deg, var(--dark-primary-color), var(--dark-secondary-color) );
+  border-bottom-right-radius: 12px;
+  border-top-right-radius: 12px;
+}
+#light .card{
+   box-shadow: 1px 1px 20px #888e9433; 
+  background: linear-gradient(280deg, var(--light-primary-color), var(--light-quaternary-color) 100% );
+  border-bottom-right-radius: 12px;
+  border-top-right-radius: 12px;
+  
+}
+
+
+#dark .formCard{
+  box-shadow: 1px 1px 20px #06203d59; 
+  background: linear-gradient(280deg, var(--dark-primary-color), var(--dark-secondary-color) );
+  border-radius: 5px;
+  min-width: 40vw;
+}
+#light .formCard{
+   box-shadow: 1px 1px 20px #888e9433; 
+  background: linear-gradient(280deg, var(--light-primary-color), var(--light-quaternary-color) 100% );
+  border-radius: 5px;
+  min-width: 40vw;  
+} 
+
+.centerFlex{
+  display:flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin-top: 25px;
 }
 
-.App-link {
-  color: #61dafb;
+/*--------------------- Material UI Theming ----------------------- */
+
+/* Input Label Coloring */
+#dark .MuiInputLabel-root {
+  color: var(--light-teritiary-color);
+}
+#light .MuiInputLabel-root{
+  color: var(--dark-secondary-color);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Input Label Coloring on Focused */
+#dark .MuiInputLabel-root.Mui-focused{
+  color: var(--light-primary-color);
 }
+#light .MuiInputLabel-root.Mui-focused{
+  color: var(--dark-primary-color);
+}
+
+/* Input Field Coloring */
+#dark .MuiOutlinedInput-root {
+  color: var(--light-primary-color);
+}
+#light .MuiOutlinedInput-root{
+  color: var(--dark-primary-color);
+}
+
+/* Standard Input Field Underline Coloring */
+#dark .MuiInput-root::after{
+  border-bottom: 2px solid var(--light-quaternary-color);
+}
+#light .MuiInput-root::after{
+  border-bottom: 2px solid var(--dark-primary-color);
+}
+#dark .MuiInput-root::before{
+  border-bottom: 1px solid #769fcd69;
+}
+#light .MuiInput-root::before{
+  border-bottom: 1px solid #0a264780;
+}
+
+/* Standard Input Field Underline Coloring on Error*/
+#dark .MuiInput-root.Mui-error::after{
+  border-bottom: 2px solid red;
+}
+#light .MuiInput-root.Mui-error::after{
+  border-bottom: 2px solid red;
+}
+#dark .MuiInput-root.Mui-error::before{
+  border-bottom: 1px solid red;
+}
+#light .MuiInput-root.Mui-error::before{
+  border-bottom: 1px solid red;
+}
+
+/* Input Field Outline Coloring */
+#dark .MuiOutlinedInput-notchedOutline{
+  border-color: var(--dark-secondary-color);
+} 
+#light .MuiOutlinedInput-notchedOutline{
+  border-color: var(--light-primary-color);
+} 
+
+/* Input Field Outline Coloring on Focused*/
+#dark .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline{
+  border-color: var(--light-primary-color);
+  border-width: 2px;
+}
+#light .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline{
+  border-color: var(--dark-primary-color);
+  border-width: 2px;
+}
+
+/* Input Field Outline Coloring on Hovering*/
+#dark .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline{
+  border-color: var(--light-primary-color);
+}
+#light .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline{
+  border-color: var(--dark-primary-color);
+}
+
+/* Input Field Outline Coloring on Error*/
+#dark .Mui-error .MuiOutlinedInput-notchedOutline{
+  border-color: red
+}
+#light .Mui-error .MuiOutlinedInput-notchedOutline{
+  border-color: red
+}
+
+
+/* Text Field Icon Coloring */
+#dark .MuiSvgIcon-root{
+  color: var(--light-primary-color);
+}
+#light .MuiSvgIcon-root{
+  color: var(--dark-primary-color);
+}
+
+/* Divider Coloring */
+#dark .MuiDivider-root{
+  border-color: rgba(255, 255, 255, 0.144);
+}
+#light .MuiDivider-root{
+  border-color: #0a264731;
+}
+
+#dark .MuiDivider-root::before{
+  border-color: rgba(255, 255, 255, 0.144);
+}
+#light .MuiDivider-root::before{
+  border-color: #0a264731;
+}
+
+#dark .MuiDivider-root::after{
+  border-color: rgba(255, 255, 255, 0.144);
+}
+#light .MuiDivider-root::after{
+  border-color: #0a264731;
+}
+
+
+/* Drawer Background Coloring */
+#dark .MuiPaper-root.MuiDrawer-paper{
+  background-color: transparent;
+  border-left: none;
+  box-shadow: var(--dark-quaternary-color) 160px 0px 100px 100px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+#light .MuiPaper-root.MuiDrawer-paper{
+  background-color: transparent;
+  border-left: none;
+  box-shadow: var(--light-quaternary-color) 50px 0px 100px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+
+/* Text Coloring and Font for Typography */
+#dark .MuiTypography-root {
+  color:var(--light-primary-color);
+  font-family:  'Antic Slab', serif;
+}
+#light .MuiTypography-root {
+  color: var(--dark-primary-color);
+  font-family:  'Antic Slab', serif;
+}
+
+#dark .MuiTypography-caption {
+  color:#f7fbfc91;
+}
+#light .MuiTypography-caption {
+  color: #0a26477a;
+}
+
+/* Coloring and Font for Outlined Button */
+#dark .MuiButton-outlined{
+  color: var(--light-primary-color);
+  border: 1px solid #769fcda8;
+  font-family:  'Antic Slab', serif;
+}
+#light .MuiButton-outlined{
+  color: var(--dark-primary-color);
+  border: 1px solid #0a264777;
+  font-family:  'Antic Slab', serif;
+}
+
+#dark .MuiButton-text{
+  color: var(--light-primary-color);
+  font-family:  'Antic Slab', serif;
+}
+#light .MuiButton-text{
+  color: var(--dark-primary-color);
+  font-family:  'Antic Slab', serif;
+}
+
+
+/* Coloring and Font for Stepper Text */
+#dark .MuiStepLabel-label {
+  color: #f7fbfc91;
+}
+#light .MuiStepLabel-label{
+  color: #0a26477a;
+}
+
+#dark .MuiStepLabel-label.Mui-active {
+  color: var(--light-primary-color);
+}
+#light .MuiStepLabel-label.Mui-active{
+  color: var(--dark-primary-color);
+}
+
+/* Coloring for Stepper Icon Text */
+#dark .MuiStepIcon-text {
+  fill: var(--dark-primary-color);
+}
+#light .MuiStepIcon-text{
+  fill: var(--light-primary-color);
+  
+}
+
+/* Chip Label Coloring */
+#dark .MuiChip-label {
+  color: var(--light-teritiary-color);
+}
+#light .MuiChip-label {
+  color: var(--dark-secondary-color);
+}
+
+/* Form Label Coloring */
+#dark .MuiFormLabel-root {
+  color: #b9d7eaa8;
+}
+#light .MuiFormLabel-root{
+  color: #14417298;
+}
+
+/* Form Label Coloring on Focus */
+#dark .MuiFormLabel-root.Mui-focused {
+  color: var(--light-teritiary-color);
+}
+#light .MuiFormLabel-root.Mui-focused{
+  color: var(--dark-secondary-color);
+}
+
+/* ------------------------------------------------------------ */
+
+#light .alertIcon{
+  color: var(--dark-primary-color);
+}
+#dark .alertIcon{
+  color: var(--dark-primary-color);
+}
+
+#light .designCard{
+  border-radius: 10px;
+  box-shadow: 1px 1px 20px #888e9433; 
+  background: linear-gradient(280deg, var(--light-primary-color), var(--light-quaternary-color) 100% );
+  background-image:url("./images/design_card_light.jpg");
+  background-size: cover;
+  background-position: bottom;
+  transition: transform .3s ease-in-out, background-image 1s ease-in-out;
+  cursor: pointer;
+}
+
+#dark .designCard{
+  border-radius: 10px;
+  box-shadow: 1px 1px 20px #06203d59; 
+  background: linear-gradient(280deg, var(--dark-primary-color), var(--dark-secondary-color) );
+  background-image:url("./images/design_card_dark.jpg");
+  background-size: cover;
+  transition: transform .3s ease-in-out, background-image 1s ease-in-out;
+  cursor: pointer;
+}
+
+#dark .updateCard{
+  background-image:url("./images/update_card_dark.png");
+}
+#light .updateCard{
+  background-image:url("./images/update_card_light.jpg");
+  background-position: top;
+}
+
+#dark .createCard{
+  background-image:url("./images/create_card_dark.jpg");
+  background-position: right;
+}
+#light .createCard{
+  background-image:url("./images/create_card_light.jpg");
+  background-position: right;
+}
+
+.designCard:hover{
+  transform: scale(1.03);
+}
+
+#dark .customizeCard{
+  box-shadow: 1px 1px 20px #06203d59; 
+  background: linear-gradient(280deg, var(--dark-primary-color), var(--dark-secondary-color) );
+  border-radius: 5px;
+}
+#light .customizeCard{
+   box-shadow: 1px 1px 20px #888e9433; 
+  background: linear-gradient(280deg, var(--light-primary-color), var(--light-quaternary-color) 100% );
+  border-radius: 5px;
+} 
