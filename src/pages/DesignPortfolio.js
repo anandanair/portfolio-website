@@ -6,6 +6,7 @@ import {
   FormGroup,
   FormLabel,
   Grid,
+  Stack,
 } from "@mui/material";
 import React, { useState } from "react";
 import CusotmCheckbox from "../components/design/CusotmCheckbox";
@@ -16,7 +17,7 @@ import DesigndPage from "./layouts/DesigndPage";
 
 export default function DesignPortfolio() {
   const [properties, setProperties] = useState(
-    new PropertiesModel("static", "red", "blue", 0, "circle at center", 0, 0)
+    new PropertiesModel("static", "red", "blue", 0, "circle at center", 0, 0, )
   );
 
   const handleChange = (value, name) => {
@@ -33,44 +34,53 @@ export default function DesignPortfolio() {
           <Card className="customizeCard" sx={{ width: 1 }}>
             <CardHeader title="Customize" />
             <CardContent>
-              <FormControl
-                sx={{ display: "flex", justifyContent: "flex-start" }}
-              >
-                <FormLabel sx={{ textAlign: "left" }} component="legend">
-                  Background Color
-                </FormLabel>
-                <FormGroup row>
-                  <CusotmCheckbox
-                    checked={properties.backgroundColorType === "static"}
-                    onChange={() =>
-                      handleChange("static", "backgroundColorType")
-                    }
-                    label="Static"
-                  />
-                  <CusotmCheckbox
-                    checked={
-                      properties.backgroundColorType === "linear-gradient"
-                    }
-                    onChange={() =>
-                      handleChange("linear-gradient", "backgroundColorType")
-                    }
-                    label="Linear Gradient"
-                  />
-                  <CusotmCheckbox
-                    checked={
-                      properties.backgroundColorType === "radial-gradient"
-                    }
-                    onChange={() =>
-                      handleChange("radial-gradient", "backgroundColorType")
-                    }
-                    label="Radial Gradient"
-                  />
-                </FormGroup>
-              </FormControl>
-              <CustomColorPicker
-                properties={properties}
-                onChange={handleChange}
-              />
+              <Stack spacing={2}>
+                <FormControl
+                  sx={{ display: "flex", justifyContent: "flex-start" }}
+                >
+                  <FormLabel sx={{ textAlign: "left" }} component="legend">
+                    Background Color
+                  </FormLabel>
+                  <FormGroup row>
+                    <CusotmCheckbox
+                      checked={properties.backgroundColorType === "static"}
+                      onChange={() =>
+                        handleChange("static", "backgroundColorType")
+                      }
+                      label="Static"
+                    />
+                    <CusotmCheckbox
+                      checked={
+                        properties.backgroundColorType === "linear-gradient"
+                      }
+                      onChange={() =>
+                        handleChange("linear-gradient", "backgroundColorType")
+                      }
+                      label="Linear Gradient"
+                    />
+                    <CusotmCheckbox
+                      checked={
+                        properties.backgroundColorType === "radial-gradient"
+                      }
+                      onChange={() =>
+                        handleChange("radial-gradient", "backgroundColorType")
+                      }
+                      label="Radial Gradient"
+                    />
+                  </FormGroup>
+                </FormControl>
+                <CustomColorPicker
+                  properties={properties}
+                  onChange={handleChange}
+                />
+                <FormControl
+                  sx={{ display: "flex", justifyContent: "flex-start" }}
+                >
+                  <FormLabel sx={{ textAlign: "left" }} component="legend">
+                    Portfolio Image
+                  </FormLabel>
+                </FormControl>
+              </Stack>
             </CardContent>
           </Card>
         </Grid>

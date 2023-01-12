@@ -1,8 +1,13 @@
 import { Box } from "@mui/material";
 import React from "react";
+import { useFirestore } from "../../contexts/FirestoreContext";
+import { useStorage } from "../../contexts/StorageContext";
 
 export default function DesigndPage(props) {
   const properties = props.properties;
+  const { firestoreUser } = useFirestore();
+  const { defaultPhotoURL } = useStorage();
+
   return (
     <Box
       sx={{
@@ -18,6 +23,8 @@ export default function DesigndPage(props) {
               )`
             : `${properties.backgroundColorType}(at ${properties.colorXAxis}% ${properties.colorYAxis}%, ${properties.backgroundColor1}, ${properties.backgroundColor2})`,
       }}
-    ></Box>
+    >
+      <img src={firestoreUser.portfolio.primaryPhotoURL || defaultPhotoURL} />
+    </Box>
   );
 }

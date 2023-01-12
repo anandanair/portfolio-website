@@ -6,7 +6,9 @@ export class PropertiesModel {
     colorAngle,
     colorPosition,
     colorXAxis,
-    colorYAxis
+    colorYAxis,
+    profileImageSize,
+    profileImagePosition
   ) {
     this.backgroundColorType = backgroundColorType;
     this.backgroundColor1 = backgroundColor1;
@@ -15,5 +17,7 @@ export class PropertiesModel {
     this.colorPosition = colorPosition;
     this.colorXAxis = colorXAxis;
     this.colorYAxis = colorYAxis;
+    this.profileImageSize = profileImageSize;
+    this.profileImagePosition = profileImagePosition;
   }
 }

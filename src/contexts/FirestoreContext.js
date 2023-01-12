@@ -62,8 +62,8 @@ export function FirestoreProvider({ children }) {
     return docRef.data().emailVerificationSendTime;
   }
 
-  async function getUser(user) {
-    const docRef = await getDoc(doc(firestore, "users", user.uid));
+  async function getUser() {
+    const docRef = await getDoc(doc(firestore, "users", currentUser.uid));
     setFirestoreUser(docRef.data());
     setLoading(false);
     return docRef.data();
@@ -80,13 +80,10 @@ export function FirestoreProvider({ children }) {
     setLoading(true);
     let newObject = Object.assign({}, portfolio);
     newObject.createdAt = serverTimestamp();
-    const collectionRef = collection(
-      firestore,
-      "users",
-      currentUser.uid,
-      "portfolio"
-    );
-    await addDoc(collectionRef, newObject);
+    newObject.primaryPhotoURL = "";
+    await updateDoc(doc(firestore, "users", currentUser.uid), {
+      portfolio: newObject,
+    });
     return await updatePortfolioDone();
   }
 
@@ -94,7 +91,7 @@ export function FirestoreProvider({ children }) {
     await updateDoc(doc(firestore, "users", currentUser.uid), {
       portfolioDone: true,
     });
-    return await getUser(currentUser);
+    return await getUser();
   }
 
   async function getSkills(searchText, stop) {
@@ -150,7 +147,7 @@ export function FirestoreProvider({ children }) {
           }
         } else {
           //When user is already logging in
-          const fUser = await getUser(currentUser);
+          const fUser = await getUser();
           setTheme(fUser.theme);
         }
       })();
