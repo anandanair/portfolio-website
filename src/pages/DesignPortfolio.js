@@ -13,10 +13,11 @@ import CusotmCheckbox from "../components/design/CusotmCheckbox";
 import CustomColorPicker from "../components/design/CustomColorPicker";
 import DrawerNavBar from "../components/DrawerNavBar";
 import { PropertiesModel } from "../models/PropertiesModel";
+import DesigndPage from "./layouts/DesigndPage";
 
 export default function DesignPortfolio() {
   const [properties, setProperties] = useState(
-    new PropertiesModel("static", "red", "blue")
+    new PropertiesModel("static", "red", "blue", 0, "circle at center", 0, 0)
   );
 
   const handleChange = (value, name) => {
@@ -49,32 +50,38 @@ export default function DesignPortfolio() {
                   />
                   <CusotmCheckbox
                     checked={
-                      properties.backgroundColorType === "linearGradient"
+                      properties.backgroundColorType === "linear-gradient"
                     }
                     onChange={() =>
-                      handleChange("linearGradient", "backgroundColorType")
+                      handleChange("linear-gradient", "backgroundColorType")
                     }
                     label="Linear Gradient"
                   />
                   <CusotmCheckbox
                     checked={
-                      properties.backgroundColorType === "radialGradient"
+                      properties.backgroundColorType === "radial-gradient"
                     }
                     onChange={() =>
-                      handleChange("radialGradient", "backgroundColorType")
+                      handleChange("radial-gradient", "backgroundColorType")
                     }
                     label="Radial Gradient"
                   />
                 </FormGroup>
               </FormControl>
-              <CustomColorPicker properties={properties} />
+              <CustomColorPicker
+                properties={properties}
+                onChange={handleChange}
+              />
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={8}>
-          <Card className="customizeCard" sx={{ width: 1 }}>
+          <Card
+            // className="customizeCard"
+            sx={{ width: 1, backgroundColor: "white" }}
+          >
             <CardContent>
-              <Box sx={{ minHeight: "80vh" }}></Box>
+              <DesigndPage properties={properties} />
             </CardContent>
           </Card>
         </Grid>
