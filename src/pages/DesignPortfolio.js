@@ -17,7 +17,17 @@ import DesigndPage from "./layouts/DesigndPage";
 
 export default function DesignPortfolio() {
   const [properties, setProperties] = useState(
-    new PropertiesModel("static", "red", "blue", 0, "circle at center", 0, 0, )
+    new PropertiesModel(
+      "static",
+      "red",
+      "blue",
+      0,
+      "circle at center",
+      0,
+      0,
+      "30%",
+      "30%"
+    )
   );
 
   const handleChange = (value, name) => {

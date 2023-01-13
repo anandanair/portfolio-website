@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import React from "react";
+import CustomDraggableComponent from "../../components/CustomDraggableComponent";
 import { useFirestore } from "../../contexts/FirestoreContext";
 import { useStorage } from "../../contexts/StorageContext";
 
@@ -11,6 +12,7 @@ export default function DesigndPage(props) {
   return (
     <Box
       sx={{
+        position: "relative",
         minHeight: "80vh",
         background:
           properties.backgroundColorType === "static"
@@ -24,7 +26,12 @@ export default function DesigndPage(props) {
             : `${properties.backgroundColorType}(at ${properties.colorXAxis}% ${properties.colorYAxis}%, ${properties.backgroundColor1}, ${properties.backgroundColor2})`,
       }}
     >
-      <img src={firestoreUser.portfolio.primaryPhotoURL || defaultPhotoURL} />
+      <img
+        src={firestoreUser.portfolio.primaryPhotoURL || defaultPhotoURL}
+        height={properties.primaryImageHeight}
+        width={properties.primaryImageWidth}
+        alt="primary"
+      />
     </Box>
   );
 }
