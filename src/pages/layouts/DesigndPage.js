@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import React from "react";
-import CustomDraggableComponent from "../../components/CustomDraggableComponent";
 import { useFirestore } from "../../contexts/FirestoreContext";
 import { useStorage } from "../../contexts/StorageContext";
 
