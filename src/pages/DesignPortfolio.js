@@ -13,7 +13,7 @@ import CusotmCheckbox from "../components/design/CusotmCheckbox";
 import CustomColorPicker from "../components/design/CustomColorPicker";
 import DrawerNavBar from "../components/DrawerNavBar";
 import { PropertiesModel } from "../models/PropertiesModel";
-import DesigndPage from "./layouts/DesigndPage";
+import DesignedPage from "./layouts/DesignedPage";
 
 export default function DesignPortfolio() {
   const [properties, setProperties] = useState(
@@ -25,8 +25,8 @@ export default function DesignPortfolio() {
       "circle at center",
       0,
       0,
-      "30%",
-      "30%"
+      { width: 200, height: 200 },
+      { x: 0, y: 0 }
     )
   );
 
@@ -34,6 +34,20 @@ export default function DesignPortfolio() {
     setProperties({
       ...properties,
       [name]: value,
+    });
+  };
+
+  const handleResize = (width, height, name) => {
+    setProperties({
+      ...properties,
+      [name]: { width: width, height: height },
+    });
+  };
+
+  const handlePosition = (x, y, name) => {
+    setProperties({
+      ...properties,
+      [name]: { x: x, y: y },
     });
   };
 
@@ -100,7 +114,11 @@ export default function DesignPortfolio() {
             sx={{ width: 1, backgroundColor: "white" }}
           >
             <CardContent>
-              <DesigndPage properties={properties} />
+              <DesignedPage
+                properties={properties}
+                onResize={handleResize}
+                onDrag={handlePosition}
+              />
             </CardContent>
           </Card>
         </Grid>
