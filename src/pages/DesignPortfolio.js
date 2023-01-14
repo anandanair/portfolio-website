@@ -3,6 +3,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  CircularProgress,
   FormControl,
   FormGroup,
   FormLabel,
@@ -16,9 +17,11 @@ import DrawerNavBar from "../components/DrawerNavBar";
 import { PropertiesModel } from "../models/PropertiesModel";
 import DesignedPage from "./layouts/DesignedPage";
 import { useStorage } from "../contexts/StorageContext";
+import Compressor from "compressorjs";
 
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
+  const [loading, setLoading] = useState(false);
   const [properties, setProperties] = useState(
     new PropertiesModel(
       "static",
@@ -54,10 +57,17 @@ export default function DesignPortfolio() {
     });
   };
 
-  const handleFile = (event) => {
+  const handleFile = async (event) => {
+    setLoading(true);
     const file = event.target.files[0];
     if (file) {
-      uploadImageFile(file, "primaryImage");
+      new Compressor(file, {
+        quality: 0.5,
+        success: async (result) => {
+          await uploadImageFile(result, "primaryImage");
+          setLoading(false);
+        },
+      });
     }
   };
 
@@ -133,11 +143,15 @@ export default function DesignPortfolio() {
             sx={{ width: 1, backgroundColor: "white" }}
           >
             <CardContent>
-              <DesignedPage
-                properties={properties}
-                onResize={handleResize}
-                onDrag={handlePosition}
-              />
+              {!loading ? (
+                <DesignedPage
+                  properties={properties}
+                  onResize={handleResize}
+                  onDrag={handlePosition}
+                />
+              ) : (
+                <CircularProgress />
+              )}
             </CardContent>
           </Card>
         </Grid>

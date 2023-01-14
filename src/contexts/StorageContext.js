@@ -28,7 +28,7 @@ export function StorageProvider({ children }) {
     const storageRef = ref(storage, `${path}/${fileName}`);
     await uploadBytes(storageRef, file);
     const imageURL = await getDefaultImageURL(path, fileName);
-    updatePortfolio(imageURL, "primaryPhotoURL");
+    return await updatePortfolio(imageURL, "primaryPhotoURL");
   }
 
   useEffect(() => {

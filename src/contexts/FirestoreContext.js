@@ -134,7 +134,6 @@ export function FirestoreProvider({ children }) {
   }
 
   async function updatePortfolio(value, name) {
-    setLoading(true);
     const docRef = doc(firestore, "users", currentUser.uid);
     await updateDoc(docRef, {
       [`portfolio.${name}`]: value,
