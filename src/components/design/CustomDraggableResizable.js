@@ -14,13 +14,14 @@ export default function CustomDraggableResizable(props) {
     <Draggable
       nodeRef={nodeRef}
       bounds="parent"
-      onStop={props.onDragStop}
+      onStop={(event, data) => props.onDragStop(data, "primaryImagePosition")}
       position={props.imagePosition}
+      grid={[25, 25]}
     >
       <Box
         ref={nodeRef}
         sx={{
-          display: "flex",
+          display: "inline-block",
           height: props.imageDimensions.height + "px",
           width: props.imageDimensions.width + "px",
         }}

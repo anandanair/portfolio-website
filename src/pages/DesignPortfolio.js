@@ -49,14 +49,16 @@ export default function DesignPortfolio() {
       0,
       0,
       { width: 200, height: 200 },
-      { x: 10, y: 10 },
+      { x: -40, y: 85 },
       {
         borderRadius: 0,
         opacity: 100,
         borderThickness: 5,
         borderType: "solid",
         borderColor: "#ddd",
-      }
+      },
+      { x: 0, y: -75 },
+      { x: 0, y: -100 }
     )
   );
 

@@ -9,7 +9,9 @@ export class PropertiesModel {
     colorYAxis,
     primaryImageDimensions,
     primaryImagePosition,
-    primaryImageProperties
+    primaryImageProperties,
+    namePosition,
+    summaryPosition
   ) {
     this.backgroundColorType = backgroundColorType;
     this.backgroundColor1 = backgroundColor1;
@@ -21,5 +23,7 @@ export class PropertiesModel {
     this.primaryImageDimensions = primaryImageDimensions;
     this.primaryImagePosition = primaryImagePosition;
     this.primaryImageProperties = primaryImageProperties;
+    this.namePosition = namePosition;
+    this.summaryPosition = summaryPosition;
   }
 }
