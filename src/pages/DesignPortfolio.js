@@ -8,6 +8,7 @@ import {
   FormGroup,
   FormLabel,
   Grid,
+  Slider,
   Stack,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -18,6 +19,7 @@ import { PropertiesModel } from "../models/PropertiesModel";
 import DesignedPage from "./layouts/DesignedPage";
 import { useStorage } from "../contexts/StorageContext";
 import Compressor from "compressorjs";
+import { Opacity } from "@mui/icons-material";
 
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
@@ -32,7 +34,14 @@ export default function DesignPortfolio() {
       0,
       0,
       { width: 200, height: 200 },
-      { x: 10, y: 10 }
+      { x: 10, y: 10 },
+      {
+        borderRadius: 0,
+        opacity: 1,
+        borderThickness: 5,
+        borderType: "solid",
+        borderColor: "#ddd",
+      }
     )
   );
 
@@ -69,6 +78,16 @@ export default function DesignPortfolio() {
         },
       });
     }
+  };
+
+  const handleImageProperties = (value, name) => {
+    setProperties({
+      ...properties,
+      primaryImageProperties: {
+        ...properties.primaryImageProperties,
+        [name]: value,
+      },
+    });
   };
 
   return (
@@ -123,6 +142,23 @@ export default function DesignPortfolio() {
                   <FormLabel sx={{ textAlign: "left" }} component="legend">
                     Portfolio Image
                   </FormLabel>
+                  <Stack
+                    spacing={2}
+                    direction="row"
+                    sx={{ mb: 1 }}
+                    alignItems="center"
+                  >
+                    <Opacity />
+                    <Slider
+                      value={properties.primaryImageProperties.opacity}
+                      max={100}
+                      min={0}
+                      onChange={(event, newValue) =>
+                        handleImageProperties(newValue, "opacity")
+                      }
+                    />
+                  </Stack>
+
                   <Button variant="outlined" component="label">
                     Change Primary Image
                     <input

@@ -10,7 +10,6 @@ export default function DesignedPage(props) {
   const { defaultPhotoURL } = useStorage();
 
   const handleResizeStop = (e, direction, ref, d) => {
-   
     const newWdith = properties.primaryImageDimensions.width + d.width;
     const newHeight = properties.primaryImageDimensions.height + d.height;
     props.onResize(newWdith, newHeight, "primaryImageDimensions");
@@ -41,6 +40,7 @@ export default function DesignedPage(props) {
         onDragStop={handleDragStop}
         imagePosition={properties.primaryImagePosition}
         imageDimensions={properties.primaryImageDimensions}
+        imageProperties={properties.primaryImageProperties}
         imageURL={firestoreUser.portfolio.primaryPhotoURL || defaultPhotoURL}
         onResizeStop={handleResizeStop}
       />
