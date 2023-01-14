@@ -19,7 +19,7 @@ import { PropertiesModel } from "../models/PropertiesModel";
 import DesignedPage from "./layouts/DesignedPage";
 import { useStorage } from "../contexts/StorageContext";
 import Compressor from "compressorjs";
-import { Opacity } from "@mui/icons-material";
+import { Circle, Opacity } from "@mui/icons-material";
 
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
@@ -37,7 +37,7 @@ export default function DesignPortfolio() {
       { x: 10, y: 10 },
       {
         borderRadius: 0,
-        opacity: 1,
+        opacity: 100,
         borderThickness: 5,
         borderType: "solid",
         borderColor: "#ddd",
@@ -155,6 +155,28 @@ export default function DesignPortfolio() {
                       min={0}
                       onChange={(event, newValue) =>
                         handleImageProperties(newValue, "opacity")
+                      }
+                    />
+                  </Stack>
+
+                  <Stack
+                    spacing={2}
+                    direction="row"
+                    sx={{ mb: 1 }}
+                    alignItems="center"
+                  >
+                    <Circle />
+                    <Slider
+                      value={properties.primaryImageProperties.borderRadius}
+                      max={
+                        Math.min(
+                          properties.primaryImageDimensions.width,
+                          properties.primaryImageDimensions.height
+                        ) / 2
+                      }
+                      min={0}
+                      onChange={(event, newValue) =>
+                        handleImageProperties(newValue, "borderRadius")
                       }
                     />
                   </Stack>
