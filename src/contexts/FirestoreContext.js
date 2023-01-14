@@ -133,6 +133,15 @@ export function FirestoreProvider({ children }) {
     return await addDoc(collection(firestore, "skills"), skill);
   }
 
+  async function updatePortfolio(value, name) {
+    setLoading(true);
+    const docRef = doc(firestore, "users", currentUser.uid);
+    await updateDoc(docRef, {
+      [`portfolio.${name}`]: value,
+    });
+    return await getUser();
+  }
+
   useEffect(() => {
     if (currentUser) {
       setLoading(true);
@@ -172,6 +181,7 @@ export function FirestoreProvider({ children }) {
     addSkill,
     createPortfolio,
     updatePortfolioDone,
+    updatePortfolio,
   };
   return (
     <FirestoreContext.Provider value={value}>
