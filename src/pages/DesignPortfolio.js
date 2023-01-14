@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -14,8 +15,10 @@ import CustomColorPicker from "../components/design/CustomColorPicker";
 import DrawerNavBar from "../components/DrawerNavBar";
 import { PropertiesModel } from "../models/PropertiesModel";
 import DesignedPage from "./layouts/DesignedPage";
+import { useStorage } from "../contexts/StorageContext";
 
 export default function DesignPortfolio() {
+  const { uploadImageFile } = useStorage();
   const [properties, setProperties] = useState(
     new PropertiesModel(
       "static",
@@ -26,7 +29,7 @@ export default function DesignPortfolio() {
       0,
       0,
       { width: 200, height: 200 },
-      { x: 0, y: 0 }
+      { x: 10, y: 10 }
     )
   );
 
@@ -49,6 +52,13 @@ export default function DesignPortfolio() {
       ...properties,
       [name]: { x: x, y: y },
     });
+  };
+
+  const handleFile = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      uploadImageFile(file, "primaryImage");
+    }
   };
 
   return (
@@ -103,6 +113,15 @@ export default function DesignPortfolio() {
                   <FormLabel sx={{ textAlign: "left" }} component="legend">
                     Portfolio Image
                   </FormLabel>
+                  <Button variant="outlined" component="label">
+                    Change Primary Image
+                    <input
+                      type="file"
+                      hidden
+                      accept=".jpg, .png, .jpeg"
+                      onChange={handleFile}
+                    />
+                  </Button>
                 </FormControl>
               </Stack>
             </CardContent>
