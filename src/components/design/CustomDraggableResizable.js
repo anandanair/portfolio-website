@@ -36,6 +36,7 @@ export default function CustomDraggableResizable(props) {
             backgroundRepeat: "no-repeat",
             borderRadius: `${props.imageProperties.borderRadius}px`,
             opacity: props.imageProperties.opacity / 100,
+            border: `${props.imageProperties.borderThickness}px ${props.imageProperties.borderType} ${props.imageProperties.borderColor}`,
           }}
           onResizeStop={props.onResizeStop}
           onResizeStart={handleResizeStart}

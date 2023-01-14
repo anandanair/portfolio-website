@@ -8,6 +8,9 @@ import {
   FormGroup,
   FormLabel,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
   Slider,
   Stack,
 } from "@mui/material";
@@ -19,7 +22,19 @@ import { PropertiesModel } from "../models/PropertiesModel";
 import DesignedPage from "./layouts/DesignedPage";
 import { useStorage } from "../contexts/StorageContext";
 import Compressor from "compressorjs";
-import { Circle, Opacity } from "@mui/icons-material";
+import { Circle, LineWeight, Opacity } from "@mui/icons-material";
+import { MuiColorInput } from "mui-color-input";
+
+const borderTypes = [
+  { value: "solid", label: "Solid" },
+  { value: "dotted", label: "Dotted" },
+  { value: "dashed", label: "Dashed" },
+  { value: "double", label: "Double" },
+  { value: "groove", label: "Groove" },
+  { value: "ridge", label: "Ridge" },
+  { value: "inset", label: "Inset" },
+  { value: "outset", label: "Outset" },
+];
 
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
@@ -142,54 +157,89 @@ export default function DesignPortfolio() {
                   <FormLabel sx={{ textAlign: "left" }} component="legend">
                     Portfolio Image
                   </FormLabel>
-                  <Stack
-                    spacing={2}
-                    direction="row"
-                    sx={{ mb: 1 }}
-                    alignItems="center"
-                  >
-                    <Opacity />
-                    <Slider
-                      value={properties.primaryImageProperties.opacity}
-                      max={100}
-                      min={0}
-                      onChange={(event, newValue) =>
-                        handleImageProperties(newValue, "opacity")
-                      }
-                    />
-                  </Stack>
+                  <Stack sx={{ mt: 2 }} spacing={2}>
+                    <Stack spacing={2} direction="row" alignItems="center">
+                      <Opacity />
+                      <Slider
+                        value={properties.primaryImageProperties.opacity}
+                        max={100}
+                        min={0}
+                        onChange={(event, newValue) =>
+                          handleImageProperties(newValue, "opacity")
+                        }
+                      />
+                    </Stack>
+                    <Stack spacing={2} direction="row" alignItems="center">
+                      <Circle />
+                      <Slider
+                        value={properties.primaryImageProperties.borderRadius}
+                        max={
+                          Math.min(
+                            properties.primaryImageDimensions.width,
+                            properties.primaryImageDimensions.height
+                          ) / 2
+                        }
+                        min={0}
+                        onChange={(event, newValue) =>
+                          handleImageProperties(newValue, "borderRadius")
+                        }
+                      />
+                    </Stack>
+                    <Stack spacing={2} direction="row" alignItems="center">
+                      <LineWeight />
+                      <Slider
+                        value={
+                          properties.primaryImageProperties.borderThickness
+                        }
+                        max={30}
+                        min={0}
+                        onChange={(event, newValue) =>
+                          handleImageProperties(newValue, "borderThickness")
+                        }
+                      />
+                    </Stack>
+                    <Stack direction="row" spacing={2}>
+                      <FormControl fullWidth>
+                        <InputLabel id="borderType">Border Type</InputLabel>
+                        <Select
+                          labelId="borderType"
+                          id="borderTypeSelect"
+                          value={properties.primaryImageProperties.borderType}
+                          label="Border Type"
+                          onChange={(event) =>
+                            handleImageProperties(
+                              event.target.value,
+                              "borderType"
+                            )
+                          }
+                        >
+                          {borderTypes.map((type, index) => (
+                            <MenuItem key={index} value={type.value}>
+                              {type.label}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                      <MuiColorInput
+                        label="Border Color"
+                        fullWidth
+                        value={properties.primaryImageProperties.borderColor}
+                        onChange={(color) =>
+                          handleImageProperties(color, "borderColor")
+                        }
+                      />
+                    </Stack>
 
-                  <Stack
-                    spacing={2}
-                    direction="row"
-                    sx={{ mb: 1 }}
-                    alignItems="center"
-                  >
-                    <Circle />
-                    <Slider
-                      value={properties.primaryImageProperties.borderRadius}
-                      max={
-                        Math.min(
-                          properties.primaryImageDimensions.width,
-                          properties.primaryImageDimensions.height
-                        ) / 2
-                      }
-                      min={0}
-                      onChange={(event, newValue) =>
-                        handleImageProperties(newValue, "borderRadius")
-                      }
-                    />
+                    <Button variant="outlined" component="label">
+                      Change Primary Image
+                      <input
+                        type="file"
+                        hidden
+                        accept=".jpg, .png, .jpeg"
+                        onChange={handleFile}
+                      />
+                    </Button>
                   </Stack>
-
-                  <Button variant="outlined" component="label">
-                    Change Primary Image
-                    <input
-                      type="file"
-                      hidden
-                      accept=".jpg, .png, .jpeg"
-                      onChange={handleFile}
-                    />
-                  </Button>
                 </FormControl>
               </Stack>
             </CardContent>
