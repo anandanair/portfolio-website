@@ -23,23 +23,24 @@ export default function CustomDraggableResizable(props) {
     <Draggable
       nodeRef={nodeRef}
       bounds="parent"
-      onStop={(event, data) => props.onDragStop(data, `${props.id}Position`)}
+      onStop={(event, data) => props.onDragStop(data, `${props.id}`)}
       position={props.position}
-      grid={[25, 25]}
+      grid={[5, 5]}
     >
       <Box
         ref={nodeRef}
         sx={{
           display: "inline-block",
-          height: props.dimensiones.height + "px",
-          width: props.dimensiones.width + "px",
+          height: props.dimensions.height + "px",
+          width: props.dimensions.width + "px",
+          cursor: "pointer",
         }}
       >
         <Resizable
-          size={props.dimensiones}
+          size={props.dimensions}
           style={props.component === "image" && imageStyleProps}
           onResizeStop={(e, direction, ref, d) =>
-            props.onResizeStop(d, `${props.id}Dimensions`)
+            props.onResizeStop(d, `${props.id}`)
           }
           onResizeStart={handleResizeStart}
         >
