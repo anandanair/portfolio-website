@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardContent,
@@ -6,7 +7,6 @@ import {
   CircularProgress,
   FormControl,
   FormGroup,
-  FormLabel,
   Grid,
   InputLabel,
   MenuItem,
@@ -25,6 +25,7 @@ import Compressor from "compressorjs";
 import { Circle, LineWeight, Opacity } from "@mui/icons-material";
 import { MuiColorInput } from "mui-color-input";
 import CustomFrom from "../components/CustomForm";
+import { useGoogle } from "../contexts/GoogleContext";
 
 const borderTypes = [
   { value: "solid", label: "Solid" },
@@ -40,6 +41,7 @@ const borderTypes = [
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
   const [loading, setLoading] = useState(false);
+  const { googleFonts } = useGoogle();
   const [properties, setProperties] = useState(
     new PropertiesModel(
       "linear-gradient",
@@ -49,6 +51,8 @@ export default function DesignPortfolio() {
       "circle at center",
       0,
       0,
+      "'Antic Slab', serif",
+      //primary Image props
       {
         dimensions: { width: 200, height: 200 },
         position: { x: 195, y: 150 },
@@ -140,125 +144,131 @@ export default function DesignPortfolio() {
           <Card className="customizeCard" sx={{ width: 1 }}>
             <CardHeader title="Customize" />
             <CardContent>
-              <Stack spacing={2}>
-                <CustomFrom label="Background Color">
-                  <FormGroup row sx={{ mx: 1 }}>
-                    <CusotmCheckbox
-                      checked={properties.backgroundColorType === "static"}
-                      onChange={() =>
-                        handleChange("static", "backgroundColorType")
-                      }
-                      label="Static"
-                    />
-                    <CusotmCheckbox
-                      checked={
-                        properties.backgroundColorType === "linear-gradient"
-                      }
-                      onChange={() =>
-                        handleChange("linear-gradient", "backgroundColorType")
-                      }
-                      label="Linear Gradient"
-                    />
-                    <CusotmCheckbox
-                      checked={
-                        properties.backgroundColorType === "radial-gradient"
-                      }
-                      onChange={() =>
-                        handleChange("radial-gradient", "backgroundColorType")
-                      }
-                      label="Radial Gradient"
-                    />
-                  </FormGroup>
-                </CustomFrom>
-                <CustomColorPicker
-                  properties={properties}
-                  onChange={handleChange}
-                />
-                <CustomFrom label="Text" />
-                <CustomFrom label="Portfolio Image">
-                  <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
-                    <Stack spacing={2} direction="row" alignItems="center">
-                      <Opacity />
-                      <Slider
-                        value={properties.primaryImage.opacity}
-                        max={100}
-                        min={0}
-                        onChange={(event, newValue) =>
-                          handleImageProperties(newValue, "opacity")
+              <Box
+                sx={{ height: "76vh", overflowY: "auto", overflowX: "hidden" }}
+              >
+                <Stack spacing={2}>
+                  <CustomFrom label="Background Color">
+                    <FormGroup row sx={{ mx: 1 }}>
+                      <CusotmCheckbox
+                        checked={properties.backgroundColorType === "static"}
+                        onChange={() =>
+                          handleChange("static", "backgroundColorType")
                         }
+                        label="Static"
                       />
-                    </Stack>
-                    <Stack spacing={2} direction="row" alignItems="center">
-                      <Circle />
-                      <Slider
-                        value={properties.primaryImage.borderRadius}
-                        max={
-                          Math.min(
-                            properties.primaryImage.dimensions.width,
-                            properties.primaryImage.dimensions.height
-                          ) / 2
+                      <CusotmCheckbox
+                        checked={
+                          properties.backgroundColorType === "linear-gradient"
                         }
-                        min={0}
-                        onChange={(event, newValue) =>
-                          handleImageProperties(newValue, "borderRadius")
+                        onChange={() =>
+                          handleChange("linear-gradient", "backgroundColorType")
                         }
+                        label="Linear Gradient"
                       />
-                    </Stack>
-                    <Stack spacing={2} direction="row" alignItems="center">
-                      <LineWeight />
-                      <Slider
-                        value={properties.primaryImage.borderThickness}
-                        max={30}
-                        min={0}
-                        onChange={(event, newValue) =>
-                          handleImageProperties(newValue, "borderThickness")
+                      <CusotmCheckbox
+                        checked={
+                          properties.backgroundColorType === "radial-gradient"
                         }
+                        onChange={() =>
+                          handleChange("radial-gradient", "backgroundColorType")
+                        }
+                        label="Radial Gradient"
                       />
-                    </Stack>
-                    <Stack direction="row" spacing={2}>
-                      <FormControl fullWidth>
-                        <InputLabel id="borderType">Border Type</InputLabel>
-                        <Select
-                          labelId="borderType"
-                          id="borderTypeSelect"
-                          value={properties.primaryImage.borderType}
-                          label="Border Type"
-                          onChange={(event) =>
-                            handleImageProperties(
-                              event.target.value,
-                              "borderType"
-                            )
+                    </FormGroup>
+                  </CustomFrom>
+                  <CustomColorPicker
+                    properties={properties}
+                    onChange={handleChange}
+                  />
+                  <CustomFrom label="Text">
+                    <Stack spacing={2} sx={{ mt: 2 }}></Stack>
+                  </CustomFrom>
+                  <CustomFrom label="Portfolio Image">
+                    <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
+                      <Stack spacing={2} direction="row" alignItems="center">
+                        <Opacity />
+                        <Slider
+                          value={properties.primaryImage.opacity}
+                          max={100}
+                          min={0}
+                          onChange={(event, newValue) =>
+                            handleImageProperties(newValue, "opacity")
                           }
-                        >
-                          {borderTypes.map((type, index) => (
-                            <MenuItem key={index} value={type.value}>
-                              {type.label}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                      <MuiColorInput
-                        label="Border Color"
-                        fullWidth
-                        value={properties.primaryImage.borderColor}
-                        onChange={(color) =>
-                          handleImageProperties(color, "borderColor")
-                        }
-                      />
-                    </Stack>
+                        />
+                      </Stack>
+                      <Stack spacing={2} direction="row" alignItems="center">
+                        <Circle />
+                        <Slider
+                          value={properties.primaryImage.borderRadius}
+                          max={
+                            Math.min(
+                              properties.primaryImage.dimensions.width,
+                              properties.primaryImage.dimensions.height
+                            ) / 2
+                          }
+                          min={0}
+                          onChange={(event, newValue) =>
+                            handleImageProperties(newValue, "borderRadius")
+                          }
+                        />
+                      </Stack>
+                      <Stack spacing={2} direction="row" alignItems="center">
+                        <LineWeight />
+                        <Slider
+                          value={properties.primaryImage.borderThickness}
+                          max={30}
+                          min={0}
+                          onChange={(event, newValue) =>
+                            handleImageProperties(newValue, "borderThickness")
+                          }
+                        />
+                      </Stack>
+                      <Stack direction="row" spacing={2}>
+                        <FormControl fullWidth>
+                          <InputLabel id="borderType">Border Type</InputLabel>
+                          <Select
+                            labelId="borderType"
+                            id="borderTypeSelect"
+                            value={properties.primaryImage.borderType}
+                            label="Border Type"
+                            onChange={(event) =>
+                              handleImageProperties(
+                                event.target.value,
+                                "borderType"
+                              )
+                            }
+                          >
+                            {borderTypes.map((type, index) => (
+                              <MenuItem key={index} value={type.value}>
+                                {type.label}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                        <MuiColorInput
+                          label="Border Color"
+                          fullWidth
+                          value={properties.primaryImage.borderColor}
+                          onChange={(color) =>
+                            handleImageProperties(color, "borderColor")
+                          }
+                        />
+                      </Stack>
 
-                    <Button variant="outlined" component="label">
-                      Change Primary Image
-                      <input
-                        type="file"
-                        hidden
-                        accept=".jpg, .png, .jpeg"
-                        onChange={handleFile}
-                      />
-                    </Button>
-                  </Stack>
-                </CustomFrom>
-              </Stack>
+                      <Button variant="outlined" component="label">
+                        Change Primary Image
+                        <input
+                          type="file"
+                          hidden
+                          accept=".jpg, .png, .jpeg"
+                          onChange={handleFile}
+                        />
+                      </Button>
+                    </Stack>
+                  </CustomFrom>
+                </Stack>
+              </Box>
             </CardContent>
           </Card>
         </Grid>

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import React, { useRef } from "react";
 import Draggable from "react-draggable";
 import CustomDraggableResizable from "../../components/design/CustomDraggableResizable";
@@ -25,7 +25,7 @@ export default function DesignedPage(props) {
     <Box
       sx={{
         position: "relative",
-        height: "80vh",
+        height: "82vh",
         overflow: "auto",
         background:
           properties.backgroundColorType === "static"

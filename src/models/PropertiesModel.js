@@ -7,6 +7,7 @@ export class PropertiesModel {
     colorPosition,
     colorXAxis,
     colorYAxis,
+    fontFamily,
     primaryImage,
     name,
     summary
@@ -18,6 +19,7 @@ export class PropertiesModel {
     this.colorPosition = colorPosition;
     this.colorXAxis = colorXAxis;
     this.colorYAxis = colorYAxis;
+    this.fontFamily = fontFamily;
     this.primaryImage = primaryImage;
     this.name = name;
     this.summary = summary;
