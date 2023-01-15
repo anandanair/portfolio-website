@@ -13,20 +13,20 @@ export default function DesignedPage(props) {
   const summaryRef = useRef();
 
   const handleResizeStop = (data, name) => {
-    const newWdith = properties[name].width + data.width;
-    const newHeight = properties[name].height + data.height;
+    const newWdith = properties[name].dimensions.width + data.width;
+    const newHeight = properties[name].dimensions.height + data.height;
     props.onResize(newWdith, newHeight, name);
   };
 
   const handleDragStop = (data, name) => {
     props.onDrag(data.x, data.y, name);
   };
-
   return (
     <Box
       sx={{
         position: "relative",
-        minHeight: "80vh",
+        height: "80vh",
+        overflow: "auto",
         background:
           properties.backgroundColorType === "static"
             ? properties.backgroundColor1
@@ -43,39 +43,41 @@ export default function DesignedPage(props) {
         component="image"
         id="primaryImage"
         onDragStop={handleDragStop}
-        position={properties.primaryImagePosition}
-        dimensiones={properties.primaryImageDimensions}
-        imageProperties={properties.primaryImageProperties}
+        position={properties.primaryImage.position}
+        dimensions={properties.primaryImage.dimensions}
+        imageProperties={properties.primaryImage}
         imageURL={firestoreUser.portfolio.primaryPhotoURL || defaultPhotoURL}
         onResizeStop={handleResizeStop}
       />
       <Draggable
-        grid={[25, 25]}
+        grid={[5, 5]}
         nodeRef={nameRef}
-        position={properties.namePosition}
-        onStop={(event, data) => handleDragStop(data, "namePosition")}
+        position={properties.name.position}
+        onStop={(event, data) => handleDragStop(data, "name")}
       >
-        <Typography ref={nameRef} sx={{ display: "inline-block" }} variant="h2">
+        <div
+          style={{ ...properties.name, display: "inline-block" }}
+          ref={nameRef}
+        >
           I'm {firestoreUser.portfolio.fullName}
-        </Typography>
+        </div>
       </Draggable>
       <CustomDraggableResizable
         component="text"
         id="summary"
         onDragStop={handleDragStop}
-        position={properties.summaryPosition}
-        dimensiones={properties.summaryDimensions}
+        position={properties.summary.position}
+        dimensions={properties.summary.dimensions}
         imageProperties={{}}
         imageURL=""
         onResizeStop={handleResizeStop}
       >
-        <Typography
+        <div
           ref={summaryRef}
-          sx={{ display: "inline-block", textAlign: "left" }}
-          variant="subtitle1"
+          style={{ ...properties.summary, textAlign: "left" }}
         >
           {firestoreUser.portfolio.summary}
-        </Typography>
+        </div>
       </CustomDraggableResizable>
     </Box>
   );

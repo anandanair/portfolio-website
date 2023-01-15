@@ -41,25 +41,37 @@ export default function DesignPortfolio() {
   const [loading, setLoading] = useState(false);
   const [properties, setProperties] = useState(
     new PropertiesModel(
-      "static",
-      "red",
+      "linear-gradient",
+      "black",
       "blue",
-      0,
+      110,
       "circle at center",
       0,
       0,
-      { width: 200, height: 200 },
-      { x: -40, y: 85 },
       {
-        borderRadius: 0,
+        dimensions: { width: 200, height: 200 },
+        position: { x: 0, y: 0 },
+        borderRadius: 20,
         opacity: 100,
         borderThickness: 5,
         borderType: "solid",
-        borderColor: "#ddd",
+        borderColor: "white",
       },
-      { x: 0, y: -75 },
-      { x: 100, y: -75 },
-      { width: 700, height: 100 }
+      //name props
+      {
+        fontSize: 72,
+        position: { x: 0, y: 0 },
+        color: "white",
+        fontFamily: "'Antic Slab', serif",
+      },
+      //summary props
+      {
+        fontSize: 16,
+        position: { x: 0, y: 0 },
+        dimensions: { width: 700, height: 100 },
+        color: "white",
+        fontFamily: "'Antic Slab', serif",
+      }
     )
   );
 
@@ -70,17 +82,29 @@ export default function DesignPortfolio() {
     });
   };
 
-  const handleResize = (width, height, name) => {
-    setProperties({
-      ...properties,
-      [name]: { width: width, height: height },
-    });
-  };
-
   const handlePosition = (x, y, name) => {
     setProperties({
       ...properties,
-      [name]: { x: x, y: y },
+      [name]: {
+        ...properties[name],
+        position: {
+          x: x,
+          y: y,
+        },
+      },
+    });
+  };
+
+  const handleResize = (width, height, name) => {
+    setProperties({
+      ...properties,
+      [name]: {
+        ...properties[name],
+        dimensions: {
+          width: width,
+          height: height,
+        },
+      },
     });
   };
 
@@ -101,8 +125,8 @@ export default function DesignPortfolio() {
   const handleImageProperties = (value, name) => {
     setProperties({
       ...properties,
-      primaryImageProperties: {
-        ...properties.primaryImageProperties,
+      primaryImage: {
+        ...properties.primaryImage,
         [name]: value,
       },
     });
@@ -111,18 +135,25 @@ export default function DesignPortfolio() {
   return (
     <DrawerNavBar>
       <Grid container spacing={2}>
-        <Grid item xs={4}>
+        <Grid item xs={2}>
           <Card className="customizeCard" sx={{ width: 1 }}>
             <CardHeader title="Customize" />
             <CardContent>
               <Stack spacing={2}>
                 <FormControl
-                  sx={{ display: "flex", justifyContent: "flex-start" }}
+                  className="customizeForm"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                  }}
                 >
-                  <FormLabel sx={{ textAlign: "left" }} component="legend">
+                  <FormLabel
+                    sx={{ textAlign: "left", mx: 1 }}
+                    component="legend"
+                  >
                     Background Color
                   </FormLabel>
-                  <FormGroup row>
+                  <FormGroup row sx={{ mx: 1 }}>
                     <CusotmCheckbox
                       checked={properties.backgroundColorType === "static"}
                       onChange={() =>
@@ -155,16 +186,23 @@ export default function DesignPortfolio() {
                   onChange={handleChange}
                 />
                 <FormControl
-                  sx={{ display: "flex", justifyContent: "flex-start" }}
+                  className="customizeForm"
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-start",
+                  }}
                 >
-                  <FormLabel sx={{ textAlign: "left" }} component="legend">
+                  <FormLabel
+                    sx={{ textAlign: "left", mx: 1 }}
+                    component="legend"
+                  >
                     Portfolio Image
                   </FormLabel>
-                  <Stack sx={{ mt: 2 }} spacing={2}>
+                  <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
                     <Stack spacing={2} direction="row" alignItems="center">
                       <Opacity />
                       <Slider
-                        value={properties.primaryImageProperties.opacity}
+                        value={properties.primaryImage.opacity}
                         max={100}
                         min={0}
                         onChange={(event, newValue) =>
@@ -175,11 +213,11 @@ export default function DesignPortfolio() {
                     <Stack spacing={2} direction="row" alignItems="center">
                       <Circle />
                       <Slider
-                        value={properties.primaryImageProperties.borderRadius}
+                        value={properties.primaryImage.borderRadius}
                         max={
                           Math.min(
-                            properties.primaryImageDimensions.width,
-                            properties.primaryImageDimensions.height
+                            properties.primaryImage.dimensions.width,
+                            properties.primaryImage.dimensions.height
                           ) / 2
                         }
                         min={0}
@@ -191,9 +229,7 @@ export default function DesignPortfolio() {
                     <Stack spacing={2} direction="row" alignItems="center">
                       <LineWeight />
                       <Slider
-                        value={
-                          properties.primaryImageProperties.borderThickness
-                        }
+                        value={properties.primaryImage.borderThickness}
                         max={30}
                         min={0}
                         onChange={(event, newValue) =>
@@ -207,7 +243,7 @@ export default function DesignPortfolio() {
                         <Select
                           labelId="borderType"
                           id="borderTypeSelect"
-                          value={properties.primaryImageProperties.borderType}
+                          value={properties.primaryImage.borderType}
                           label="Border Type"
                           onChange={(event) =>
                             handleImageProperties(
@@ -226,7 +262,7 @@ export default function DesignPortfolio() {
                       <MuiColorInput
                         label="Border Color"
                         fullWidth
-                        value={properties.primaryImageProperties.borderColor}
+                        value={properties.primaryImage.borderColor}
                         onChange={(color) =>
                           handleImageProperties(color, "borderColor")
                         }
@@ -248,7 +284,7 @@ export default function DesignPortfolio() {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item xs={10}>
           <Card
             // className="customizeCard"
             sx={{ width: 1, backgroundColor: "white" }}
