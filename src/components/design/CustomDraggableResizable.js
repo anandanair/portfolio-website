@@ -10,38 +10,41 @@ export default function CustomDraggableResizable(props) {
     event.stopPropagation();
   };
 
+  const imageStyleProps = {
+    background: `url(${props.imageURL})`,
+    backgroundSize: "cover",
+    backgroundRepeat: "no-repeat",
+    borderRadius: `${props.imageProperties.borderRadius}px`,
+    opacity: props.imageProperties.opacity / 100,
+    border: `${props.imageProperties.borderThickness}px ${props.imageProperties.borderType} ${props.imageProperties.borderColor}`,
+  };
+
   return (
     <Draggable
       nodeRef={nodeRef}
       bounds="parent"
-      onStop={(event, data) => props.onDragStop(data, "primaryImagePosition")}
-      position={props.imagePosition}
+      onStop={(event, data) => props.onDragStop(data, `${props.id}Position`)}
+      position={props.position}
       grid={[25, 25]}
     >
       <Box
         ref={nodeRef}
         sx={{
           display: "inline-block",
-          height: props.imageDimensions.height + "px",
-          width: props.imageDimensions.width + "px",
+          height: props.dimensiones.height + "px",
+          width: props.dimensiones.width + "px",
         }}
       >
         <Resizable
-          size={{
-            height: props.imageDimensions.height,
-            width: props.imageDimensions.width,
-          }}
-          style={{
-            background: `url(${props.imageURL})`,
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            borderRadius: `${props.imageProperties.borderRadius}px`,
-            opacity: props.imageProperties.opacity / 100,
-            border: `${props.imageProperties.borderThickness}px ${props.imageProperties.borderType} ${props.imageProperties.borderColor}`,
-          }}
-          onResizeStop={props.onResizeStop}
+          size={props.dimensiones}
+          style={props.component === "image" && imageStyleProps}
+          onResizeStop={(e, direction, ref, d) =>
+            props.onResizeStop(d, `${props.id}Dimensions`)
+          }
           onResizeStart={handleResizeStart}
-        ></Resizable>
+        >
+          {props.children}
+        </Resizable>
       </Box>
     </Draggable>
   );
