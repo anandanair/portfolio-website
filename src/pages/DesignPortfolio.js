@@ -50,7 +50,7 @@ export default function DesignPortfolio() {
       0,
       {
         dimensions: { width: 200, height: 200 },
-        position: { x: 0, y: 0 },
+        position: { x: 195, y: 150 },
         borderRadius: 20,
         opacity: 100,
         borderThickness: 5,
@@ -60,14 +60,14 @@ export default function DesignPortfolio() {
       //name props
       {
         fontSize: 72,
-        position: { x: 0, y: 0 },
+        position: { x: 415, y: 150 },
         color: "white",
         fontFamily: "'Antic Slab', serif",
       },
       //summary props
       {
         fontSize: 16,
-        position: { x: 0, y: 0 },
+        position: { x: 415, y: 245 },
         dimensions: { width: 700, height: 100 },
         color: "white",
         fontFamily: "'Antic Slab', serif",

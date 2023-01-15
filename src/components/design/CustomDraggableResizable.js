@@ -30,13 +30,14 @@ export default function CustomDraggableResizable(props) {
       <Box
         ref={nodeRef}
         sx={{
-          display: "inline-block",
           height: props.dimensions.height + "px",
           width: props.dimensions.width + "px",
           cursor: "pointer",
+          position: "absolute",
         }}
       >
         <Resizable
+          className="resizableText"
           size={props.dimensions}
           style={props.component === "image" && imageStyleProps}
           onResizeStop={(e, direction, ref, d) =>

@@ -56,7 +56,10 @@ export default function DesignedPage(props) {
         onStop={(event, data) => handleDragStop(data, "name")}
       >
         <div
-          style={{ ...properties.name, display: "inline-block" }}
+          style={{
+            ...properties.name,
+            position: "absolute",
+          }}
           ref={nameRef}
         >
           I'm {firestoreUser.portfolio.fullName}

@@ -403,3 +403,7 @@
 #light .customizeForm:hover{
   border: 1px solid var(--dark-primary-color);
 }
+
+.resizableText:hover{
+  border: 1px solid white;
+}
