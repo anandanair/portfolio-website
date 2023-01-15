@@ -1,5 +1,4 @@
 import { Box, Typography } from "@mui/material";
-import { width } from "@mui/system";
 import React, { useRef } from "react";
 import Draggable from "react-draggable";
 import CustomDraggableResizable from "../../components/design/CustomDraggableResizable";
@@ -13,10 +12,10 @@ export default function DesignedPage(props) {
   const nameRef = useRef();
   const summaryRef = useRef();
 
-  const handleResizeStop = (e, direction, ref, d) => {
-    const newWdith = properties.primaryImageDimensions.width + d.width;
-    const newHeight = properties.primaryImageDimensions.height + d.height;
-    props.onResize(newWdith, newHeight, "primaryImageDimensions");
+  const handleResizeStop = (data, name) => {
+    const newWdith = properties[name].width + data.width;
+    const newHeight = properties[name].height + data.height;
+    props.onResize(newWdith, newHeight, name);
   };
 
   const handleDragStop = (data, name) => {
@@ -41,9 +40,11 @@ export default function DesignedPage(props) {
       }}
     >
       <CustomDraggableResizable
+        component="image"
+        id="primaryImage"
         onDragStop={handleDragStop}
-        imagePosition={properties.primaryImagePosition}
-        imageDimensions={properties.primaryImageDimensions}
+        position={properties.primaryImagePosition}
+        dimensiones={properties.primaryImageDimensions}
         imageProperties={properties.primaryImageProperties}
         imageURL={firestoreUser.portfolio.primaryPhotoURL || defaultPhotoURL}
         onResizeStop={handleResizeStop}
@@ -58,11 +59,15 @@ export default function DesignedPage(props) {
           I'm {firestoreUser.portfolio.fullName}
         </Typography>
       </Draggable>
-      <Draggable
-        grid={[25, 25]}
-        nodeRef={summaryRef}
+      <CustomDraggableResizable
+        component="text"
+        id="summary"
+        onDragStop={handleDragStop}
         position={properties.summaryPosition}
-        onStop={(event, data) => handleDragStop(data, "summaryPosition")}
+        dimensiones={properties.summaryDimensions}
+        imageProperties={{}}
+        imageURL=""
+        onResizeStop={handleResizeStop}
       >
         <Typography
           ref={summaryRef}
@@ -71,7 +76,7 @@ export default function DesignedPage(props) {
         >
           {firestoreUser.portfolio.summary}
         </Typography>
-      </Draggable>
+      </CustomDraggableResizable>
     </Box>
   );
 }
