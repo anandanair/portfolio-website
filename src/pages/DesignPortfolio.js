@@ -58,7 +58,8 @@ export default function DesignPortfolio() {
         borderColor: "#ddd",
       },
       { x: 0, y: -75 },
-      { x: 0, y: -100 }
+      { x: 100, y: -75 },
+      { width: 700, height: 100 }
     )
   );
 
