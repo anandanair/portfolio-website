@@ -37,7 +37,7 @@ export default function CustomDraggableResizable(props) {
         }}
       >
         <Resizable
-          className="resizableText"
+          className="textContent"
           size={props.dimensions}
           style={props.component === "image" && imageStyleProps}
           onResizeStop={(e, direction, ref, d) =>

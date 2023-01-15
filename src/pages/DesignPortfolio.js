@@ -24,6 +24,7 @@ import { useStorage } from "../contexts/StorageContext";
 import Compressor from "compressorjs";
 import { Circle, LineWeight, Opacity } from "@mui/icons-material";
 import { MuiColorInput } from "mui-color-input";
+import CustomFrom from "../components/CustomForm";
 
 const borderTypes = [
   { value: "solid", label: "Solid" },
@@ -140,19 +141,7 @@ export default function DesignPortfolio() {
             <CardHeader title="Customize" />
             <CardContent>
               <Stack spacing={2}>
-                <FormControl
-                  className="customizeForm"
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <FormLabel
-                    sx={{ textAlign: "left", mx: 1 }}
-                    component="legend"
-                  >
-                    Background Color
-                  </FormLabel>
+                <CustomFrom label="Background Color">
                   <FormGroup row sx={{ mx: 1 }}>
                     <CusotmCheckbox
                       checked={properties.backgroundColorType === "static"}
@@ -180,24 +169,13 @@ export default function DesignPortfolio() {
                       label="Radial Gradient"
                     />
                   </FormGroup>
-                </FormControl>
+                </CustomFrom>
                 <CustomColorPicker
                   properties={properties}
                   onChange={handleChange}
                 />
-                <FormControl
-                  className="customizeForm"
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <FormLabel
-                    sx={{ textAlign: "left", mx: 1 }}
-                    component="legend"
-                  >
-                    Portfolio Image
-                  </FormLabel>
+                <CustomFrom label="Text" />
+                <CustomFrom label="Portfolio Image">
                   <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
                     <Stack spacing={2} direction="row" alignItems="center">
                       <Opacity />
@@ -279,7 +257,7 @@ export default function DesignPortfolio() {
                       />
                     </Button>
                   </Stack>
-                </FormControl>
+                </CustomFrom>
               </Stack>
             </CardContent>
           </Card>

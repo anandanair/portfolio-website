@@ -404,6 +404,6 @@
   border: 1px solid var(--dark-primary-color);
 }
 
-.resizableText:hover{
+.textContent:hover{
   border: 1px solid white;
 }

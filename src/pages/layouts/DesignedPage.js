@@ -56,6 +56,7 @@ export default function DesignedPage(props) {
         onStop={(event, data) => handleDragStop(data, "name")}
       >
         <div
+          className="textContent"
           style={{
             ...properties.name,
             position: "absolute",
