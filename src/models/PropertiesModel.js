@@ -10,7 +10,8 @@ export class PropertiesModel {
     fontFamily,
     primaryImage,
     name,
-    summary
+    summary,
+    dividers
   ) {
     this.backgroundColorType = backgroundColorType;
     this.backgroundColor1 = backgroundColor1;
@@ -23,5 +24,6 @@ export class PropertiesModel {
     this.primaryImage = primaryImage;
     this.name = name;
     this.summary = summary;
+    this.dividers = dividers;
   }
 }

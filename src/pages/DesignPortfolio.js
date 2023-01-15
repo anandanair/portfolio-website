@@ -8,6 +8,7 @@ import {
   FormControl,
   FormGroup,
   Grid,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -22,10 +23,15 @@ import { PropertiesModel } from "../models/PropertiesModel";
 import DesignedPage from "./layouts/DesignedPage";
 import { useStorage } from "../contexts/StorageContext";
 import Compressor from "compressorjs";
-import { Circle, LineWeight, Opacity } from "@mui/icons-material";
+import {
+  Add,
+  Circle,
+  FormatSize,
+  LineWeight,
+  Opacity,
+} from "@mui/icons-material";
 import { MuiColorInput } from "mui-color-input";
 import CustomFrom from "../components/CustomForm";
-import { useGoogle } from "../contexts/GoogleContext";
 
 const borderTypes = [
   { value: "solid", label: "Solid" },
@@ -41,7 +47,6 @@ const borderTypes = [
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
   const [loading, setLoading] = useState(false);
-  const { googleFonts } = useGoogle();
   const [properties, setProperties] = useState(
     new PropertiesModel(
       "linear-gradient",
@@ -66,6 +71,7 @@ export default function DesignPortfolio() {
       {
         fontSize: 72,
         position: { x: 415, y: 150 },
+        opacity: 100,
         color: "white",
         fontFamily: "'Antic Slab', serif",
       },
@@ -74,9 +80,12 @@ export default function DesignPortfolio() {
         fontSize: 16,
         position: { x: 415, y: 245 },
         dimensions: { width: 700, height: 100 },
+        opacity: 100,
         color: "white",
         fontFamily: "'Antic Slab', serif",
-      }
+      },
+      //dividers
+      []
     )
   );
 
@@ -128,11 +137,23 @@ export default function DesignPortfolio() {
   };
 
   const handleImageProperties = (value, name) => {
+    console.log(value);
+
     setProperties({
       ...properties,
       primaryImage: {
         ...properties.primaryImage,
         [name]: value,
+      },
+    });
+  };
+
+  const handleNestedChange = (value, name, nestedProp) => {
+    setProperties({
+      ...properties,
+      [name]: {
+        ...properties[name],
+        [nestedProp]: value,
       },
     });
   };
@@ -181,8 +202,73 @@ export default function DesignPortfolio() {
                     properties={properties}
                     onChange={handleChange}
                   />
-                  <CustomFrom label="Text">
-                    <Stack spacing={2} sx={{ mt: 2 }}></Stack>
+                  <CustomFrom label="Text - Name">
+                    <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
+                      <Stack spacing={2} direction="row" alignItems="center">
+                        <FormatSize />
+                        <Slider
+                          value={properties.name.fontSize}
+                          max={100}
+                          min={0}
+                          onChange={(event, newValue) =>
+                            handleNestedChange(newValue, "name", "fontSize")
+                          }
+                        />
+                      </Stack>
+                      <Stack spacing={2} direction="row" alignItems="center">
+                        <Opacity />
+                        <Slider
+                          value={properties.name.opacity}
+                          max={100}
+                          min={0}
+                          onChange={(event, newValue) =>
+                            handleNestedChange(newValue, "name", "opacity")
+                          }
+                        />
+                      </Stack>
+                      <MuiColorInput
+                        label="Text Color"
+                        fullWidth
+                        value={properties.name.color}
+                        onChange={(color) =>
+                          handleNestedChange(color, "name", "color")
+                        }
+                      />
+                    </Stack>
+                  </CustomFrom>
+                  <CustomFrom label="Text - Summary">
+                    <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
+                      <Stack spacing={2} direction="row" alignItems="center">
+                        <FormatSize />
+                        <Slider
+                          value={properties.summary.fontSize}
+                          max={100}
+                          min={0}
+                          onChange={(event, newValue) =>
+                            handleNestedChange(newValue, "summary", "fontSize")
+                          }
+                        />
+                      </Stack>
+                      <Stack spacing={2} direction="row" alignItems="center">
+                        <Opacity />
+                        <Slider
+                          value={properties.summary.opacity}
+                          max={100}
+                          min={0}
+                          onChange={(event, newValue) =>
+                            handleNestedChange(newValue, "summary", "opacity")
+                          }
+                        />
+                      </Stack>
+                      <MuiColorInput
+                        label="Text Color"
+                        fullWidth
+                        value={properties.name.color}
+                        onChange={(color) =>
+                          handleNestedChange(color, "summary", "color")
+                        }
+                      />
+                    </Stack>
                   </CustomFrom>
                   <CustomFrom label="Portfolio Image">
                     <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
@@ -273,22 +359,30 @@ export default function DesignPortfolio() {
           </Card>
         </Grid>
         <Grid item xs={10}>
-          <Card
-            // className="customizeCard"
-            sx={{ width: 1, backgroundColor: "white" }}
-          >
-            <CardContent>
-              {!loading ? (
-                <DesignedPage
-                  properties={properties}
-                  onResize={handleResize}
-                  onDrag={handlePosition}
-                />
-              ) : (
-                <CircularProgress />
-              )}
-            </CardContent>
-          </Card>
+          <Stack spacing={2}>
+            <Stack className="customizeCard" direction="row" spacing={2}>
+              <IconButton>
+                <Add />
+              </IconButton>
+            </Stack>
+
+            <Card
+              // className="customizeCard"
+              sx={{ width: 1, backgroundColor: "white" }}
+            >
+              <CardContent>
+                {!loading ? (
+                  <DesignedPage
+                    properties={properties}
+                    onResize={handleResize}
+                    onDrag={handlePosition}
+                  />
+                ) : (
+                  <CircularProgress />
+                )}
+              </CardContent>
+            </Card>
+          </Stack>
         </Grid>
       </Grid>
     </DrawerNavBar>

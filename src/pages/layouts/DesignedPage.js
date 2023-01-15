@@ -25,7 +25,7 @@ export default function DesignedPage(props) {
     <Box
       sx={{
         position: "relative",
-        height: "82vh",
+        height: "77vh",
         overflow: "auto",
         background:
           properties.backgroundColorType === "static"
@@ -58,8 +58,12 @@ export default function DesignedPage(props) {
         <div
           className="textContent"
           style={{
-            ...properties.name,
+            fontFamily: properties.fontFamily,
+            color: properties.name.color,
+            fontSize: properties.name.fontSize,
             position: "absolute",
+            opacity: properties.name.opacity / 100,
+            cursor: "pointer",
           }}
           ref={nameRef}
         >
@@ -78,7 +82,13 @@ export default function DesignedPage(props) {
       >
         <div
           ref={summaryRef}
-          style={{ ...properties.summary, textAlign: "left" }}
+          style={{
+            fontFamily: properties.fontFamily,
+            color: properties.summary.color,
+            fontSize: properties.summary.fontSize,
+            opacity: properties.summary.opacity / 100,
+            textAlign: "left",
+          }}
         >
           {firestoreUser.portfolio.summary}
         </div>
