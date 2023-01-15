@@ -11,7 +11,8 @@ export class PropertiesModel {
     primaryImagePosition,
     primaryImageProperties,
     namePosition,
-    summaryPosition
+    summaryPosition,
+    summaryDimensions
   ) {
     this.backgroundColorType = backgroundColorType;
     this.backgroundColor1 = backgroundColor1;
@@ -25,5 +26,6 @@ export class PropertiesModel {
     this.primaryImageProperties = primaryImageProperties;
     this.namePosition = namePosition;
     this.summaryPosition = summaryPosition;
+    this.summaryDimensions = summaryDimensions;
   }
 }
