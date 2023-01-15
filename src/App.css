@@ -385,3 +385,21 @@
   background: linear-gradient(280deg, var(--light-primary-color), var(--light-quaternary-color) 100% );
   border-radius: 5px;
 } 
+
+#dark .customizeForm{
+  border-radius: 10px;
+  border: 1px solid #f7fbfc7c;
+  padding: 10px;
+}
+#dark .customizeForm:hover{
+  border: 1px solid var(--light-primary-color);
+}
+
+#light .customizeForm{
+  border-radius: 10px;
+  border: 1px solid #0a264762;
+  padding: 10px;
+}
+#light .customizeForm:hover{
+  border: 1px solid var(--dark-primary-color);
+}
