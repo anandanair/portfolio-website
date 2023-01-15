@@ -1,7 +1,9 @@
+import { RotateRight } from "@mui/icons-material";
 import {
   FormControl,
   FormLabel,
   InputAdornment,
+  Slider,
   TextField,
 } from "@mui/material";
 import { Stack } from "@mui/system";
@@ -14,11 +16,17 @@ export default function CustomColorPicker(props) {
   };
 
   return (
-    <FormControl sx={{ display: "flex", justifyContent: "flex-start" }}>
-      <FormLabel sx={{ textAlign: "left" }} component="legend">
+    <FormControl
+      className="customizeForm"
+      sx={{
+        display: "flex",
+        justifyContent: "flex-start",
+      }}
+    >
+      <FormLabel sx={{ textAlign: "left", mx: 1 }} component="legend">
         Color Picker
       </FormLabel>
-      <Stack direction="row" spacing={2}>
+      <Stack direction="row" spacing={2} sx={{ mt: 1, mx: 1 }}>
         <MuiColorInput
           fullWidth
           value={props.properties.backgroundColor1}
@@ -34,19 +42,19 @@ export default function CustomColorPicker(props) {
       </Stack>
 
       {props.properties.backgroundColorType === "linear-gradient" && (
-        <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-          <TextField
-            label="Angle"
-            id="colorAngle"
-            fullWidth
-            type="number"
+        // <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+        <Stack
+          spacing={2}
+          direction="row"
+          alignItems="center"
+          sx={{ mt: 2, mx: 2 }}
+        >
+          <RotateRight />
+          <Slider
             value={props.properties.colorAngle}
-            onChange={(e) => handleChange(e.target.value, "colorAngle")}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">deg</InputAdornment>
-              ),
-            }}
+            max={360}
+            min={0}
+            onChange={(event, newValue) => handleChange(newValue, "colorAngle")}
           />
         </Stack>
       )}
