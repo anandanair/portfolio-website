@@ -84,7 +84,60 @@ export function FirestoreProvider({ children }) {
     await updateDoc(doc(firestore, "users", currentUser.uid), {
       portfolio: newObject,
     });
+    await createPortfolioDesign(newObject);
     return await updatePortfolioDone();
+  }
+
+  async function createPortfolioDesign(portfolio) {
+    let newObject = {
+      backgroundColorType: "linear-gradient",
+      backgroundColor1: "black",
+      backgroundColor2: "blue",
+      colorAngle: 110,
+      colorPosition: "circle at center",
+      colorXAxis: 0,
+      colorYAxis: 0,
+      fontFamily: "'Antic Slab', serif",
+    };
+    newObject.primaryImage = {
+      dimensions: { width: 200, height: 200 },
+      position: { x: 195, y: 150 },
+      borderRadius: 20,
+      opacity: 100,
+      borderThickness: 5,
+      borderType: "solid",
+      borderColor: "white",
+    };
+    newObject.name = {
+      fontSize: 72,
+      position: { x: 415, y: 150 },
+      opacity: 100,
+      color: "white",
+    };
+    if (portfolio.summary !== "") {
+      newObject.summary = {
+        fontSize: 16,
+        position: { x: 415, y: 245 },
+        dimensions: { width: 700, height: 100 },
+        opacity: 100,
+        color: "white",
+      };
+    }
+    for (let exp in portfolio.workExperience) {
+      newObject.workExperience.push({
+        titleFontSize: 24,
+        titleTextColor: "white",
+        roleFontSize: 20,
+        roleTextColor: "white",
+        descriptionFontSize: 16,
+        descriptionTextColor: "white",
+        position: { x: 195, y: 350 },
+        dimensions: { width: 300, height: 300 },
+        opacity: 100,
+        cardColor: "white",
+      });
+    }
+    console.log(newObject);
   }
 
   async function updatePortfolioDone() {
