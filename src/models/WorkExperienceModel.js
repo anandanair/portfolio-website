@@ -1,5 +1,6 @@
 export class WorkExperienceModel {
-  constructor(companyName, position, startDate, endDate, description) {
+  constructor(id, companyName, position, startDate, endDate, description) {
+    this.id = id;
     this.companyName = companyName;
     this.position = position;
     this.startDate = startDate;

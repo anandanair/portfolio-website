@@ -19,12 +19,20 @@ import {
 import { useLocalTheme } from "../../contexts/ThemeContext";
 import { Add } from "@mui/icons-material";
 import { Timestamp } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
 
 export default function WorkExperienceForm(props) {
   const { isSmallSize, localTheme } = useLocalTheme();
   const color = localTheme === "dark" ? "#F7FBFC" : "#0A2647";
   const [workExp, setWorkExp] = useState(
-    new WorkExperienceModel("", "", dayjs().subtract(1, "year"), dayjs(), "")
+    new WorkExperienceModel(
+      "",
+      "",
+      "",
+      dayjs().subtract(1, "year"),
+      dayjs(),
+      ""
+    )
   );
   const [workExpError, setWorkExpError] = useState(
     new WorkExperienceErrorModel("", "", "", "")
@@ -72,9 +80,11 @@ export default function WorkExperienceForm(props) {
       let newObject = Object.assign({}, workExp);
       newObject.startDate = Timestamp.fromDate(newObject.startDate.toDate());
       newObject.endDate = Timestamp.fromDate(newObject.endDate.toDate());
+      newObject.id = uuidv4();
       props.onObjectAdd(newObject, "workExperience");
       setWorkExp(
         new WorkExperienceModel(
+          "",
           "",
           "",
           dayjs().subtract(1, "year"),
