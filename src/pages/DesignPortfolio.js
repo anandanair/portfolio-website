@@ -84,6 +84,19 @@ export default function DesignPortfolio() {
         color: "white",
         fontFamily: "'Antic Slab', serif",
       },
+      //work Experience props
+      {
+        titleFontSize: 24,
+        titleTextColor: "white",
+        roleFontSize: 20,
+        roleTextColor: "white",
+        descriptionFontSize: 16,
+        descriptionTextColor: "white",
+        position: { x: 195, y: 350 },
+        dimensions: { width: 300, height: 300 },
+        opacity: 100,
+        cardColor: "white",
+      },
       //dividers
       []
     )

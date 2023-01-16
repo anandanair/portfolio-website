@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Card, CardContent } from "@mui/material";
 import React, { useRef } from "react";
 import Draggable from "react-draggable";
 import CustomDraggableResizable from "../../components/design/CustomDraggableResizable";
@@ -93,6 +93,31 @@ export default function DesignedPage(props) {
           {firestoreUser.portfolio.summary}
         </div>
       </CustomDraggableResizable>
+      {firestoreUser.portfolio.workExperience.map((exp, index) => (
+        <CustomDraggableResizable
+          component="card"
+          id="workExperience"
+          onDragStop={handleDragStop}
+          position={properties.workExperience.position}
+          dimensions={properties.workExperience.dimensions}
+          imageProperties={{}}
+          imageURL=""
+          onResizeStop={handleResizeStop}
+          key={index}
+        >
+          <Card
+            sx={{
+              position: "absolute",
+              width: `${properties.workExperience.dimensions.width}px`,
+              height: `${properties.workExperience.dimensions.height}px`,
+            }}
+          >
+            <CardContent>
+              <div>{exp.companyName}</div>
+            </CardContent>
+          </Card>
+        </CustomDraggableResizable>
+      ))}
     </Box>
   );
 }

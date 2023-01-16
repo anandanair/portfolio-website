@@ -11,6 +11,7 @@ export class PropertiesModel {
     primaryImage,
     name,
     summary,
+    workExperience,
     dividers
   ) {
     this.backgroundColorType = backgroundColorType;
@@ -24,6 +25,7 @@ export class PropertiesModel {
     this.primaryImage = primaryImage;
     this.name = name;
     this.summary = summary;
+    this.workExperience = workExperience;
     this.dividers = dividers;
   }
 }
