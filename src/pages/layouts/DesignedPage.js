@@ -150,8 +150,8 @@ export default function DesignedPage(props) {
               <div
                 style={{
                   fontFamily: properties.fontFamily,
-                  color: properties[exp.id].titleTextColor,
-                  fontSize: properties[exp.id].titleFontSize,
+                  color: properties[exp.id].roleTextColor,
+                  fontSize: properties[exp.id].roleFontSize,
                   textAlign: "center",
                 }}
               >
@@ -160,8 +160,8 @@ export default function DesignedPage(props) {
               <div
                 style={{
                   fontFamily: properties.fontFamily,
-                  color: properties[exp.id].roleTextColor,
-                  fontSize: properties[exp.id].roleFontSize,
+                  color: properties[exp.id].titleTextColor,
+                  fontSize: properties[exp.id].titleFontSize,
                   textAlign: "center",
                 }}
               >

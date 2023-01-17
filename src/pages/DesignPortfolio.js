@@ -32,6 +32,7 @@ import {
 } from "@mui/icons-material";
 import { MuiColorInput } from "mui-color-input";
 import CustomFrom from "../components/CustomForm";
+import CustomSlider from "../components/CustomSlider";
 
 const borderTypes = [
   { value: "solid", label: "Solid" },
@@ -165,28 +166,22 @@ export default function DesignPortfolio() {
                   />
                   <CustomFrom label="Text - Name">
                     <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <FormatSize />
-                        <Slider
-                          value={properties.name.fontSize}
-                          max={100}
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleNestedChange(newValue, "name", "fontSize")
-                          }
-                        />
-                      </Stack>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <Opacity />
-                        <Slider
-                          value={properties.name.opacity}
-                          max={100}
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleNestedChange(newValue, "name", "opacity")
-                          }
-                        />
-                      </Stack>
+                      <CustomSlider
+                        icon={FormatSize}
+                        value={properties.name.fontSize}
+                        max={100}
+                        onChange={(event, newValue) =>
+                          handleNestedChange(newValue, "name", "fontSize")
+                        }
+                      />
+                      <CustomSlider
+                        icon={Opacity}
+                        value={properties.name.opacity}
+                        max={100}
+                        onChange={(event, newValue) =>
+                          handleNestedChange(newValue, "name", "opacity")
+                        }
+                      />
                       <MuiColorInput
                         label="Text Color"
                         fullWidth
@@ -199,28 +194,22 @@ export default function DesignPortfolio() {
                   </CustomFrom>
                   <CustomFrom label="Text - Summary">
                     <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <FormatSize />
-                        <Slider
-                          value={properties.summary.fontSize}
-                          max={100}
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleNestedChange(newValue, "summary", "fontSize")
-                          }
-                        />
-                      </Stack>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <Opacity />
-                        <Slider
-                          value={properties.summary.opacity}
-                          max={100}
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleNestedChange(newValue, "summary", "opacity")
-                          }
-                        />
-                      </Stack>
+                      <CustomSlider
+                        icon={FormatSize}
+                        value={properties.summary.fontSize}
+                        max={100}
+                        onChange={(event, newValue) =>
+                          handleNestedChange(newValue, "summary", "fontSize")
+                        }
+                      />
+                      <CustomSlider
+                        icon={Opacity}
+                        value={properties.summary.opacity}
+                        max={100}
+                        onChange={(event, newValue) =>
+                          handleNestedChange(newValue, "summary", "opacity")
+                        }
+                      />
                       <MuiColorInput
                         label="Text Color"
                         fullWidth
@@ -233,44 +222,35 @@ export default function DesignPortfolio() {
                   </CustomFrom>
                   <CustomFrom label="Portfolio Image">
                     <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <Opacity />
-                        <Slider
-                          value={properties.primaryImage.opacity}
-                          max={100}
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleImageProperties(newValue, "opacity")
-                          }
-                        />
-                      </Stack>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <Circle />
-                        <Slider
-                          value={properties.primaryImage.borderRadius}
-                          max={
-                            Math.min(
-                              properties.primaryImage.dimensions.width,
-                              properties.primaryImage.dimensions.height
-                            ) / 2
-                          }
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleImageProperties(newValue, "borderRadius")
-                          }
-                        />
-                      </Stack>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <LineWeight />
-                        <Slider
-                          value={properties.primaryImage.borderThickness}
-                          max={30}
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleImageProperties(newValue, "borderThickness")
-                          }
-                        />
-                      </Stack>
+                      <CustomSlider
+                        icon={Opacity}
+                        value={properties.primaryImage.opacity}
+                        max={100}
+                        onChange={(event, newValue) =>
+                          handleImageProperties(newValue, "opacity")
+                        }
+                      />
+                      <CustomSlider
+                        icon={Circle}
+                        max={
+                          Math.min(
+                            properties.primaryImage.dimensions.width,
+                            properties.primaryImage.dimensions.height
+                          ) / 2
+                        }
+                        value={properties.primaryImage.borderRadius}
+                        onChange={(event, newValue) =>
+                          handleImageProperties(newValue, "borderRadius")
+                        }
+                      />
+                      <CustomSlider
+                        icon={LineWeight}
+                        value={properties.primaryImage.borderThickness}
+                        max={30}
+                        onChange={(event, newValue) =>
+                          handleImageProperties(newValue, "borderThickness")
+                        }
+                      />
                       <Stack direction="row" spacing={2}>
                         <FormControl fullWidth>
                           <InputLabel id="borderType">Border Type</InputLabel>
@@ -302,7 +282,6 @@ export default function DesignPortfolio() {
                           }
                         />
                       </Stack>
-
                       <Button variant="outlined" component="label">
                         Change Primary Image
                         <input
@@ -372,6 +351,41 @@ export default function DesignPortfolio() {
                             handleNestedChange(value, exp.id, name)
                           }
                         />
+                        <CustomFrom label="Text - Position">
+                          <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
+                            <Stack
+                              spacing={2}
+                              direction="row"
+                              alignItems="center"
+                            >
+                              <FormatSize />
+                              <Slider
+                                value={properties[exp.id].roleFontSize}
+                                max={100}
+                                min={0}
+                                onChange={(event, newValue) =>
+                                  handleNestedChange(
+                                    newValue,
+                                    exp.id,
+                                    "roleFontSize"
+                                  )
+                                }
+                              />
+                            </Stack>
+                            <MuiColorInput
+                              label="Text Color"
+                              fullWidth
+                              value={properties[exp.id].roleTextColor}
+                              onChange={(color) =>
+                                handleNestedChange(
+                                  color,
+                                  exp.id,
+                                  "roleTextColor"
+                                )
+                              }
+                            />
+                          </Stack>
+                        </CustomFrom>
                         <CustomFrom label="Text - Company Name">
                           <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
                             <Stack
@@ -407,52 +421,68 @@ export default function DesignPortfolio() {
                             />
                           </Stack>
                         </CustomFrom>
-                        <CustomFrom label="Card Opacity & Shape">
+                        <CustomFrom label="Text - Description">
                           <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
                             <Stack
                               spacing={2}
                               direction="row"
                               alignItems="center"
                             >
-                              <Opacity />
+                              <FormatSize />
                               <Slider
-                                value={properties[exp.id].opacity}
+                                value={properties[exp.id].descriptionFontSize}
                                 max={100}
                                 min={0}
                                 onChange={(event, newValue) =>
                                   handleNestedChange(
                                     newValue,
                                     exp.id,
-                                    "opacity"
+                                    "descriptionFontSize"
                                   )
                                 }
                               />
                             </Stack>
-                            <Stack
-                              spacing={2}
-                              direction="row"
-                              alignItems="center"
-                            >
-                              <Circle />
-                              <Slider
-                                value={properties[exp.id].borderRadius}
-                                max={
-                                  Math.min(
-                                    properties[exp.id].dimensions.width,
-                                    properties[exp.id].dimensions.height
-                                  ) / 2
-                                }
-                                min={0}
-                                onChange={(event, newValue) =>
-                                  handleNestedChange(
-                                    newValue,
-                                    exp.id,
-                                    "borderRadius"
-                                  )
-                                }
-                              />
-                            </Stack>
-
+                            <MuiColorInput
+                              label="Text Color"
+                              fullWidth
+                              value={properties[exp.id].descriptionTextColor}
+                              onChange={(color) =>
+                                handleNestedChange(
+                                  color,
+                                  exp.id,
+                                  "descriptionTextColor"
+                                )
+                              }
+                            />
+                          </Stack>
+                        </CustomFrom>
+                        <CustomFrom label="Card Opacity & Shape">
+                          <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
+                            <CustomSlider
+                              icon={Opacity}
+                              value={properties[exp.id].opacity}
+                              max={100}
+                              onChange={(event, newValue) =>
+                                handleNestedChange(newValue, exp.id, "opacity")
+                              }
+                            />
+                            <CustomSlider
+                              icon={Circle}
+                              value={properties[exp.id].borderRadius}
+                              max={
+                                Math.min(
+                                  properties[exp.id].dimensions.width,
+                                  properties[exp.id].dimensions.height
+                                ) / 2
+                              }
+                              onChange={(event, newValue) =>
+                                handleNestedChange(
+                                  newValue,
+                                  exp.id,
+                                  "borderRadius"
+                                )
+                              }
+                            />
                             <Button variant="outlined" component="label">
                               Add Company Image
                               <input
