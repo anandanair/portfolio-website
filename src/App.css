@@ -407,3 +407,37 @@
 .textContent:hover{
   border: 1px solid white;
 }
+
+/* Horizontal Dotted Line for showing space */
+.horizontal-dotted-line{
+  position: absolute;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+.horizontal-dotted-line::before, .horizontal-dotted-line::after {
+  content: '';
+  width: 50%;
+  display: block;
+  border-top: 1px dotted #ccc;
+}
+
+
+/* Vertical Dotted Line for showing space */
+.vertical-dotted-line{
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+.vertical-dotted-line::before, .vertical-dotted-line::after {
+  content: '';
+  width: 1px;
+  height: 50%;
+  display: block;
+  border-left: 1px dotted #ccc;
+}
+
+
