@@ -19,9 +19,9 @@ import React, { useState } from "react";
 import CusotmCheckbox from "../components/design/CusotmCheckbox";
 import CustomColorPicker from "../components/design/CustomColorPicker";
 import DrawerNavBar from "../components/DrawerNavBar";
-import { PropertiesModel } from "../models/PropertiesModel";
 import DesignedPage from "./layouts/DesignedPage";
 import { useStorage } from "../contexts/StorageContext";
+import { useFirestore } from "../contexts/FirestoreContext";
 import Compressor from "compressorjs";
 import {
   Add,
@@ -47,60 +47,8 @@ const borderTypes = [
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
   const [loading, setLoading] = useState(false);
-  const [properties, setProperties] = useState(
-    new PropertiesModel(
-      "linear-gradient",
-      "black",
-      "blue",
-      110,
-      "circle at center",
-      0,
-      0,
-      "'Antic Slab', serif",
-      //primary Image props
-      {
-        dimensions: { width: 200, height: 200 },
-        position: { x: 195, y: 150 },
-        borderRadius: 20,
-        opacity: 100,
-        borderThickness: 5,
-        borderType: "solid",
-        borderColor: "white",
-      },
-      //name props
-      {
-        fontSize: 72,
-        position: { x: 415, y: 150 },
-        opacity: 100,
-        color: "white",
-        fontFamily: "'Antic Slab', serif",
-      },
-      //summary props
-      {
-        fontSize: 16,
-        position: { x: 415, y: 245 },
-        dimensions: { width: 700, height: 100 },
-        opacity: 100,
-        color: "white",
-        fontFamily: "'Antic Slab', serif",
-      },
-      //work Experience props
-      {
-        titleFontSize: 24,
-        titleTextColor: "white",
-        roleFontSize: 20,
-        roleTextColor: "white",
-        descriptionFontSize: 16,
-        descriptionTextColor: "white",
-        position: { x: 195, y: 350 },
-        dimensions: { width: 300, height: 300 },
-        opacity: 100,
-        cardColor: "white",
-      },
-      //dividers
-      []
-    )
-  );
+  const { firestoreUser } = useFirestore();
+  const [properties, setProperties] = useState(firestoreUser.design);
 
   const handleChange = (value, name) => {
     setProperties({

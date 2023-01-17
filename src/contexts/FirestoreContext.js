@@ -123,8 +123,8 @@ export function FirestoreProvider({ children }) {
         color: "white",
       };
     }
-    for (let exp in portfolio.workExperience) {
-      newObject.workExperience.push({
+    for (let index in portfolio.workExperience) {
+      newObject[portfolio.workExperience[index].id] = {
         titleFontSize: 24,
         titleTextColor: "white",
         roleFontSize: 20,
@@ -135,9 +135,11 @@ export function FirestoreProvider({ children }) {
         dimensions: { width: 300, height: 300 },
         opacity: 100,
         cardColor: "white",
-      });
+      };
     }
-    console.log(newObject);
+    await updateDoc(doc(firestore, "users", currentUser.uid), {
+      design: newObject,
+    });
   }
 
   async function updatePortfolioDone() {

@@ -96,10 +96,10 @@ export default function DesignedPage(props) {
       {firestoreUser.portfolio.workExperience.map((exp, index) => (
         <CustomDraggableResizable
           component="card"
-          id="workExperience"
+          id={exp.id}
           onDragStop={handleDragStop}
-          position={properties.workExperience.position}
-          dimensions={properties.workExperience.dimensions}
+          position={properties[exp.id].position}
+          dimensions={properties[exp.id].dimensions}
           imageProperties={{}}
           imageURL=""
           onResizeStop={handleResizeStop}
@@ -108,8 +108,8 @@ export default function DesignedPage(props) {
           <Card
             sx={{
               position: "absolute",
-              width: `${properties.workExperience.dimensions.width}px`,
-              height: `${properties.workExperience.dimensions.height}px`,
+              width: `${properties[exp.id].dimensions.width}px`,
+              height: `${properties[exp.id].dimensions.height}px`,
             }}
           >
             <CardContent>
