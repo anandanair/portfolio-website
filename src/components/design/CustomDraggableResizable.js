@@ -5,6 +5,7 @@ import Draggable from "react-draggable";
 
 export default function CustomDraggableResizable(props) {
   const nodeRef = useRef(null);
+  const firstRun = useRef(true);
   const [parentWidth, setParentWidth] = useState(0);
   const [childWidth, setChildWidth] = useState(0);
   const [bounds, setBounds] = useState({
@@ -31,23 +32,28 @@ export default function CustomDraggableResizable(props) {
     props.onResizeStop(d, `${props.id}`);
   };
 
-  //Call on initialization
+  //Call once on initialization
   useEffect(() => {
-    const componentWidth = nodeRef.current.offsetWidth;
-    const boxWidth = props.boxRef.current.offsetWidth;
-    setParentWidth(boxWidth);
-    setChildWidth(componentWidth);
-  }, []);
+    if (firstRun.current) {
+      firstRun.current = false;
+      const componentWidth = nodeRef.current.offsetWidth;
+      const boxWidth = props.boxRef.current.offsetWidth;
+      setParentWidth(boxWidth);
+      setChildWidth(componentWidth);
+    }
+  }, [props.boxRef]);
 
-  //call whenever childWidth value changes
+  //call whenever childWidth or parentWidth value changes
   useEffect(() => {
-    setBounds((prevState) => {
-      return {
-        ...prevState,
-        right: parentWidth - childWidth,
-      };
-    });
-  }, [childWidth]);
+    if (childWidth !== 0) {
+      setBounds((prevState) => {
+        return {
+          ...prevState,
+          right: parentWidth - childWidth,
+        };
+      });
+    }
+  }, [childWidth, parentWidth]);
 
   return (
     <Draggable
