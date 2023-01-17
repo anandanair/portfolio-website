@@ -131,10 +131,15 @@ export function FirestoreProvider({ children }) {
         roleTextColor: "white",
         descriptionFontSize: 16,
         descriptionTextColor: "white",
-        position: { x: 195, y: 350 },
+        position: { x: 195 + index * 450, y: 370 },
         dimensions: { width: 300, height: 300 },
         opacity: 100,
-        cardColor: "white",
+        backgroundColor1: "black",
+        backgroundColor2: "blue",
+        colorAngle: 110,
+        backgroundColorType: "linear-gradient",
+        colorXAxis: 0,
+        colorYAxis: 0,
       };
     }
     await updateDoc(doc(firestore, "users", currentUser.uid), {
