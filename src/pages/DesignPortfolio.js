@@ -319,52 +319,152 @@ export default function DesignPortfolio() {
                       key={index}
                       label={`Work Exp Card - ${index + 1}`}
                     >
-                      <CustomFrom label="Background Color">
-                        <FormGroup row sx={{ mx: 1 }}>
-                          <CusotmCheckbox
-                            checked={
-                              properties[exp.id].backgroundColorType ===
-                              "static"
-                            }
-                            onChange={() =>
-                              handleNestedChange(
-                                "static",
-                                exp.id,
-                                "backgroundColorType"
-                              )
-                            }
-                            label="Static"
-                          />
-                          <CusotmCheckbox
-                            checked={
-                              properties[exp.id].backgroundColorType ===
-                              "linear-gradient"
-                            }
-                            onChange={() =>
-                              handleNestedChange(
-                                "linear-gradient",
-                                exp.id,
-                                "backgroundColorType"
-                              )
-                            }
-                            label="Linear Gradient"
-                          />
-                          <CusotmCheckbox
-                            checked={
-                              properties[exp.id].backgroundColorType ===
-                              "radial-gradient"
-                            }
-                            onChange={() =>
-                              handleNestedChange(
-                                "radial-gradient",
-                                exp.id,
-                                "backgroundColorType"
-                              )
-                            }
-                            label="Radial Gradient"
-                          />
-                        </FormGroup>
-                      </CustomFrom>
+                      <Stack spacing={2} sx={{ mt: 2 }}>
+                        <CustomFrom label="Background Color">
+                          <FormGroup row sx={{ mx: 1 }}>
+                            <CusotmCheckbox
+                              checked={
+                                properties[exp.id].backgroundColorType ===
+                                "static"
+                              }
+                              onChange={() =>
+                                handleNestedChange(
+                                  "static",
+                                  exp.id,
+                                  "backgroundColorType"
+                                )
+                              }
+                              label="Static"
+                            />
+                            <CusotmCheckbox
+                              checked={
+                                properties[exp.id].backgroundColorType ===
+                                "linear-gradient"
+                              }
+                              onChange={() =>
+                                handleNestedChange(
+                                  "linear-gradient",
+                                  exp.id,
+                                  "backgroundColorType"
+                                )
+                              }
+                              label="Linear Gradient"
+                            />
+                            <CusotmCheckbox
+                              checked={
+                                properties[exp.id].backgroundColorType ===
+                                "radial-gradient"
+                              }
+                              onChange={() =>
+                                handleNestedChange(
+                                  "radial-gradient",
+                                  exp.id,
+                                  "backgroundColorType"
+                                )
+                              }
+                              label="Radial Gradient"
+                            />
+                          </FormGroup>
+                        </CustomFrom>
+                        <CustomColorPicker
+                          properties={properties[exp.id]}
+                          onChange={(value, name) =>
+                            handleNestedChange(value, exp.id, name)
+                          }
+                        />
+                        <CustomFrom label="Text - Company Name">
+                          <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
+                            <Stack
+                              spacing={2}
+                              direction="row"
+                              alignItems="center"
+                            >
+                              <FormatSize />
+                              <Slider
+                                value={properties[exp.id].titleFontSize}
+                                max={100}
+                                min={0}
+                                onChange={(event, newValue) =>
+                                  handleNestedChange(
+                                    newValue,
+                                    exp.id,
+                                    "titleFontSize"
+                                  )
+                                }
+                              />
+                            </Stack>
+                            <MuiColorInput
+                              label="Text Color"
+                              fullWidth
+                              value={properties[exp.id].titleTextColor}
+                              onChange={(color) =>
+                                handleNestedChange(
+                                  color,
+                                  exp.id,
+                                  "titleTextColor"
+                                )
+                              }
+                            />
+                          </Stack>
+                        </CustomFrom>
+                        <CustomFrom label="Card Opacity & Shape">
+                          <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
+                            <Stack
+                              spacing={2}
+                              direction="row"
+                              alignItems="center"
+                            >
+                              <Opacity />
+                              <Slider
+                                value={properties[exp.id].opacity}
+                                max={100}
+                                min={0}
+                                onChange={(event, newValue) =>
+                                  handleNestedChange(
+                                    newValue,
+                                    exp.id,
+                                    "opacity"
+                                  )
+                                }
+                              />
+                            </Stack>
+                            <Stack
+                              spacing={2}
+                              direction="row"
+                              alignItems="center"
+                            >
+                              <Circle />
+                              <Slider
+                                value={properties[exp.id].borderRadius}
+                                max={
+                                  Math.min(
+                                    properties[exp.id].dimensions.width,
+                                    properties[exp.id].dimensions.height
+                                  ) / 2
+                                }
+                                min={0}
+                                onChange={(event, newValue) =>
+                                  handleNestedChange(
+                                    newValue,
+                                    exp.id,
+                                    "borderRadius"
+                                  )
+                                }
+                              />
+                            </Stack>
+
+                            <Button variant="outlined" component="label">
+                              Add Company Image
+                              <input
+                                type="file"
+                                hidden
+                                accept=".jpg, .png, .jpeg"
+                                onChange={handleFile}
+                              />
+                            </Button>
+                          </Stack>
+                        </CustomFrom>
+                      </Stack>
                     </CustomFrom>
                   ))}
                 </Stack>

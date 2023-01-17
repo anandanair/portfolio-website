@@ -140,6 +140,7 @@ export function FirestoreProvider({ children }) {
         backgroundColorType: "linear-gradient",
         colorXAxis: 0,
         colorYAxis: 0,
+        borderRadius: 20,
       };
     }
     await updateDoc(doc(firestore, "users", currentUser.uid), {

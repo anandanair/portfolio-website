@@ -142,10 +142,41 @@ export default function DesignedPage(props) {
                     }% ${properties[exp.id].colorYAxis}%, ${
                       properties[exp.id].backgroundColor1
                     }, ${properties[exp.id].backgroundColor2})`,
+              borderRadius: `${properties[exp.id].borderRadius}px`,
+              opacity: properties[exp.id].opacity / 100,
             }}
           >
             <CardContent>
-              <div>{exp.companyName}</div>
+              <div
+                style={{
+                  fontFamily: properties.fontFamily,
+                  color: properties[exp.id].titleTextColor,
+                  fontSize: properties[exp.id].titleFontSize,
+                  textAlign: "center",
+                }}
+              >
+                {exp.position}
+              </div>
+              <div
+                style={{
+                  fontFamily: properties.fontFamily,
+                  color: properties[exp.id].roleTextColor,
+                  fontSize: properties[exp.id].roleFontSize,
+                  textAlign: "center",
+                }}
+              >
+                {exp.companyName}
+              </div>
+              <div
+                style={{
+                  fontFamily: properties.fontFamily,
+                  color: properties[exp.id].descriptionTextColor,
+                  fontSize: properties[exp.id].descriptionFontSize,
+                  textAlign: "left",
+                }}
+              >
+                {exp.description}
+              </div>
             </CardContent>
           </Card>
         </CustomDraggableResizable>
