@@ -1,5 +1,5 @@
 import { Box, Card, CardContent } from "@mui/material";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import CustomDraggableResizable from "../../components/design/CustomDraggableResizable";
 import { useFirestore } from "../../contexts/FirestoreContext";
@@ -9,8 +9,13 @@ export default function DesignedPage(props) {
   const properties = props.properties;
   const { firestoreUser } = useFirestore();
   const { defaultPhotoURL } = useStorage();
+  const boxRef = useRef();
   const nameRef = useRef();
-  const summaryRef = useRef();
+  const [bounds, setBounds] = useState({
+    top: 0,
+    left: 0,
+    right: 0,
+  });
 
   const handleResizeStop = (data, name) => {
     const newWdith = properties[name].dimensions.width + data.width;
@@ -21,8 +26,18 @@ export default function DesignedPage(props) {
   const handleDragStop = (data, name) => {
     props.onDrag(data.x, data.y, name);
   };
+
+  useEffect(() => {
+    const boxWidth = boxRef.current.offsetWidth;
+    const nameWidth = nameRef.current.offsetWidth;
+    setBounds((prevState) => {
+      return { ...prevState, right: boxWidth - nameWidth };
+    });
+  }, []);
+
   return (
     <Box
+      ref={boxRef}
       sx={{
         position: "relative",
         height: "77vh",
@@ -48,12 +63,14 @@ export default function DesignedPage(props) {
         imageProperties={properties.primaryImage}
         imageURL={firestoreUser.portfolio.primaryPhotoURL || defaultPhotoURL}
         onResizeStop={handleResizeStop}
+        boxRef={boxRef}
       />
       <Draggable
         grid={[5, 5]}
         nodeRef={nameRef}
         position={properties.name.position}
         onStop={(event, data) => handleDragStop(data, "name")}
+        bounds={bounds}
       >
         <div
           className="textContent"
@@ -79,9 +96,9 @@ export default function DesignedPage(props) {
         imageProperties={{}}
         imageURL=""
         onResizeStop={handleResizeStop}
+        boxRef={boxRef}
       >
         <div
-          ref={summaryRef}
           style={{
             fontFamily: properties.fontFamily,
             color: properties.summary.color,
@@ -104,6 +121,7 @@ export default function DesignedPage(props) {
           imageURL=""
           onResizeStop={handleResizeStop}
           key={index}
+          boxRef={boxRef}
         >
           <Card
             sx={{
