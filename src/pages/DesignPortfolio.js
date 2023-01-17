@@ -314,6 +314,59 @@ export default function DesignPortfolio() {
                       </Button>
                     </Stack>
                   </CustomFrom>
+                  {firestoreUser.portfolio.workExperience.map((exp, index) => (
+                    <CustomFrom
+                      key={index}
+                      label={`Work Exp Card - ${index + 1}`}
+                    >
+                      <CustomFrom label="Background Color">
+                        <FormGroup row sx={{ mx: 1 }}>
+                          <CusotmCheckbox
+                            checked={
+                              properties[exp.id].backgroundColorType ===
+                              "static"
+                            }
+                            onChange={() =>
+                              handleNestedChange(
+                                "static",
+                                exp.id,
+                                "backgroundColorType"
+                              )
+                            }
+                            label="Static"
+                          />
+                          <CusotmCheckbox
+                            checked={
+                              properties[exp.id].backgroundColorType ===
+                              "linear-gradient"
+                            }
+                            onChange={() =>
+                              handleNestedChange(
+                                "linear-gradient",
+                                exp.id,
+                                "backgroundColorType"
+                              )
+                            }
+                            label="Linear Gradient"
+                          />
+                          <CusotmCheckbox
+                            checked={
+                              properties[exp.id].backgroundColorType ===
+                              "radial-gradient"
+                            }
+                            onChange={() =>
+                              handleNestedChange(
+                                "radial-gradient",
+                                exp.id,
+                                "backgroundColorType"
+                              )
+                            }
+                            label="Radial Gradient"
+                          />
+                        </FormGroup>
+                      </CustomFrom>
+                    </CustomFrom>
+                  ))}
                 </Stack>
               </Box>
             </CardContent>

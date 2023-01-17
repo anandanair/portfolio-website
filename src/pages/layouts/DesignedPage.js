@@ -128,6 +128,20 @@ export default function DesignedPage(props) {
               position: "absolute",
               width: `${properties[exp.id].dimensions.width}px`,
               height: `${properties[exp.id].dimensions.height}px`,
+              background:
+                properties[exp.id].backgroundColorType === "static"
+                  ? properties[exp.id].backgroundColor1
+                  : properties[exp.id].backgroundColorType === "linear-gradient"
+                  ? `${properties[exp.id].backgroundColorType}(
+                ${properties[exp.id].colorAngle}deg,
+                ${properties[exp.id].backgroundColor1},
+                 ${properties[exp.id].backgroundColor2}
+              )`
+                  : `${properties[exp.id].backgroundColorType}(at ${
+                      properties[exp.id].colorXAxis
+                    }% ${properties[exp.id].colorYAxis}%, ${
+                      properties[exp.id].backgroundColor1
+                    }, ${properties[exp.id].backgroundColor2})`,
             }}
           >
             <CardContent>
