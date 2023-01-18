@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
 import React from "react";
-import CustomForm from "../../../components/CustomForm";
+import CustomAccordion from "../../../components/CustomAccordion";
 import CustomSlider from "../../../components/CustomSlider";
 
 const borderTypes = [
@@ -25,8 +25,39 @@ const borderTypes = [
 
 export default function PrimaryImageDesign(props) {
   return (
-    <CustomForm label="Portfolio Image">
-      <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
+    <CustomAccordion
+      id="primaryImageDesign"
+      title="Primary Image"
+      expanded={props.expanded}
+      onChange={props.handleAccordionChange}
+    >
+      <Stack spacing={2}>
+        <Stack direction="row" spacing={2}>
+          <FormControl fullWidth>
+            <InputLabel id="borderType">Border Type</InputLabel>
+            <Select
+              labelId="borderType"
+              id="borderTypeSelect"
+              value={props.properties.primaryImage.borderType}
+              label="Border Type"
+              onChange={(event) =>
+                props.onChange(event.target.value, "borderType")
+              }
+            >
+              {borderTypes.map((type, index) => (
+                <MenuItem key={index} value={type.value}>
+                  {type.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <MuiColorInput
+            label="Border Color"
+            fullWidth
+            value={props.properties.primaryImage.borderColor}
+            onChange={(color) => props.onChange(color, "borderColor")}
+          />
+        </Stack>
         <CustomSlider
           icon={Opacity}
           value={props.properties.primaryImage.opacity}
@@ -54,32 +85,6 @@ export default function PrimaryImageDesign(props) {
             props.onChange(newValue, "borderThickness")
           }
         />
-        <Stack direction="row" spacing={2}>
-          <FormControl fullWidth>
-            <InputLabel id="borderType">Border Type</InputLabel>
-            <Select
-              labelId="borderType"
-              id="borderTypeSelect"
-              value={props.properties.primaryImage.borderType}
-              label="Border Type"
-              onChange={(event) =>
-                props.onChange(event.target.value, "borderType")
-              }
-            >
-              {borderTypes.map((type, index) => (
-                <MenuItem key={index} value={type.value}>
-                  {type.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <MuiColorInput
-            label="Border Color"
-            fullWidth
-            value={props.properties.primaryImage.borderColor}
-            onChange={(color) => props.onChange(color, "borderColor")}
-          />
-        </Stack>
         <Button variant="outlined" component="label">
           Change Primary Image
           <input
@@ -90,6 +95,6 @@ export default function PrimaryImageDesign(props) {
           />
         </Button>
       </Stack>
-    </CustomForm>
+    </CustomAccordion>
   );
 }

@@ -1,32 +1,14 @@
 import { RotateRight } from "@mui/icons-material";
-import {
-  FormControl,
-  FormLabel,
-  InputAdornment,
-  Slider,
-  TextField,
-} from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
 import { MuiColorInput } from "mui-color-input";
 import React from "react";
+import CustomSlider from "../CustomSlider";
 
 export default function CustomColorPicker(props) {
-  const handleChange = (value, name) => {
-    props.onChange(value, name);
-  };
-
   return (
-    <FormControl
-      className="customizeForm"
-      sx={{
-        display: "flex",
-        justifyContent: "flex-start",
-      }}
-    >
-      <FormLabel sx={{ textAlign: "left", mx: 1 }} component="legend">
-        Color Picker
-      </FormLabel>
-      <Stack direction="row" spacing={2} sx={{ mt: 1, mx: 1 }}>
+    <React.Fragment>
+      <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
         <MuiColorInput
           fullWidth
           value={props.properties.backgroundColor1}
@@ -42,21 +24,12 @@ export default function CustomColorPicker(props) {
       </Stack>
 
       {props.properties.backgroundColorType === "linear-gradient" && (
-        // <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-        <Stack
-          spacing={2}
-          direction="row"
-          alignItems="center"
-          sx={{ mt: 2, mx: 2 }}
-        >
-          <RotateRight />
-          <Slider
-            value={props.properties.colorAngle}
-            max={360}
-            min={0}
-            onChange={(event, newValue) => handleChange(newValue, "colorAngle")}
-          />
-        </Stack>
+        <CustomSlider
+          icon={RotateRight}
+          value={props.properties.colorAngle}
+          max={360}
+          onChange={(event, newValue) => props.onChange(newValue, "colorAngle")}
+        />
       )}
       {props.properties.backgroundColorType === "radial-gradient" && (
         <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
@@ -66,7 +39,7 @@ export default function CustomColorPicker(props) {
             fullWidth
             type="number"
             value={props.properties.colorXAxis}
-            onChange={(e) => handleChange(e.target.value, "colorXAxis")}
+            onChange={(e) => props.onChange(e.target.value, "colorXAxis")}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">%</InputAdornment>
@@ -80,7 +53,7 @@ export default function CustomColorPicker(props) {
             fullWidth
             type="number"
             value={props.properties.colorYAxis}
-            onChange={(e) => handleChange(e.target.value, "colorYAxis")}
+            onChange={(e) => props.onChange(e.target.value, "colorYAxis")}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">%</InputAdornment>
@@ -89,6 +62,6 @@ export default function CustomColorPicker(props) {
           />
         </Stack>
       )}
-    </FormControl>
+    </React.Fragment>
   );
 }

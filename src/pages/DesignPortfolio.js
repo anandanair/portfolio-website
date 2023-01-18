@@ -9,7 +9,6 @@ import {
   Stack,
 } from "@mui/material";
 import React, { useState } from "react";
-import CustomColorPicker from "../components/design/CustomColorPicker";
 import DrawerNavBar from "../components/DrawerNavBar";
 import DesignedPage from "./layouts/DesignedPage";
 import { useStorage } from "../contexts/StorageContext";
@@ -27,6 +26,7 @@ export default function DesignPortfolio() {
   const [loading, setLoading] = useState(false);
   const { firestoreUser } = useFirestore();
   const [properties, setProperties] = useState(firestoreUser.design);
+  const [expanded, setExpanded] = useState(false);
 
   const handleChange = (value, name) => {
     setProperties({
@@ -97,6 +97,10 @@ export default function DesignPortfolio() {
     });
   };
 
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
   return (
     <DrawerNavBar>
       <Grid container spacing={2}>
@@ -109,22 +113,27 @@ export default function DesignPortfolio() {
               >
                 <Stack spacing={2}>
                   <BackgroundColorCheckbox
+                    expanded={expanded}
+                    handleAccordionChange={handleAccordionChange}
                     properties={properties}
                     onChange={handleChange}
                   />
-                  <CustomColorPicker
-                    properties={properties}
-                    onChange={handleChange}
-                  />
+
                   <NameDesign
+                    expanded={expanded}
+                    handleAccordionChange={handleAccordionChange}
                     properties={properties}
                     onChange={handleNestedChange}
                   />
                   <SummaryDesign
+                    expanded={expanded}
+                    handleAccordionChange={handleAccordionChange}
                     properties={properties}
                     onChange={handleNestedChange}
                   />
                   <PrimaryImageDesign
+                    expanded={expanded}
+                    handleAccordionChange={handleAccordionChange}
                     properties={properties}
                     onChange={handleImageProperties}
                     onFileChange={handleFile}
@@ -132,8 +141,11 @@ export default function DesignPortfolio() {
 
                   {firestoreUser.portfolio.workExperience.map((exp, index) => (
                     <WorkExperienceDesign
-                      id={exp.id}
+                      key={index}
+                      exp={exp}
                       index={index}
+                      expanded={expanded}
+                      handleAccordionChange={handleAccordionChange}
                       properties={properties[exp.id]}
                       onChange={handleNestedChange}
                       onFileChange={handleFile}
@@ -151,11 +163,7 @@ export default function DesignPortfolio() {
                 <Add />
               </IconButton>
             </Stack>
-
-            <Card
-              // className="customizeCard"
-              sx={{ width: 1, backgroundColor: "white" }}
-            >
+            <Card sx={{ width: 1, backgroundColor: "white" }}>
               <CardContent>
                 {!loading ? (
                   <DesignedPage

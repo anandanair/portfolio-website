@@ -1,12 +1,18 @@
 import { FormGroup } from "@mui/material";
 import React from "react";
-import CustomForm from "../../../components/CustomForm";
+import CustomAccordion from "../../../components/CustomAccordion";
 import CusotmCheckbox from "../../../components/design/CusotmCheckbox";
+import CustomColorPicker from "../../../components/design/CustomColorPicker";
 
 export default function BackgroundColorCheckbox(props) {
   return (
-    <CustomForm label="Background Color">
-      <FormGroup row sx={{ mx: 1 }}>
+    <CustomAccordion
+      id="bgCheckbox"
+      title="Background Color"
+      expanded={props.expanded}
+      onChange={props.handleAccordionChange}
+    >
+      <FormGroup row>
         <CusotmCheckbox
           checked={props.properties.backgroundColorType === "static"}
           onChange={() => props.onChange("static", "backgroundColorType")}
@@ -26,7 +32,11 @@ export default function BackgroundColorCheckbox(props) {
           }
           label="Radial Gradient"
         />
+        <CustomColorPicker
+          properties={props.properties}
+          onChange={props.onChange}
+        />
       </FormGroup>
-    </CustomForm>
+    </CustomAccordion>
   );
 }

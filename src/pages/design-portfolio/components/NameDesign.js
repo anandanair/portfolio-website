@@ -2,13 +2,24 @@ import { FormatSize, Opacity } from "@mui/icons-material";
 import { Stack } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
 import React from "react";
-import CustomForm from "../../../components/CustomForm";
+import CustomAccordion from "../../../components/CustomAccordion";
 import CustomSlider from "../../../components/CustomSlider";
 
 export default function NameDesign(props) {
   return (
-    <CustomForm label="Text - Name">
-      <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
+    <CustomAccordion
+      id="nameDesign"
+      title="Text - Name"
+      expanded={props.expanded}
+      onChange={props.handleAccordionChange}
+    >
+      <Stack spacing={2}>
+        <MuiColorInput
+          label="Text Color"
+          fullWidth
+          value={props.properties.name.color}
+          onChange={(color) => props.onChange(color, "name", "color")}
+        />
         <CustomSlider
           icon={FormatSize}
           value={props.properties.name.fontSize}
@@ -25,13 +36,7 @@ export default function NameDesign(props) {
             props.onChange(newValue, "name", "opacity")
           }
         />
-        <MuiColorInput
-          label="Text Color"
-          fullWidth
-          value={props.properties.name.color}
-          onChange={(color) => props.onChange(color, "name", "color")}
-        />
       </Stack>
-    </CustomForm>
+    </CustomAccordion>
   );
 }
