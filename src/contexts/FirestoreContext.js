@@ -118,7 +118,7 @@ export function FirestoreProvider({ children }) {
       newObject.summary = {
         fontSize: 16,
         position: { x: 415, y: 245 },
-        dimensions: { width: 700, height: 100 },
+        dimensions: { width: 700, height: 150 },
         opacity: 100,
         color: "white",
       };
@@ -131,7 +131,7 @@ export function FirestoreProvider({ children }) {
         roleTextColor: "white",
         descriptionFontSize: 16,
         descriptionTextColor: "white",
-        position: { x: 195 + index * 450, y: 370 },
+        position: { x: 195 + index * 450, y: 420 },
         dimensions: { width: 300, height: 300 },
         opacity: 100,
         backgroundColor1: "black",

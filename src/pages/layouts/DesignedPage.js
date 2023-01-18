@@ -1,7 +1,8 @@
-import { Box, Card, CardContent, TextField } from "@mui/material";
+import { Check } from "@mui/icons-material";
+import { Box, Card, CardContent, IconButton, Stack } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
-import tinycolor from "tinycolor2";
+import CustomTextArea from "../../components/CustomTextArea";
 import CustomDraggableResizable from "../../components/design/CustomDraggableResizable";
 import { useFirestore } from "../../contexts/FirestoreContext";
 import { useStorage } from "../../contexts/StorageContext";
@@ -116,31 +117,28 @@ export default function DesignedPage(props) {
         boxRef={boxRef}
         onClick={() => handleClick("summaryDesign")}
       >
-        <div
-          style={{
-            fontFamily: properties.fontFamily,
-            color: properties.summary.color,
-            fontSize: properties.summary.fontSize,
-            opacity: properties.summary.opacity / 100,
-            textAlign: "left",
-          }}
-        >
-          {editable === "summaryDesign" ? (
-            <textarea
-              className="designTextarea"
-              defaultValue={firestoreUser.portfolio.summary}
-              style={{
-                height: properties.summary.dimensions.height,
-                width: properties.summary.dimensions.width,
-                color: tinycolor(properties.backgroundColor1).isLight()
-                  ? "black"
-                  : "white",
-              }}
-            />
-          ) : (
-            firestoreUser.portfolio.summary
-          )}
-        </div>
+        {editable === "summaryDesign" ? (
+          <CustomTextArea
+            value={firestoreUser.portfolio.summary}
+            height={properties.summary.dimensions.height}
+            width={properties.summary.dimensions.width}
+            bgColor={properties.backgroundColor1}
+            fontSize={properties.summary.fontSize}
+            onChange={() => {}}
+          />
+        ) : (
+          <div
+            style={{
+              fontFamily: properties.fontFamily,
+              color: properties.summary.color,
+              fontSize: properties.summary.fontSize,
+              opacity: properties.summary.opacity / 100,
+              textAlign: "left",
+            }}
+          >
+            {firestoreUser.portfolio.summary}
+          </div>
+        )}
       </CustomDraggableResizable>
       {firestoreUser.portfolio.workExperience.map((exp, index) => (
         <CustomDraggableResizable
