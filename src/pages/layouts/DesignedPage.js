@@ -8,7 +8,7 @@ import { useStorage } from "../../contexts/StorageContext";
 
 export default function DesignedPage(props) {
   const properties = props.properties;
-  const { firestoreUser } = useFirestore();
+  const { firestoreUser, updatePortfolio } = useFirestore();
   const { defaultPhotoURL } = useStorage();
   const boxRef = useRef();
   const nameRef = useRef();
@@ -42,7 +42,8 @@ export default function DesignedPage(props) {
     setLastClick(currentClick);
   }
 
-  function handleDone() {
+  async function handleDone(value, name) {
+    await updatePortfolio(value, name);
     setEditable("");
   }
 
@@ -83,7 +84,9 @@ export default function DesignedPage(props) {
         imageURL={firestoreUser.portfolio.primaryPhotoURL || defaultPhotoURL}
         onResizeStop={handleResizeStop}
         boxRef={boxRef}
-        onClick={() => handleClick("primaryImageDesign")}
+        onClick={() => {
+          handleClick("primaryImageDesign");
+        }}
       />
       <Draggable
         grid={[5, 5]}
@@ -105,7 +108,7 @@ export default function DesignedPage(props) {
           ref={nameRef}
           onClick={() => handleClick("nameDesign")}
         >
-          I'm {firestoreUser.portfolio.fullName}
+          {firestoreUser.portfolio.fullName}
         </div>
       </Draggable>
       <CustomDraggableResizable
@@ -127,8 +130,7 @@ export default function DesignedPage(props) {
             width={properties.summary.dimensions.width}
             bgColor={properties.backgroundColor1}
             fontSize={properties.summary.fontSize}
-            onChange={() => {}}
-            onDone={handleDone}
+            onDone={(value) => handleDone(value, "summary")}
           />
         ) : (
           <div
