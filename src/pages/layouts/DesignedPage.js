@@ -1,5 +1,4 @@
-import { Check } from "@mui/icons-material";
-import { Box, Card, CardContent, IconButton, Stack } from "@mui/material";
+import { Box, Card, CardContent } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import CustomTextArea from "../../components/CustomTextArea";
@@ -41,6 +40,10 @@ export default function DesignedPage(props) {
       props.onClick(id);
     }
     setLastClick(currentClick);
+  }
+
+  function handleDone() {
+    setEditable("");
   }
 
   useEffect(() => {
@@ -125,6 +128,7 @@ export default function DesignedPage(props) {
             bgColor={properties.backgroundColor1}
             fontSize={properties.summary.fontSize}
             onChange={() => {}}
+            onDone={handleDone}
           />
         ) : (
           <div
