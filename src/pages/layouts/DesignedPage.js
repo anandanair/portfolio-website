@@ -122,6 +122,7 @@ export default function DesignedPage(props) {
         onResizeStop={handleResizeStop}
         boxRef={boxRef}
         onClick={() => handleClick("summaryDesign")}
+        editable={editable === "summaryDesign"}
       >
         {editable === "summaryDesign" ? (
           <CustomTextArea

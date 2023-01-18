@@ -63,14 +63,12 @@ export default function DesignPortfolio() {
   };
 
   const handleFile = async (event) => {
-    setLoading(true);
     const file = event.target.files[0];
     if (file) {
       new Compressor(file, {
         quality: 0.5,
         success: async (result) => {
           await uploadImageFile(result, "primaryImage");
-          setLoading(false);
         },
       });
     }
