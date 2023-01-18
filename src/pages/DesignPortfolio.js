@@ -1,54 +1,33 @@
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
   CircularProgress,
-  FormControl,
-  FormGroup,
   Grid,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  Slider,
   Stack,
 } from "@mui/material";
-import React, { useState } from "react";
-import CusotmCheckbox from "../components/design/CusotmCheckbox";
-import CustomColorPicker from "../components/design/CustomColorPicker";
+import React, { useEffect, useRef, useState } from "react";
 import DrawerNavBar from "../components/DrawerNavBar";
 import DesignedPage from "./layouts/DesignedPage";
 import { useStorage } from "../contexts/StorageContext";
 import { useFirestore } from "../contexts/FirestoreContext";
 import Compressor from "compressorjs";
-import {
-  Add,
-  Circle,
-  FormatSize,
-  LineWeight,
-  Opacity,
-} from "@mui/icons-material";
-import { MuiColorInput } from "mui-color-input";
-import CustomFrom from "../components/CustomForm";
-
-const borderTypes = [
-  { value: "solid", label: "Solid" },
-  { value: "dotted", label: "Dotted" },
-  { value: "dashed", label: "Dashed" },
-  { value: "double", label: "Double" },
-  { value: "groove", label: "Groove" },
-  { value: "ridge", label: "Ridge" },
-  { value: "inset", label: "Inset" },
-  { value: "outset", label: "Outset" },
-];
+import { Add } from "@mui/icons-material";
+import BackgroundColorCheckbox from "./design-portfolio/components/BackgroundColorCheckbox";
+import NameDesign from "./design-portfolio/components/NameDesign";
+import SummaryDesign from "./design-portfolio/components/SummaryDesign";
+import PrimaryImageDesign from "./design-portfolio/components/PrimaryImageDesign";
+import WorkExperienceDesign from "./design-portfolio/components/WorkExperienceDesign";
 
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
   const [loading, setLoading] = useState(false);
   const { firestoreUser } = useFirestore();
   const [properties, setProperties] = useState(firestoreUser.design);
+  const [expanded, setExpanded] = useState(false);
+  const rafRef = useRef(null);
 
   const handleChange = (value, name) => {
     setProperties({
@@ -84,14 +63,12 @@ export default function DesignPortfolio() {
   };
 
   const handleFile = async (event) => {
-    setLoading(true);
     const file = event.target.files[0];
     if (file) {
       new Compressor(file, {
         quality: 0.5,
         success: async (result) => {
           await uploadImageFile(result, "primaryImage");
-          setLoading(false);
         },
       });
     }
@@ -119,6 +96,22 @@ export default function DesignPortfolio() {
     });
   };
 
+  const handleAccordionChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
+  const handleClick = (id) => {
+    rafRef.current = requestAnimationFrame(() => {
+      setExpanded(id);
+    });
+  };
+
+  useEffect(() => {
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
   return (
     <DrawerNavBar>
       <Grid container spacing={2}>
@@ -130,342 +123,44 @@ export default function DesignPortfolio() {
                 sx={{ height: "76vh", overflowY: "auto", overflowX: "hidden" }}
               >
                 <Stack spacing={2}>
-                  <CustomFrom label="Background Color">
-                    <FormGroup row sx={{ mx: 1 }}>
-                      <CusotmCheckbox
-                        checked={properties.backgroundColorType === "static"}
-                        onChange={() =>
-                          handleChange("static", "backgroundColorType")
-                        }
-                        label="Static"
-                      />
-                      <CusotmCheckbox
-                        checked={
-                          properties.backgroundColorType === "linear-gradient"
-                        }
-                        onChange={() =>
-                          handleChange("linear-gradient", "backgroundColorType")
-                        }
-                        label="Linear Gradient"
-                      />
-                      <CusotmCheckbox
-                        checked={
-                          properties.backgroundColorType === "radial-gradient"
-                        }
-                        onChange={() =>
-                          handleChange("radial-gradient", "backgroundColorType")
-                        }
-                        label="Radial Gradient"
-                      />
-                    </FormGroup>
-                  </CustomFrom>
-                  <CustomColorPicker
+                  <BackgroundColorCheckbox
+                    expanded={expanded}
+                    handleAccordionChange={handleAccordionChange}
                     properties={properties}
                     onChange={handleChange}
                   />
-                  <CustomFrom label="Text - Name">
-                    <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <FormatSize />
-                        <Slider
-                          value={properties.name.fontSize}
-                          max={100}
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleNestedChange(newValue, "name", "fontSize")
-                          }
-                        />
-                      </Stack>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <Opacity />
-                        <Slider
-                          value={properties.name.opacity}
-                          max={100}
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleNestedChange(newValue, "name", "opacity")
-                          }
-                        />
-                      </Stack>
-                      <MuiColorInput
-                        label="Text Color"
-                        fullWidth
-                        value={properties.name.color}
-                        onChange={(color) =>
-                          handleNestedChange(color, "name", "color")
-                        }
-                      />
-                    </Stack>
-                  </CustomFrom>
-                  <CustomFrom label="Text - Summary">
-                    <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <FormatSize />
-                        <Slider
-                          value={properties.summary.fontSize}
-                          max={100}
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleNestedChange(newValue, "summary", "fontSize")
-                          }
-                        />
-                      </Stack>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <Opacity />
-                        <Slider
-                          value={properties.summary.opacity}
-                          max={100}
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleNestedChange(newValue, "summary", "opacity")
-                          }
-                        />
-                      </Stack>
-                      <MuiColorInput
-                        label="Text Color"
-                        fullWidth
-                        value={properties.name.color}
-                        onChange={(color) =>
-                          handleNestedChange(color, "summary", "color")
-                        }
-                      />
-                    </Stack>
-                  </CustomFrom>
-                  <CustomFrom label="Portfolio Image">
-                    <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <Opacity />
-                        <Slider
-                          value={properties.primaryImage.opacity}
-                          max={100}
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleImageProperties(newValue, "opacity")
-                          }
-                        />
-                      </Stack>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <Circle />
-                        <Slider
-                          value={properties.primaryImage.borderRadius}
-                          max={
-                            Math.min(
-                              properties.primaryImage.dimensions.width,
-                              properties.primaryImage.dimensions.height
-                            ) / 2
-                          }
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleImageProperties(newValue, "borderRadius")
-                          }
-                        />
-                      </Stack>
-                      <Stack spacing={2} direction="row" alignItems="center">
-                        <LineWeight />
-                        <Slider
-                          value={properties.primaryImage.borderThickness}
-                          max={30}
-                          min={0}
-                          onChange={(event, newValue) =>
-                            handleImageProperties(newValue, "borderThickness")
-                          }
-                        />
-                      </Stack>
-                      <Stack direction="row" spacing={2}>
-                        <FormControl fullWidth>
-                          <InputLabel id="borderType">Border Type</InputLabel>
-                          <Select
-                            labelId="borderType"
-                            id="borderTypeSelect"
-                            value={properties.primaryImage.borderType}
-                            label="Border Type"
-                            onChange={(event) =>
-                              handleImageProperties(
-                                event.target.value,
-                                "borderType"
-                              )
-                            }
-                          >
-                            {borderTypes.map((type, index) => (
-                              <MenuItem key={index} value={type.value}>
-                                {type.label}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                        <MuiColorInput
-                          label="Border Color"
-                          fullWidth
-                          value={properties.primaryImage.borderColor}
-                          onChange={(color) =>
-                            handleImageProperties(color, "borderColor")
-                          }
-                        />
-                      </Stack>
 
-                      <Button variant="outlined" component="label">
-                        Change Primary Image
-                        <input
-                          type="file"
-                          hidden
-                          accept=".jpg, .png, .jpeg"
-                          onChange={handleFile}
-                        />
-                      </Button>
-                    </Stack>
-                  </CustomFrom>
+                  <NameDesign
+                    expanded={expanded}
+                    handleAccordionChange={handleAccordionChange}
+                    properties={properties}
+                    onChange={handleNestedChange}
+                  />
+                  <SummaryDesign
+                    expanded={expanded}
+                    handleAccordionChange={handleAccordionChange}
+                    properties={properties}
+                    onChange={handleNestedChange}
+                  />
+                  <PrimaryImageDesign
+                    expanded={expanded}
+                    handleAccordionChange={handleAccordionChange}
+                    properties={properties}
+                    onChange={handleImageProperties}
+                    onFileChange={handleFile}
+                  />
+
                   {firestoreUser.portfolio.workExperience.map((exp, index) => (
-                    <CustomFrom
+                    <WorkExperienceDesign
                       key={index}
-                      label={`Work Exp Card - ${index + 1}`}
-                    >
-                      <Stack spacing={2} sx={{ mt: 2 }}>
-                        <CustomFrom label="Background Color">
-                          <FormGroup row sx={{ mx: 1 }}>
-                            <CusotmCheckbox
-                              checked={
-                                properties[exp.id].backgroundColorType ===
-                                "static"
-                              }
-                              onChange={() =>
-                                handleNestedChange(
-                                  "static",
-                                  exp.id,
-                                  "backgroundColorType"
-                                )
-                              }
-                              label="Static"
-                            />
-                            <CusotmCheckbox
-                              checked={
-                                properties[exp.id].backgroundColorType ===
-                                "linear-gradient"
-                              }
-                              onChange={() =>
-                                handleNestedChange(
-                                  "linear-gradient",
-                                  exp.id,
-                                  "backgroundColorType"
-                                )
-                              }
-                              label="Linear Gradient"
-                            />
-                            <CusotmCheckbox
-                              checked={
-                                properties[exp.id].backgroundColorType ===
-                                "radial-gradient"
-                              }
-                              onChange={() =>
-                                handleNestedChange(
-                                  "radial-gradient",
-                                  exp.id,
-                                  "backgroundColorType"
-                                )
-                              }
-                              label="Radial Gradient"
-                            />
-                          </FormGroup>
-                        </CustomFrom>
-                        <CustomColorPicker
-                          properties={properties[exp.id]}
-                          onChange={(value, name) =>
-                            handleNestedChange(value, exp.id, name)
-                          }
-                        />
-                        <CustomFrom label="Text - Company Name">
-                          <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
-                            <Stack
-                              spacing={2}
-                              direction="row"
-                              alignItems="center"
-                            >
-                              <FormatSize />
-                              <Slider
-                                value={properties[exp.id].titleFontSize}
-                                max={100}
-                                min={0}
-                                onChange={(event, newValue) =>
-                                  handleNestedChange(
-                                    newValue,
-                                    exp.id,
-                                    "titleFontSize"
-                                  )
-                                }
-                              />
-                            </Stack>
-                            <MuiColorInput
-                              label="Text Color"
-                              fullWidth
-                              value={properties[exp.id].titleTextColor}
-                              onChange={(color) =>
-                                handleNestedChange(
-                                  color,
-                                  exp.id,
-                                  "titleTextColor"
-                                )
-                              }
-                            />
-                          </Stack>
-                        </CustomFrom>
-                        <CustomFrom label="Card Opacity & Shape">
-                          <Stack sx={{ mt: 2, mx: 1 }} spacing={2}>
-                            <Stack
-                              spacing={2}
-                              direction="row"
-                              alignItems="center"
-                            >
-                              <Opacity />
-                              <Slider
-                                value={properties[exp.id].opacity}
-                                max={100}
-                                min={0}
-                                onChange={(event, newValue) =>
-                                  handleNestedChange(
-                                    newValue,
-                                    exp.id,
-                                    "opacity"
-                                  )
-                                }
-                              />
-                            </Stack>
-                            <Stack
-                              spacing={2}
-                              direction="row"
-                              alignItems="center"
-                            >
-                              <Circle />
-                              <Slider
-                                value={properties[exp.id].borderRadius}
-                                max={
-                                  Math.min(
-                                    properties[exp.id].dimensions.width,
-                                    properties[exp.id].dimensions.height
-                                  ) / 2
-                                }
-                                min={0}
-                                onChange={(event, newValue) =>
-                                  handleNestedChange(
-                                    newValue,
-                                    exp.id,
-                                    "borderRadius"
-                                  )
-                                }
-                              />
-                            </Stack>
-
-                            <Button variant="outlined" component="label">
-                              Add Company Image
-                              <input
-                                type="file"
-                                hidden
-                                accept=".jpg, .png, .jpeg"
-                                onChange={handleFile}
-                              />
-                            </Button>
-                          </Stack>
-                        </CustomFrom>
-                      </Stack>
-                    </CustomFrom>
+                      exp={exp}
+                      index={index}
+                      expanded={expanded}
+                      handleAccordionChange={handleAccordionChange}
+                      properties={properties[exp.id]}
+                      onChange={handleNestedChange}
+                      onFileChange={handleFile}
+                    />
                   ))}
                 </Stack>
               </Box>
@@ -479,17 +174,14 @@ export default function DesignPortfolio() {
                 <Add />
               </IconButton>
             </Stack>
-
-            <Card
-              // className="customizeCard"
-              sx={{ width: 1, backgroundColor: "white" }}
-            >
+            <Card sx={{ width: 1, backgroundColor: "white" }}>
               <CardContent>
                 {!loading ? (
                   <DesignedPage
                     properties={properties}
                     onResize={handleResize}
                     onDrag={handlePosition}
+                    onClick={handleClick}
                   />
                 ) : (
                   <CircularProgress />

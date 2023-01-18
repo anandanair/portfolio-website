@@ -29,7 +29,7 @@ export default function CustomDraggableResizable(props) {
   };
 
   const imageStyleProps = {
-    background: `url(${props.imageURL})`,
+    backgroundImage: `url(${props.imageURL})`,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     borderRadius: `${props.imageProperties.borderRadius}px`,
@@ -128,16 +128,17 @@ export default function CustomDraggableResizable(props) {
       )}
       <Draggable
         nodeRef={nodeRef}
-        // bounds="parent"
         bounds={bounds}
         onStart={handleDragStart}
         onStop={handleDragStop}
         onDrag={handleDrag}
         position={props.position}
         grid={[5, 5]}
+        disabled={props.editable}
       >
         <Box
           ref={nodeRef}
+          onClick={props.onClick}
           sx={{
             height: props.dimensions.height + "px",
             width: props.dimensions.width + "px",
