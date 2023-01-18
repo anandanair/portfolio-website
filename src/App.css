@@ -440,4 +440,10 @@
   border-left: 1px dotted #ccc;
 }
 
-
+.designTextarea{
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background-color:transparent;
+  font-size: 16px;
+}

@@ -128,7 +128,6 @@ export default function CustomDraggableResizable(props) {
       )}
       <Draggable
         nodeRef={nodeRef}
-        // bounds="parent"
         bounds={bounds}
         onStart={handleDragStart}
         onStop={handleDragStop}
@@ -138,6 +137,7 @@ export default function CustomDraggableResizable(props) {
       >
         <Box
           ref={nodeRef}
+          onClick={props.onClick}
           sx={{
             height: props.dimensions.height + "px",
             width: props.dimensions.width + "px",

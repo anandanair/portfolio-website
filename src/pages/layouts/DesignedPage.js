@@ -1,4 +1,4 @@
-import { Box, Card, CardContent } from "@mui/material";
+import { Box, Card, CardContent, TextField } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import CustomDraggableResizable from "../../components/design/CustomDraggableResizable";
@@ -11,6 +11,9 @@ export default function DesignedPage(props) {
   const { defaultPhotoURL } = useStorage();
   const boxRef = useRef();
   const nameRef = useRef();
+  const [clicks, setClicks] = useState(0);
+  const [editable, setEditable] = useState("");
+  const [lastClick, setLastClick] = useState(0);
   const [bounds, setBounds] = useState({
     top: 0,
     left: 0,
@@ -26,6 +29,17 @@ export default function DesignedPage(props) {
   const handleDragStop = (data, name) => {
     props.onDrag(data.x, data.y, name);
   };
+
+  function handleClick(id) {
+    const currentClick = Date.now();
+    if (currentClick - lastClick < 300) {
+      setEditable(id);
+    } else {
+      setClicks(clicks + 1);
+      props.onClick(id);
+    }
+    setLastClick(currentClick);
+  }
 
   useEffect(() => {
     const boxWidth = boxRef.current.offsetWidth;
@@ -64,6 +78,7 @@ export default function DesignedPage(props) {
         imageURL={firestoreUser.portfolio.primaryPhotoURL || defaultPhotoURL}
         onResizeStop={handleResizeStop}
         boxRef={boxRef}
+        onClick={() => handleClick("primaryImageDesign")}
       />
       <Draggable
         grid={[5, 5]}
@@ -83,6 +98,7 @@ export default function DesignedPage(props) {
             cursor: "pointer",
           }}
           ref={nameRef}
+          onClick={() => handleClick("nameDesign")}
         >
           I'm {firestoreUser.portfolio.fullName}
         </div>
@@ -97,6 +113,7 @@ export default function DesignedPage(props) {
         imageURL=""
         onResizeStop={handleResizeStop}
         boxRef={boxRef}
+        onClick={() => handleClick("summaryDesign")}
       >
         <div
           style={{
@@ -107,7 +124,18 @@ export default function DesignedPage(props) {
             textAlign: "left",
           }}
         >
-          {firestoreUser.portfolio.summary}
+          {editable === "summaryDesign" ? (
+            <textarea
+              className="designTextarea"
+              defaultValue={firestoreUser.portfolio.summary}
+              style={{
+                height: properties.summary.dimensions.height,
+                width: properties.summary.dimensions.width,
+              }}
+            />
+          ) : (
+            firestoreUser.portfolio.summary
+          )}
         </div>
       </CustomDraggableResizable>
       {firestoreUser.portfolio.workExperience.map((exp, index) => (
@@ -122,6 +150,7 @@ export default function DesignedPage(props) {
           onResizeStop={handleResizeStop}
           key={index}
           boxRef={boxRef}
+          onClick={() => handleClick(exp.id)}
         >
           <Card
             sx={{

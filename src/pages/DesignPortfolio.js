@@ -8,7 +8,7 @@ import {
   IconButton,
   Stack,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import DrawerNavBar from "../components/DrawerNavBar";
 import DesignedPage from "./layouts/DesignedPage";
 import { useStorage } from "../contexts/StorageContext";
@@ -27,6 +27,7 @@ export default function DesignPortfolio() {
   const { firestoreUser } = useFirestore();
   const [properties, setProperties] = useState(firestoreUser.design);
   const [expanded, setExpanded] = useState(false);
+  const rafRef = useRef(null);
 
   const handleChange = (value, name) => {
     setProperties({
@@ -101,6 +102,18 @@ export default function DesignPortfolio() {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const handleClick = (id) => {
+    rafRef.current = requestAnimationFrame(() => {
+      setExpanded(id);
+    });
+  };
+
+  useEffect(() => {
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
   return (
     <DrawerNavBar>
       <Grid container spacing={2}>
@@ -170,6 +183,7 @@ export default function DesignPortfolio() {
                     properties={properties}
                     onResize={handleResize}
                     onDrag={handlePosition}
+                    onClick={handleClick}
                   />
                 ) : (
                   <CircularProgress />
