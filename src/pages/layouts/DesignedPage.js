@@ -1,6 +1,7 @@
 import { Box, Card, CardContent, TextField } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
+import tinycolor from "tinycolor2";
 import CustomDraggableResizable from "../../components/design/CustomDraggableResizable";
 import { useFirestore } from "../../contexts/FirestoreContext";
 import { useStorage } from "../../contexts/StorageContext";
@@ -131,6 +132,9 @@ export default function DesignedPage(props) {
               style={{
                 height: properties.summary.dimensions.height,
                 width: properties.summary.dimensions.width,
+                color: tinycolor(properties.backgroundColor1).isLight()
+                  ? "black"
+                  : "white",
               }}
             />
           ) : (
