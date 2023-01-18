@@ -63,10 +63,17 @@ export function FirestoreProvider({ children }) {
   }
 
   async function getUser() {
-    const docRef = await getDoc(doc(firestore, "users", currentUser.uid));
-    setFirestoreUser(docRef.data());
-    setLoading(false);
-    return docRef.data();
+    const unsubscribe = onSnapshot(
+      doc(firestore, "users", currentUser.uid),
+      (doc) => {
+        setFirestoreUser(doc.data());
+        setLoading(false);
+        return doc.data();
+      }
+    );
+    // const docRef = await getDoc(doc(firestore, "users", currentUser.uid));
+    // setFirestoreUser(docRef.data());
+    // setLoading(false);
   }
 
   async function updateTheme(user, currentTheme) {
@@ -152,7 +159,8 @@ export function FirestoreProvider({ children }) {
     await updateDoc(doc(firestore, "users", currentUser.uid), {
       portfolioDone: true,
     });
-    return await getUser();
+    return;
+    // return await getUser();
   }
 
   async function getSkills(searchText, stop) {
@@ -199,7 +207,8 @@ export function FirestoreProvider({ children }) {
     await updateDoc(docRef, {
       [`portfolio.${name}`]: value,
     });
-    return await getUser();
+    return;
+    // return await getUser();
   }
 
   useEffect(() => {
