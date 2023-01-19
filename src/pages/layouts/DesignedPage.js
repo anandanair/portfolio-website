@@ -1,6 +1,5 @@
 import { Box, Card, CardContent } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
-import Draggable from "react-draggable";
+import React, { useRef, useState } from "react";
 import CustomTextArea from "../../components/CustomTextArea";
 import CustomDraggableResizable from "../../components/design/CustomDraggableResizable";
 import { useFirestore } from "../../contexts/FirestoreContext";
@@ -11,13 +10,7 @@ export default function DesignedPage(props) {
   const { firestoreUser, updatePortfolio } = useFirestore();
   const { defaultPhotoURL } = useStorage();
   const boxRef = useRef();
-  const nameRef = useRef();
   const [editable, setEditable] = useState("");
-  const [bounds, setBounds] = useState({
-    top: 0,
-    left: 0,
-    right: 0,
-  });
 
   const handleResizeStop = (data, name) => {
     const newWdith = properties[name].dimensions.width + data.width;

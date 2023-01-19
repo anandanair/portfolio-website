@@ -95,16 +95,14 @@ export default function CustomDraggableResizable(props) {
           right: parentWidth - childWidth,
         };
       });
-      setEditIconTop(props.position.y);
-      setEditIconLeft(props.position.x + props.dimensions.width);
     }
   }, [childWidth, parentWidth]);
 
-  //calls whenever position of element changes
+  //calls whenever position or width of element changes
   useEffect(() => {
     setEditIconTop(props.position.y);
     setEditIconLeft(props.position.x + props.dimensions.width);
-  }, [props.position]);
+  }, [props.position.y, props.position.x, props.dimensions.width]);
 
   return (
     <React.Fragment>
