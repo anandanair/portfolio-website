@@ -73,8 +73,6 @@ export default function DesignPortfolio() {
   };
 
   const handleImageProperties = (value, name) => {
-    console.log(value);
-
     setProperties({
       ...properties,
       primaryImage: {

@@ -43,7 +43,7 @@ export default function DesignedPage(props) {
   }
 
   async function handleDone(value, name) {
-    await updatePortfolio(value, name);
+    updatePortfolio(value, name);
     setEditable("");
   }
 
