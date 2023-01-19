@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { firestore } from "../firebase";
 import {
   setDoc,
@@ -26,8 +26,9 @@ export function FirestoreProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const { currentUser, verifyEmail } = useAuth();
   const [firestoreUser, setFirestoreUser] = useState();
-  const { setTheme } = useLocalTheme();
+  const { setTheme, localTheme } = useLocalTheme();
   const [skills, setSkills] = useState([]);
+  const userUnsubcribe = useRef(null);
 
   async function setUser(user) {
     const userObj = {
@@ -42,19 +43,11 @@ export function FirestoreProvider({ children }) {
     };
     try {
       await setDoc(doc(firestore, "users", user.uid), userObj);
-      setFirestoreUser(userObj);
-      setLoading(false);
+      getUser();
       console.log("Document written with ID: ", user.uid);
     } catch (error) {
       console.error("Error adding document: ", error);
     }
-  }
-
-  async function updateEmailVerification(user) {
-    await updateDoc(doc(firestore, "users", user.uid), {
-      emailVerificationSendTime: serverTimestamp(),
-    });
-    return;
   }
 
   async function getVerifyEmailSendTime(user) {
@@ -62,8 +55,8 @@ export function FirestoreProvider({ children }) {
     return docRef.data().emailVerificationSendTime;
   }
 
-  async function getUser() {
-    const unsubscribe = onSnapshot(
+  function getUser() {
+    userUnsubcribe.current = onSnapshot(
       doc(firestore, "users", currentUser.uid),
       (doc) => {
         setFirestoreUser(doc.data());
@@ -71,16 +64,6 @@ export function FirestoreProvider({ children }) {
         return doc.data();
       }
     );
-    // const docRef = await getDoc(doc(firestore, "users", currentUser.uid));
-    // setFirestoreUser(docRef.data());
-    // setLoading(false);
-  }
-
-  async function updateTheme(user, currentTheme) {
-    await updateDoc(doc(firestore, "users", user.uid), {
-      theme: currentTheme,
-    });
-    return;
   }
 
   async function createPortfolio(portfolio) {
@@ -88,11 +71,9 @@ export function FirestoreProvider({ children }) {
     let newObject = Object.assign({}, portfolio);
     newObject.createdAt = serverTimestamp();
     newObject.primaryPhotoURL = "";
-    await updateDoc(doc(firestore, "users", currentUser.uid), {
-      portfolio: newObject,
-    });
+    await updateUser("portfolio", newObject);
     await createPortfolioDesign(newObject);
-    return await updatePortfolioDone();
+    return await updateUser("portfolioDone", true);
   }
 
   async function createPortfolioDesign(portfolio) {
@@ -114,12 +95,15 @@ export function FirestoreProvider({ children }) {
       borderThickness: 5,
       borderType: "solid",
       borderColor: "white",
+      zIndex: 10,
     };
     newObject.name = {
       fontSize: 72,
       position: { x: 415, y: 150 },
+      dimensions: { width: 750, height: 120 },
       opacity: 100,
       color: "white",
+      zIndex: 10,
     };
     if (portfolio.summary !== "") {
       newObject.summary = {
@@ -128,8 +112,24 @@ export function FirestoreProvider({ children }) {
         dimensions: { width: 700, height: 150 },
         opacity: 100,
         color: "white",
+        zIndex: 10,
       };
     }
+
+    for (let index in portfolio.education) {
+      const list = ["school", "field", "description", "duration"];
+      list.forEach((name, i) => {
+        newObject[`${portfolio.education[index].id}-${name}`] = {
+          fontSize: 20,
+          position: { x: 415, y: 245 },
+          dimensions: { width: 700, height: 150 },
+          opacity: 100,
+          color: "white",
+          zIndex: 10,
+        };
+      });
+    }
+
     for (let index in portfolio.workExperience) {
       newObject[portfolio.workExperience[index].id] = {
         titleFontSize: 24,
@@ -148,19 +148,17 @@ export function FirestoreProvider({ children }) {
         colorXAxis: 0,
         colorYAxis: 0,
         borderRadius: 20,
+        zIndex: 10,
       };
     }
-    await updateDoc(doc(firestore, "users", currentUser.uid), {
-      design: newObject,
-    });
+    updateUser("design", newObject);
+    return newObject;
   }
 
-  async function updatePortfolioDone() {
+  async function updateUser(name, value) {
     await updateDoc(doc(firestore, "users", currentUser.uid), {
-      portfolioDone: true,
+      [name]: value,
     });
-    return;
-    // return await getUser();
   }
 
   async function getSkills(searchText, stop) {
@@ -203,12 +201,8 @@ export function FirestoreProvider({ children }) {
   }
 
   async function updatePortfolio(value, name) {
-    const docRef = doc(firestore, "users", currentUser.uid);
-    await updateDoc(docRef, {
-      [`portfolio.${name}`]: value,
-    });
+    await updateUser(`portfolio.${name}`, value);
     return;
-    // return await getUser();
   }
 
   useEffect(() => {
@@ -221,36 +215,51 @@ export function FirestoreProvider({ children }) {
           await setUser(currentUser);
           if (!currentUser.emailVerified) {
             await verifyEmail();
-            await updateEmailVerification(currentUser);
+            await updateUser("emailVerificationSendTime", serverTimestamp());
           }
         } else {
           //When user is already logging in
-          const fUser = await getUser();
-          setTheme(fUser.theme);
+          getUser();
         }
       })();
     } else {
+      //Calls only if user is not logged in
       setLoading(false);
     }
 
+    // this now gets called when the component unmounts
     return () => {
-      // this now gets called when the component unmounts
+      if (userUnsubcribe.current) {
+        userUnsubcribe.current();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
 
+  //Runs whenever User data in firestore changes
+  useEffect(() => {
+    if (firestoreUser) {
+      if (firestoreUser.theme !== localTheme) {
+        setTheme(firestoreUser.theme);
+      }
+    }
+
+    return () => {
+      // second
+    };
+  }, [firestoreUser, localTheme, setTheme]);
+
   const value = {
-    updateEmailVerification,
     getVerifyEmailSendTime,
-    updateTheme,
     firestoreUser,
     getSkills,
     skills,
     setSkills,
     addSkill,
     createPortfolio,
-    updatePortfolioDone,
     updatePortfolio,
+    updateUser,
+    createPortfolioDesign,
   };
   return (
     <FirestoreContext.Provider value={value}>

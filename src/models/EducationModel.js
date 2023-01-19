@@ -1,5 +1,6 @@
 export class EducationModel {
-  constructor(schoolName, field, startDate, endDate, description) {
+  constructor(id, schoolName, field, startDate, endDate, description) {
+    this.id = id;
     this.schoolName = schoolName;
     this.field = field;
     this.startDate = startDate;

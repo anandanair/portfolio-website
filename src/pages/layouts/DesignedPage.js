@@ -1,6 +1,5 @@
 import { Box, Card, CardContent } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
-import Draggable from "react-draggable";
+import React, { useRef, useState } from "react";
 import CustomTextArea from "../../components/CustomTextArea";
 import CustomDraggableResizable from "../../components/design/CustomDraggableResizable";
 import { useFirestore } from "../../contexts/FirestoreContext";
@@ -11,15 +10,7 @@ export default function DesignedPage(props) {
   const { firestoreUser, updatePortfolio } = useFirestore();
   const { defaultPhotoURL } = useStorage();
   const boxRef = useRef();
-  const nameRef = useRef();
-  const [clicks, setClicks] = useState(0);
   const [editable, setEditable] = useState("");
-  const [lastClick, setLastClick] = useState(0);
-  const [bounds, setBounds] = useState({
-    top: 0,
-    left: 0,
-    right: 0,
-  });
 
   const handleResizeStop = (data, name) => {
     const newWdith = properties[name].dimensions.width + data.width;
@@ -32,28 +23,14 @@ export default function DesignedPage(props) {
   };
 
   function handleClick(id) {
-    const currentClick = Date.now();
-    if (currentClick - lastClick < 300) {
-      setEditable(id);
-    } else {
-      setClicks(clicks + 1);
-      props.onClick(id);
-    }
-    setLastClick(currentClick);
+    setEditable(id);
+    props.onClick(id);
   }
 
   async function handleDone(value, name) {
-    await updatePortfolio(value, name);
+    updatePortfolio(value, name);
     setEditable("");
   }
-
-  useEffect(() => {
-    const boxWidth = boxRef.current.offsetWidth;
-    const nameWidth = nameRef.current.offsetWidth;
-    setBounds((prevState) => {
-      return { ...prevState, right: boxWidth - nameWidth };
-    });
-  }, []);
 
   return (
     <Box
@@ -74,57 +51,71 @@ export default function DesignedPage(props) {
             : `${properties.backgroundColorType}(at ${properties.colorXAxis}% ${properties.colorYAxis}%, ${properties.backgroundColor1}, ${properties.backgroundColor2})`,
       }}
     >
+      {/* Draggable and Resizable Image Component */}
       <CustomDraggableResizable
         component="image"
         id="primaryImage"
         onDragStop={handleDragStop}
-        position={properties.primaryImage.position}
-        dimensions={properties.primaryImage.dimensions}
-        imageProperties={properties.primaryImage}
+        properties={properties.primaryImage}
         imageURL={firestoreUser.portfolio.primaryPhotoURL || defaultPhotoURL}
+        dynamicColor={properties.backgroundColor1}
         onResizeStop={handleResizeStop}
         boxRef={boxRef}
-        onClick={() => {
-          handleClick("primaryImageDesign");
-        }}
+        onClick={handleClick}
+        onRightClick={props.onUpdate}
       />
-      <Draggable
-        grid={[5, 5]}
-        nodeRef={nameRef}
-        position={properties.name.position}
-        onStop={(event, data) => handleDragStop(data, "name")}
-        bounds={bounds}
+
+      {/* Draggable Name Component */}
+      <CustomDraggableResizable
+        component="text"
+        id="name"
+        onDragStop={handleDragStop}
+        properties={properties.name}
+        dynamicColor={properties.backgroundColor1}
+        onResizeStop={handleResizeStop}
+        boxRef={boxRef}
+        onClick={handleClick}
+        editable={editable === "name"}
+        onRightClick={props.onUpdate}
       >
-        <div
-          className="textContent"
-          style={{
-            fontFamily: properties.fontFamily,
-            color: properties.name.color,
-            fontSize: properties.name.fontSize,
-            position: "absolute",
-            opacity: properties.name.opacity / 100,
-            cursor: "pointer",
-          }}
-          ref={nameRef}
-          onClick={() => handleClick("nameDesign")}
-        >
-          {firestoreUser.portfolio.fullName}
-        </div>
-      </Draggable>
+        {editable === "name" ? (
+          <CustomTextArea
+            value={firestoreUser.portfolio.fullName}
+            height={properties.name.dimensions.height}
+            width={properties.name.dimensions.width}
+            bgColor={properties.backgroundColor1}
+            fontSize={properties.name.fontSize}
+            onDone={(value) => handleDone(value, "fullName")}
+          />
+        ) : (
+          <div
+            style={{
+              fontFamily: properties.fontFamily,
+              color: properties.name.color,
+              fontSize: properties.name.fontSize,
+              opacity: properties.name.opacity / 100,
+              textAlign: "left",
+            }}
+          >
+            {firestoreUser.portfolio.fullName}
+          </div>
+        )}
+      </CustomDraggableResizable>
+
+      {/* Draggable and Resizable Summary Component */}
       <CustomDraggableResizable
         component="text"
         id="summary"
         onDragStop={handleDragStop}
-        position={properties.summary.position}
-        dimensions={properties.summary.dimensions}
-        imageProperties={{}}
-        imageURL=""
+        properties={properties.summary}
+        dynamicColor={properties.backgroundColor1}
         onResizeStop={handleResizeStop}
         boxRef={boxRef}
-        onClick={() => handleClick("summaryDesign")}
-        editable={editable === "summaryDesign"}
+        onClick={handleClick}
+        editable={editable === "summary"}
+        onRightClick={props.onUpdate}
       >
-        {editable === "summaryDesign" ? (
+        {editable === "summary" ? (
           <CustomTextArea
             value={firestoreUser.portfolio.summary}
             height={properties.summary.dimensions.height}
@@ -147,19 +138,20 @@ export default function DesignedPage(props) {
           </div>
         )}
       </CustomDraggableResizable>
+
+      {/* Loop - Draggable and Resizable Work Experience Component */}
       {firestoreUser.portfolio.workExperience.map((exp, index) => (
         <CustomDraggableResizable
           component="card"
           id={exp.id}
           onDragStop={handleDragStop}
-          position={properties[exp.id].position}
-          dimensions={properties[exp.id].dimensions}
-          imageProperties={{}}
-          imageURL=""
+          properties={properties[exp.id]}
+          dynamicColor={properties.backgroundColor1}
           onResizeStop={handleResizeStop}
           key={index}
           boxRef={boxRef}
-          onClick={() => handleClick(exp.id)}
+          onClick={handleClick}
+          onRightClick={props.onUpdate}
         >
           <Card
             sx={{

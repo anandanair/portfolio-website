@@ -1,13 +1,24 @@
-import { Box } from "@mui/material";
+import { Edit } from "@mui/icons-material";
+import { Box, IconButton } from "@mui/material";
 import { Resizable } from "re-resizable";
 import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
+import { useLocalTheme } from "../../contexts/ThemeContext";
+import ContextMenu from "../ContextMenu";
+
+const initialContextMenu = {
+  show: false,
+  x: 0,
+  y: 0,
+};
 
 export default function CustomDraggableResizable(props) {
+  const properties = props.properties;
   const nodeRef = useRef(null);
   const firstRun = useRef(true);
   const [parentWidth, setParentWidth] = useState(0);
   const [childWidth, setChildWidth] = useState(0);
+  const { getDynamicColor } = useLocalTheme();
   const [bounds, setBounds] = useState({
     left: 0,
     top: 0,
@@ -21,23 +32,31 @@ export default function CustomDraggableResizable(props) {
   const [lefLineTop, setLeftLineTop] = useState(0);
   const [topLineLeft, setTopLineLeft] = useState(0);
   const [rightLineLeft, setRightLineLeft] = useState(0);
+  const [editIconTop, setEditIconTop] = useState(properties.position.y);
+  const [editIconLeft, setEditIconLeft] = useState(
+    properties.position.x + properties.dimensions.width
+  );
 
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+  const [contextMenu, setContextMenu] = useState(initialContextMenu);
 
   const handleResizeStart = (event) => {
     event.stopPropagation();
+    setIsResizing(true);
   };
 
   const imageStyleProps = {
     backgroundImage: `url(${props.imageURL})`,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    borderRadius: `${props.imageProperties.borderRadius}px`,
-    opacity: props.imageProperties.opacity / 100,
-    border: `${props.imageProperties.borderThickness}px ${props.imageProperties.borderType} ${props.imageProperties.borderColor}`,
+    borderRadius: !isResizing && `${properties.borderRadius}px`,
+    opacity: properties.opacity / 100,
+    border: `${properties.borderThickness}px ${properties.borderType} ${properties.borderColor}`,
   };
 
   const handleResizeStop = (e, direction, ref, d) => {
+    setIsResizing(false);
     setChildWidth(childWidth + d.width);
     props.onResizeStop(d, `${props.id}`);
   };
@@ -55,14 +74,33 @@ export default function CustomDraggableResizable(props) {
     const left = data.x;
     const right = parentWidth - (data.x + childWidth);
     const top = data.y;
-    setLeftLineTop(top - 10 + props.dimensions.height / 2);
-    setTopLineLeft(left - 10 + props.dimensions.width / 2);
-    setRightLineLeft(left + props.dimensions.width);
+    setLeftLineTop(top - 10 + properties.dimensions.height / 2);
+    setTopLineLeft(left - 10 + properties.dimensions.width / 2);
+    setRightLineLeft(left + properties.dimensions.width);
     setSpacing({
       left: left,
       right: right,
       top: top,
     });
+  };
+
+  const handleRightClick = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const childComponent = nodeRef.current;
+    const { top, left } = childComponent.getBoundingClientRect();
+    const x = event.clientX - left;
+    const y = event.clientY - top;
+    setContextMenu({ show: true, x, y });
+  };
+
+  const handleRightClickSelection = (value, name) => {
+    props.onRightClick(value, props.id, name);
+    setContextMenu(initialContextMenu);
+  };
+
+  const contextMenuClose = () => {
+    setContextMenu(initialContextMenu);
   };
 
   //Call once on initialization
@@ -88,8 +126,18 @@ export default function CustomDraggableResizable(props) {
     }
   }, [childWidth, parentWidth]);
 
+  //calls whenever position or width of element changes
+  useEffect(() => {
+    setEditIconTop(properties.position.y);
+    setEditIconLeft(properties.position.x + properties.dimensions.width);
+  }, [
+    properties.position.y,
+    properties.position.x,
+    properties.dimensions.width,
+  ]);
+
   return (
-    <div>
+    <React.Fragment>
       {isDragging && (
         <React.Fragment>
           <div
@@ -126,29 +174,54 @@ export default function CustomDraggableResizable(props) {
           </div>
         </React.Fragment>
       )}
+      {!props.editable && !isDragging && !isResizing && (
+        <IconButton
+          onClick={() => props.onClick(props.id)}
+          style={{
+            position: "absolute",
+            left: `${editIconLeft}px`,
+            top: `${editIconTop}px`,
+          }}
+        >
+          <Edit style={{ color: getDynamicColor(props.dynamicColor) }} />
+        </IconButton>
+      )}
       <Draggable
         nodeRef={nodeRef}
         bounds={bounds}
         onStart={handleDragStart}
         onStop={handleDragStop}
         onDrag={handleDrag}
-        position={props.position}
+        position={properties.position}
         grid={[5, 5]}
         disabled={props.editable}
       >
         <Box
+          onContextMenu={handleRightClick}
+          className={
+            props.component === "image" && !isResizing && "textContent"
+          }
           ref={nodeRef}
-          onClick={props.onClick}
           sx={{
-            height: props.dimensions.height + "px",
-            width: props.dimensions.width + "px",
+            height: properties.dimensions.height + "px",
+            width: properties.dimensions.width + "px",
             cursor: "pointer",
             position: "absolute",
+            zIndex: properties.zIndex,
           }}
         >
+          {contextMenu.show && (
+            <ContextMenu
+              x={contextMenu.x}
+              y={contextMenu.y}
+              closeContextMenu={contextMenuClose}
+              properties={properties}
+              onClick={handleRightClickSelection}
+            />
+          )}
           <Resizable
             className="textContent"
-            size={props.dimensions}
+            size={properties.dimensions}
             style={props.component === "image" && imageStyleProps}
             onResizeStop={handleResizeStop}
             onResizeStart={handleResizeStart}
@@ -157,6 +230,6 @@ export default function CustomDraggableResizable(props) {
           </Resizable>
         </Box>
       </Draggable>
-    </div>
+    </React.Fragment>
   );
 }

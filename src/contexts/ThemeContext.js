@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
+import tinycolor from "tinycolor2";
 
 const ThemeContext = React.createContext();
 
@@ -12,11 +13,6 @@ export function LocalThemeProvider({ children }) {
   const [width, setWidth] = useState(window.innerWidth);
   const [isSmallSize, setIsSmallSize] = useState(false);
 
-  function toggleTheme() {
-    setLocalTheme(localTheme === "light" ? "dark" : "light");
-    return localTheme;
-  }
-
   function setTheme(theme) {
     setLocalTheme(theme);
   }
@@ -29,6 +25,11 @@ export function LocalThemeProvider({ children }) {
     return setIsSmallSize(false);
   }
 
+  function getDynamicColor(color) {
+    const newColor = tinycolor(color).isLight() ? "black" : "white";
+    return newColor;
+  }
+
   //Run whenever width changes
   useEffect(() => {
     window.addEventListener("resize", handleWindowSizeChange);
@@ -38,13 +39,13 @@ export function LocalThemeProvider({ children }) {
   }, [width]);
 
   const value = {
-    toggleTheme,
     localTheme,
     setTheme,
     viewportHeight,
     width,
     isSmallSize,
-    handleWindowSizeChange
+    handleWindowSizeChange,
+    getDynamicColor,
   };
 
   return (

@@ -19,12 +19,13 @@ import {
 import { useLocalTheme } from "../../contexts/ThemeContext";
 import { Add } from "@mui/icons-material";
 import { Timestamp } from "firebase/firestore";
+import { v4 as uuidv4 } from "uuid";
 
 export default function EducationForm(props) {
   const { isSmallSize, localTheme } = useLocalTheme();
   const color = localTheme === "dark" ? "#F7FBFC" : "#0A2647";
   const [education, setEducation] = useState(
-    new EducationModel("", "", dayjs().subtract(1, "year"), dayjs(), "")
+    new EducationModel("", "", "", dayjs().subtract(1, "year"), dayjs(), "")
   );
   const [educationError, setEducationError] = useState(
     new EducationErrorModel("", "", "", "")
@@ -72,9 +73,10 @@ export default function EducationForm(props) {
       let newObject = Object.assign({}, education);
       newObject.startDate = Timestamp.fromDate(newObject.startDate.toDate());
       newObject.endDate = Timestamp.fromDate(newObject.endDate.toDate());
+      newObject.id = uuidv4();
       props.onObjectAdd(newObject, "education");
       setEducation(
-        new EducationModel("", "", dayjs().subtract(1, "year"), dayjs(), "")
+        new EducationModel("", "", "", dayjs().subtract(1, "year"), dayjs(), "")
       );
     }
   }

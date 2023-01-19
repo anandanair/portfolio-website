@@ -26,7 +26,7 @@ const borderTypes = [
 export default function PrimaryImageDesign(props) {
   return (
     <CustomAccordion
-      id="primaryImageDesign"
+      id="primaryImage"
       title="Primary Image"
       expanded={props.expanded}
       onChange={props.handleAccordionChange}

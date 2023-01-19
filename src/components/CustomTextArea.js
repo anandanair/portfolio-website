@@ -1,10 +1,11 @@
 import { Check } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import React, { useState } from "react";
-import tinycolor from "tinycolor2";
+import { useLocalTheme } from "../contexts/ThemeContext";
 
 export default function CustomTextArea(props) {
   const [value, setValue] = useState(props.value);
+  const { getDynamicColor } = useLocalTheme();
 
   const handleChane = (event) => {
     setValue(event.target.value);
@@ -18,7 +19,7 @@ export default function CustomTextArea(props) {
         style={{
           height: props.height,
           width: props.width,
-          color: tinycolor(props.bgColor).isLight() ? "black" : "white",
+          color: getDynamicColor(props.bgColor),
           fontSize: props.fontSize,
         }}
         onChange={handleChane}
@@ -29,7 +30,7 @@ export default function CustomTextArea(props) {
       >
         <Check
           style={{
-            color: tinycolor(props.bgColor).isLight() ? "black" : "white",
+            color: getDynamicColor(props.bgColor),
           }}
         />
       </IconButton>
