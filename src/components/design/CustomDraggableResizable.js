@@ -6,6 +6,7 @@ import Draggable from "react-draggable";
 import { useLocalTheme } from "../../contexts/ThemeContext";
 
 export default function CustomDraggableResizable(props) {
+  const properties = props.properties;
   const nodeRef = useRef(null);
   const firstRun = useRef(true);
   const [parentWidth, setParentWidth] = useState(0);
@@ -24,9 +25,9 @@ export default function CustomDraggableResizable(props) {
   const [lefLineTop, setLeftLineTop] = useState(0);
   const [topLineLeft, setTopLineLeft] = useState(0);
   const [rightLineLeft, setRightLineLeft] = useState(0);
-  const [editIconTop, setEditIconTop] = useState(props.position.y);
+  const [editIconTop, setEditIconTop] = useState(properties.position.y);
   const [editIconLeft, setEditIconLeft] = useState(
-    props.position.x + props.dimensions.width
+    properties.position.x + properties.dimensions.width
   );
 
   const [isDragging, setIsDragging] = useState(false);
@@ -41,9 +42,9 @@ export default function CustomDraggableResizable(props) {
     backgroundImage: `url(${props.imageURL})`,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    borderRadius: !isResizing && `${props.imageProperties.borderRadius}px`,
-    opacity: props.imageProperties.opacity / 100,
-    border: `${props.imageProperties.borderThickness}px ${props.imageProperties.borderType} ${props.imageProperties.borderColor}`,
+    borderRadius: !isResizing && `${properties.borderRadius}px`,
+    opacity: properties.opacity / 100,
+    border: `${properties.borderThickness}px ${properties.borderType} ${properties.borderColor}`,
   };
 
   const handleResizeStop = (e, direction, ref, d) => {
@@ -65,9 +66,9 @@ export default function CustomDraggableResizable(props) {
     const left = data.x;
     const right = parentWidth - (data.x + childWidth);
     const top = data.y;
-    setLeftLineTop(top - 10 + props.dimensions.height / 2);
-    setTopLineLeft(left - 10 + props.dimensions.width / 2);
-    setRightLineLeft(left + props.dimensions.width);
+    setLeftLineTop(top - 10 + properties.dimensions.height / 2);
+    setTopLineLeft(left - 10 + properties.dimensions.width / 2);
+    setRightLineLeft(left + properties.dimensions.width);
     setSpacing({
       left: left,
       right: right,
@@ -100,9 +101,13 @@ export default function CustomDraggableResizable(props) {
 
   //calls whenever position or width of element changes
   useEffect(() => {
-    setEditIconTop(props.position.y);
-    setEditIconLeft(props.position.x + props.dimensions.width);
-  }, [props.position.y, props.position.x, props.dimensions.width]);
+    setEditIconTop(properties.position.y);
+    setEditIconLeft(properties.position.x + properties.dimensions.width);
+  }, [
+    properties.position.y,
+    properties.position.x,
+    properties.dimensions.width,
+  ]);
 
   return (
     <React.Fragment>
@@ -160,7 +165,7 @@ export default function CustomDraggableResizable(props) {
         onStart={handleDragStart}
         onStop={handleDragStop}
         onDrag={handleDrag}
-        position={props.position}
+        position={properties.position}
         grid={[5, 5]}
         disabled={props.editable}
       >
@@ -170,15 +175,16 @@ export default function CustomDraggableResizable(props) {
           }
           ref={nodeRef}
           sx={{
-            height: props.dimensions.height + "px",
-            width: props.dimensions.width + "px",
+            height: properties.dimensions.height + "px",
+            width: properties.dimensions.width + "px",
             cursor: "pointer",
             position: "absolute",
+            zIndex: 1,
           }}
         >
           <Resizable
             className="textContent"
-            size={props.dimensions}
+            size={properties.dimensions}
             style={props.component === "image" && imageStyleProps}
             onResizeStop={handleResizeStop}
             onResizeStart={handleResizeStart}

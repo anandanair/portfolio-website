@@ -95,6 +95,7 @@ export function FirestoreProvider({ children }) {
       borderThickness: 5,
       borderType: "solid",
       borderColor: "white",
+      zIndex: 1,
     };
     newObject.name = {
       fontSize: 72,
@@ -102,6 +103,7 @@ export function FirestoreProvider({ children }) {
       dimensions: { width: 750, height: 120 },
       opacity: 100,
       color: "white",
+      zIndex: 1,
     };
     if (portfolio.summary !== "") {
       newObject.summary = {
@@ -110,6 +112,7 @@ export function FirestoreProvider({ children }) {
         dimensions: { width: 700, height: 150 },
         opacity: 100,
         color: "white",
+        zIndex: 1,
       };
     }
 
@@ -122,6 +125,7 @@ export function FirestoreProvider({ children }) {
           dimensions: { width: 700, height: 150 },
           opacity: 100,
           color: "white",
+          zIndex: 1,
         };
       });
     }
@@ -144,6 +148,7 @@ export function FirestoreProvider({ children }) {
         colorXAxis: 0,
         colorYAxis: 0,
         borderRadius: 20,
+        zIndex: 1,
       };
     }
     updateUser("design", newObject);
