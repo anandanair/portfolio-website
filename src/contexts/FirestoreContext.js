@@ -26,7 +26,7 @@ export function FirestoreProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const { currentUser, verifyEmail } = useAuth();
   const [firestoreUser, setFirestoreUser] = useState();
-  const { setTheme } = useLocalTheme();
+  const { setTheme, localTheme } = useLocalTheme();
   const [skills, setSkills] = useState([]);
 
   async function setUser(user) {
@@ -42,8 +42,7 @@ export function FirestoreProvider({ children }) {
     };
     try {
       await setDoc(doc(firestore, "users", user.uid), userObj);
-      setFirestoreUser(userObj);
-      setLoading(false);
+      getUser();
       console.log("Document written with ID: ", user.uid);
     } catch (error) {
       console.error("Error adding document: ", error);
@@ -62,7 +61,7 @@ export function FirestoreProvider({ children }) {
     return docRef.data().emailVerificationSendTime;
   }
 
-  async function getUser() {
+  function getUser() {
     const unsubscribe = onSnapshot(
       doc(firestore, "users", currentUser.uid),
       (doc) => {
@@ -71,9 +70,6 @@ export function FirestoreProvider({ children }) {
         return doc.data();
       }
     );
-    // const docRef = await getDoc(doc(firestore, "users", currentUser.uid));
-    // setFirestoreUser(docRef.data());
-    // setLoading(false);
   }
 
   async function updateTheme(user, currentTheme) {
@@ -160,7 +156,6 @@ export function FirestoreProvider({ children }) {
       portfolioDone: true,
     });
     return;
-    // return await getUser();
   }
 
   async function getSkills(searchText, stop) {
@@ -208,7 +203,6 @@ export function FirestoreProvider({ children }) {
       [`portfolio.${name}`]: value,
     });
     return;
-    // return await getUser();
   }
 
   useEffect(() => {
@@ -225,8 +219,7 @@ export function FirestoreProvider({ children }) {
           }
         } else {
           //When user is already logging in
-          const fUser = await getUser();
-          setTheme(fUser.theme);
+          getUser();
         }
       })();
     } else {
@@ -238,6 +231,19 @@ export function FirestoreProvider({ children }) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
+
+  //Runs whenever User data in firestore changes
+  useEffect(() => {
+    if (firestoreUser) {
+      if (firestoreUser.theme !== localTheme) {
+        setTheme(firestoreUser.theme);
+      }
+    }
+
+    return () => {
+      // second
+    };
+  }, [firestoreUser]);
 
   const value = {
     updateEmailVerification,
