@@ -62,6 +62,7 @@ export default function DesignedPage(props) {
         onResizeStop={handleResizeStop}
         boxRef={boxRef}
         onClick={handleClick}
+        onRightClick={props.onUpdate}
       />
 
       {/* Draggable Name Component */}
@@ -75,6 +76,7 @@ export default function DesignedPage(props) {
         boxRef={boxRef}
         onClick={handleClick}
         editable={editable === "name"}
+        onRightClick={props.onUpdate}
       >
         {editable === "name" ? (
           <CustomTextArea
@@ -111,6 +113,7 @@ export default function DesignedPage(props) {
         boxRef={boxRef}
         onClick={handleClick}
         editable={editable === "summary"}
+        onRightClick={props.onUpdate}
       >
         {editable === "summary" ? (
           <CustomTextArea
@@ -148,6 +151,7 @@ export default function DesignedPage(props) {
           key={index}
           boxRef={boxRef}
           onClick={handleClick}
+          onRightClick={props.onUpdate}
         >
           <Card
             sx={{

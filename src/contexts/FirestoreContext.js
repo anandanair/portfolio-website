@@ -95,7 +95,7 @@ export function FirestoreProvider({ children }) {
       borderThickness: 5,
       borderType: "solid",
       borderColor: "white",
-      zIndex: 1,
+      zIndex: 10,
     };
     newObject.name = {
       fontSize: 72,
@@ -103,7 +103,7 @@ export function FirestoreProvider({ children }) {
       dimensions: { width: 750, height: 120 },
       opacity: 100,
       color: "white",
-      zIndex: 1,
+      zIndex: 10,
     };
     if (portfolio.summary !== "") {
       newObject.summary = {
@@ -112,20 +112,20 @@ export function FirestoreProvider({ children }) {
         dimensions: { width: 700, height: 150 },
         opacity: 100,
         color: "white",
-        zIndex: 1,
+        zIndex: 10,
       };
     }
 
     for (let index in portfolio.education) {
       const list = ["school", "field", "description", "duration"];
-      list.forEach((name) => {
+      list.forEach((name, i) => {
         newObject[`${portfolio.education[index].id}-${name}`] = {
           fontSize: 20,
           position: { x: 415, y: 245 },
           dimensions: { width: 700, height: 150 },
           opacity: 100,
           color: "white",
-          zIndex: 1,
+          zIndex: 10,
         };
       });
     }
@@ -148,7 +148,7 @@ export function FirestoreProvider({ children }) {
         colorXAxis: 0,
         colorYAxis: 0,
         borderRadius: 20,
-        zIndex: 1,
+        zIndex: 10,
       };
     }
     updateUser("design", newObject);

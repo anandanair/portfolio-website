@@ -89,10 +89,14 @@ export default function CustomDraggableResizable(props) {
     event.preventDefault();
     const childComponent = nodeRef.current;
     const { top, left } = childComponent.getBoundingClientRect();
-    console.log(top, left);
     const x = event.clientX - left;
     const y = event.clientY - top;
     setContextMenu({ show: true, x, y });
+  };
+
+  const handleRightClickSelection = (value, name) => {
+    props.onRightClick(value, props.id, name);
+    setContextMenu(initialContextMenu);
   };
 
   const contextMenuClose = () => {
@@ -203,7 +207,7 @@ export default function CustomDraggableResizable(props) {
             width: properties.dimensions.width + "px",
             cursor: "pointer",
             position: "absolute",
-            zIndex: 1,
+            zIndex: properties.zIndex,
           }}
         >
           {contextMenu.show && (
@@ -211,6 +215,8 @@ export default function CustomDraggableResizable(props) {
               x={contextMenu.x}
               y={contextMenu.y}
               closeContextMenu={contextMenuClose}
+              properties={properties}
+              onClick={handleRightClickSelection}
             />
           )}
           <Resizable

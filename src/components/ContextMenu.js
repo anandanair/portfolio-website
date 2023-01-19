@@ -11,13 +11,28 @@ import React, { useRef } from "react";
 import useOnClickOutside from "../utils/hooks/useOnClickOutside";
 
 const menuList = [
-  { icon: ArrowUpward, label: "Bring to Front" },
-  { icon: ArrowDownward, label: "Send to Back" },
+  { icon: ArrowUpward, label: "Bring to Front", name: "zIndex" },
+  { icon: ArrowDownward, label: "Send to Back", name: "zIndex" },
 ];
 
-export default function ContextMenu({ x, y, closeContextMenu }) {
+export default function ContextMenu({
+  x,
+  y,
+  closeContextMenu,
+  properties,
+  onClick,
+}) {
   const contextMenuRef = useRef(null);
   useOnClickOutside(contextMenuRef, closeContextMenu);
+
+  const handleClick = (label, name) => {
+    let newIndex = 1;
+    if (label === "Bring to Front") {
+      newIndex = properties.zIndex + 1;
+    }
+    onClick(newIndex, name);
+  };
+
   return (
     <Box
       className="rightClickMenu"
@@ -33,7 +48,7 @@ export default function ContextMenu({ x, y, closeContextMenu }) {
       <List dense>
         {menuList.map((menu, index) => (
           <ListItem key={index} disableGutters>
-            <ListItemButton>
+            <ListItemButton onClick={() => handleClick(menu.label, menu.name)}>
               <ListItemIcon>
                 <menu.icon />
               </ListItemIcon>

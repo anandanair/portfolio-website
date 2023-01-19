@@ -215,6 +215,7 @@ export default function DesignPortfolio() {
                   onResize={handleResize}
                   onDrag={handlePosition}
                   onClick={handleClick}
+                  onUpdate={handleNestedChange}
                 />
               </CardContent>
             </Card>
