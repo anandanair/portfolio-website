@@ -4,6 +4,13 @@ import { Resizable } from "re-resizable";
 import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { useLocalTheme } from "../../contexts/ThemeContext";
+import ContextMenu from "../ContextMenu";
+
+const initialContextMenu = {
+  show: false,
+  x: 0,
+  y: 0,
+};
 
 export default function CustomDraggableResizable(props) {
   const properties = props.properties;
@@ -32,6 +39,7 @@ export default function CustomDraggableResizable(props) {
 
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
+  const [contextMenu, setContextMenu] = useState(initialContextMenu);
 
   const handleResizeStart = (event) => {
     event.stopPropagation();
@@ -74,6 +82,21 @@ export default function CustomDraggableResizable(props) {
       right: right,
       top: top,
     });
+  };
+
+  const handleRightClick = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const childComponent = nodeRef.current;
+    const { top, left } = childComponent.getBoundingClientRect();
+    console.log(top, left);
+    const x = event.clientX - left;
+    const y = event.clientY - top;
+    setContextMenu({ show: true, x, y });
+  };
+
+  const contextMenuClose = () => {
+    setContextMenu(initialContextMenu);
   };
 
   //Call once on initialization
@@ -170,6 +193,7 @@ export default function CustomDraggableResizable(props) {
         disabled={props.editable}
       >
         <Box
+          onContextMenu={handleRightClick}
           className={
             props.component === "image" && !isResizing && "textContent"
           }
@@ -182,6 +206,13 @@ export default function CustomDraggableResizable(props) {
             zIndex: 1,
           }}
         >
+          {contextMenu.show && (
+            <ContextMenu
+              x={contextMenu.x}
+              y={contextMenu.y}
+              closeContextMenu={contextMenuClose}
+            />
+          )}
           <Resizable
             className="textContent"
             size={properties.dimensions}

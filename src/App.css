@@ -447,3 +447,14 @@
   background-color:transparent;
   font-family:  'Antic Slab', serif;
 }
+
+.rightClickMenu{
+  border-radius: 5px;
+}
+
+#dark .rightClickMenu{
+  background-color: var(--dark-primary-color);
+}
+#light .rightClickMenu{
+background-color: var(--light-primary-color);
+}
