@@ -137,6 +137,7 @@ export default function CustomDraggableResizable(props) {
       )}
       {!props.editable && (
         <IconButton
+          onClick={() => props.onClick(props.id)}
           style={{
             position: "absolute",
             left: `${editIconLeft}px`,
@@ -158,7 +159,6 @@ export default function CustomDraggableResizable(props) {
       >
         <Box
           ref={nodeRef}
-          onClick={props.onClick}
           sx={{
             height: props.dimensions.height + "px",
             width: props.dimensions.width + "px",

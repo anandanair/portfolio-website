@@ -8,7 +8,7 @@ import CustomSlider from "../../../components/CustomSlider";
 export default function SummaryDesign(props) {
   return (
     <CustomAccordion
-      id="summaryDesign"
+      id="summary"
       title="Text - Summary"
       expanded={props.expanded}
       onChange={props.handleAccordionChange}

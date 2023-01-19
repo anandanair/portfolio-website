@@ -8,7 +8,7 @@ import CustomSlider from "../../../components/CustomSlider";
 export default function NameDesign(props) {
   return (
     <CustomAccordion
-      id="nameDesign"
+      id="name"
       title="Text - Name"
       expanded={props.expanded}
       onChange={props.handleAccordionChange}

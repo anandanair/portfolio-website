@@ -12,9 +12,7 @@ export default function DesignedPage(props) {
   const { defaultPhotoURL } = useStorage();
   const boxRef = useRef();
   const nameRef = useRef();
-  const [clicks, setClicks] = useState(0);
   const [editable, setEditable] = useState("");
-  const [lastClick, setLastClick] = useState(0);
   const [bounds, setBounds] = useState({
     top: 0,
     left: 0,
@@ -32,14 +30,8 @@ export default function DesignedPage(props) {
   };
 
   function handleClick(id) {
-    const currentClick = Date.now();
-    if (currentClick - lastClick < 300) {
-      setEditable(id);
-    } else {
-      setClicks(clicks + 1);
-      props.onClick(id);
-    }
-    setLastClick(currentClick);
+    setEditable(id);
+    props.onClick(id);
   }
 
   async function handleDone(value, name) {
@@ -85,9 +77,7 @@ export default function DesignedPage(props) {
         dynamicColor={properties.backgroundColor1}
         onResizeStop={handleResizeStop}
         boxRef={boxRef}
-        onClick={() => {
-          handleClick("primaryImageDesign");
-        }}
+        onClick={handleClick}
       />
       <Draggable
         grid={[5, 5]}
@@ -107,7 +97,7 @@ export default function DesignedPage(props) {
             cursor: "pointer",
           }}
           ref={nameRef}
-          onClick={() => handleClick("nameDesign")}
+          onClick={() => handleClick("name")}
         >
           {firestoreUser.portfolio.fullName}
         </div>
@@ -123,10 +113,10 @@ export default function DesignedPage(props) {
         imageURL=""
         onResizeStop={handleResizeStop}
         boxRef={boxRef}
-        onClick={() => handleClick("summaryDesign")}
-        editable={editable === "summaryDesign"}
+        onClick={handleClick}
+        editable={editable === "summary"}
       >
-        {editable === "summaryDesign" ? (
+        {editable === "summary" ? (
           <CustomTextArea
             value={firestoreUser.portfolio.summary}
             height={properties.summary.dimensions.height}
@@ -162,7 +152,7 @@ export default function DesignedPage(props) {
           onResizeStop={handleResizeStop}
           key={index}
           boxRef={boxRef}
-          onClick={() => handleClick(exp.id)}
+          onClick={handleClick}
         >
           <Card
             sx={{
