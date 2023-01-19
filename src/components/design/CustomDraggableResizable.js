@@ -30,21 +30,24 @@ export default function CustomDraggableResizable(props) {
   );
 
   const [isDragging, setIsDragging] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
 
   const handleResizeStart = (event) => {
     event.stopPropagation();
+    setIsResizing(true);
   };
 
   const imageStyleProps = {
     backgroundImage: `url(${props.imageURL})`,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
-    borderRadius: `${props.imageProperties.borderRadius}px`,
+    borderRadius: !isResizing && `${props.imageProperties.borderRadius}px`,
     opacity: props.imageProperties.opacity / 100,
     border: `${props.imageProperties.borderThickness}px ${props.imageProperties.borderType} ${props.imageProperties.borderColor}`,
   };
 
   const handleResizeStop = (e, direction, ref, d) => {
+    setIsResizing(false);
     setChildWidth(childWidth + d.width);
     props.onResizeStop(d, `${props.id}`);
   };
@@ -65,8 +68,6 @@ export default function CustomDraggableResizable(props) {
     setLeftLineTop(top - 10 + props.dimensions.height / 2);
     setTopLineLeft(left - 10 + props.dimensions.width / 2);
     setRightLineLeft(left + props.dimensions.width);
-    setEditIconTop(data.y);
-    setEditIconLeft(left + props.dimensions.width);
     setSpacing({
       left: left,
       right: right,
@@ -94,8 +95,16 @@ export default function CustomDraggableResizable(props) {
           right: parentWidth - childWidth,
         };
       });
+      setEditIconTop(props.position.y);
+      setEditIconLeft(props.position.x + props.dimensions.width);
     }
   }, [childWidth, parentWidth]);
+
+  //calls whenever position of element changes
+  useEffect(() => {
+    setEditIconTop(props.position.y);
+    setEditIconLeft(props.position.x + props.dimensions.width);
+  }, [props.position]);
 
   return (
     <React.Fragment>
@@ -135,7 +144,7 @@ export default function CustomDraggableResizable(props) {
           </div>
         </React.Fragment>
       )}
-      {!props.editable && (
+      {!props.editable && !isDragging && !isResizing && (
         <IconButton
           onClick={() => props.onClick(props.id)}
           style={{
@@ -158,6 +167,9 @@ export default function CustomDraggableResizable(props) {
         disabled={props.editable}
       >
         <Box
+          className={
+            props.component === "image" && !isResizing && "textContent"
+          }
           ref={nodeRef}
           sx={{
             height: props.dimensions.height + "px",

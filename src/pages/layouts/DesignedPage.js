@@ -39,14 +39,6 @@ export default function DesignedPage(props) {
     setEditable("");
   }
 
-  useEffect(() => {
-    const boxWidth = boxRef.current.offsetWidth;
-    const nameWidth = nameRef.current.offsetWidth;
-    setBounds((prevState) => {
-      return { ...prevState, right: boxWidth - nameWidth };
-    });
-  }, []);
-
   return (
     <Box
       ref={boxRef}
@@ -66,6 +58,7 @@ export default function DesignedPage(props) {
             : `${properties.backgroundColorType}(at ${properties.colorXAxis}% ${properties.colorYAxis}%, ${properties.backgroundColor1}, ${properties.backgroundColor2})`,
       }}
     >
+      {/* Draggable and Resizable Image Component */}
       <CustomDraggableResizable
         component="image"
         id="primaryImage"
@@ -79,29 +72,47 @@ export default function DesignedPage(props) {
         boxRef={boxRef}
         onClick={handleClick}
       />
-      <Draggable
-        grid={[5, 5]}
-        nodeRef={nameRef}
+
+      {/* Draggable Name Component */}
+      <CustomDraggableResizable
+        component="text"
+        id="name"
+        onDragStop={handleDragStop}
         position={properties.name.position}
-        onStop={(event, data) => handleDragStop(data, "name")}
-        bounds={bounds}
+        dimensions={properties.name.dimensions}
+        dynamicColor={properties.backgroundColor1}
+        imageProperties={{}}
+        imageURL=""
+        onResizeStop={handleResizeStop}
+        boxRef={boxRef}
+        onClick={handleClick}
+        editable={editable === "name"}
       >
-        <div
-          className="textContent"
-          style={{
-            fontFamily: properties.fontFamily,
-            color: properties.name.color,
-            fontSize: properties.name.fontSize,
-            position: "absolute",
-            opacity: properties.name.opacity / 100,
-            cursor: "pointer",
-          }}
-          ref={nameRef}
-          onClick={() => handleClick("name")}
-        >
-          {firestoreUser.portfolio.fullName}
-        </div>
-      </Draggable>
+        {editable === "name" ? (
+          <CustomTextArea
+            value={firestoreUser.portfolio.fullName}
+            height={properties.name.dimensions.height}
+            width={properties.name.dimensions.width}
+            bgColor={properties.backgroundColor1}
+            fontSize={properties.name.fontSize}
+            onDone={(value) => handleDone(value, "fullName")}
+          />
+        ) : (
+          <div
+            style={{
+              fontFamily: properties.fontFamily,
+              color: properties.name.color,
+              fontSize: properties.name.fontSize,
+              opacity: properties.name.opacity / 100,
+              textAlign: "left",
+            }}
+          >
+            {firestoreUser.portfolio.fullName}
+          </div>
+        )}
+      </CustomDraggableResizable>
+
+      {/* Draggable and Resizable Summary Component */}
       <CustomDraggableResizable
         component="text"
         id="summary"
@@ -139,6 +150,8 @@ export default function DesignedPage(props) {
           </div>
         )}
       </CustomDraggableResizable>
+
+      {/* Loop - Draggable and Resizable Work Experience Component */}
       {firestoreUser.portfolio.workExperience.map((exp, index) => (
         <CustomDraggableResizable
           component="card"

@@ -99,6 +99,7 @@ export function FirestoreProvider({ children }) {
     newObject.name = {
       fontSize: 72,
       position: { x: 415, y: 150 },
+      dimensions: { width: 750, height: 120 },
       opacity: 100,
       color: "white",
     };
