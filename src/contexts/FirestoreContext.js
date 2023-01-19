@@ -112,6 +112,20 @@ export function FirestoreProvider({ children }) {
         color: "white",
       };
     }
+
+    for (let index in portfolio.education) {
+      const list = ["school", "field", "description", "duration"];
+      list.forEach((name) => {
+        newObject[`${portfolio.education[index].id}-${name}`] = {
+          fontSize: 20,
+          position: { x: 415, y: 245 },
+          dimensions: { width: 700, height: 150 },
+          opacity: 100,
+          color: "white",
+        };
+      });
+    }
+
     for (let index in portfolio.workExperience) {
       newObject[portfolio.workExperience[index].id] = {
         titleFontSize: 24,
