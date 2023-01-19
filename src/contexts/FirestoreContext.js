@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { firestore } from "../firebase";
 import {
   setDoc,
@@ -28,6 +28,7 @@ export function FirestoreProvider({ children }) {
   const [firestoreUser, setFirestoreUser] = useState();
   const { setTheme, localTheme } = useLocalTheme();
   const [skills, setSkills] = useState([]);
+  const firstRun = useRef(true);
 
   async function setUser(user) {
     const userObj = {
@@ -130,7 +131,8 @@ export function FirestoreProvider({ children }) {
         borderRadius: 20,
       };
     }
-    await updateUser("design", newObject);
+    updateUser("design", newObject);
+    return newObject;
   }
 
   async function updateUser(name, value) {
@@ -184,24 +186,27 @@ export function FirestoreProvider({ children }) {
   }
 
   useEffect(() => {
-    if (currentUser) {
-      setLoading(true);
-      (async () => {
-        const user = await getDoc(doc(firestore, "users", currentUser.uid));
-        if (!user.exists()) {
-          //When user sign up for first time
-          await setUser(currentUser);
-          if (!currentUser.emailVerified) {
-            await verifyEmail();
-            await updateUser("emailVerificationSendTime", serverTimestamp());
+    if (firstRun.current) {
+      firstRun.current = false;
+      if (currentUser) {
+        setLoading(true);
+        (async () => {
+          const user = await getDoc(doc(firestore, "users", currentUser.uid));
+          if (!user.exists()) {
+            //When user sign up for first time
+            await setUser(currentUser);
+            if (!currentUser.emailVerified) {
+              await verifyEmail();
+              await updateUser("emailVerificationSendTime", serverTimestamp());
+            }
+          } else {
+            //When user is already logging in
+            getUser();
           }
-        } else {
-          //When user is already logging in
-          getUser();
-        }
-      })();
-    } else {
-      setLoading(false);
+        })();
+      } else {
+        setLoading(false);
+      }
     }
 
     return () => {
@@ -233,6 +238,7 @@ export function FirestoreProvider({ children }) {
     createPortfolio,
     updatePortfolio,
     updateUser,
+    createPortfolioDesign,
   };
   return (
     <FirestoreContext.Provider value={value}>

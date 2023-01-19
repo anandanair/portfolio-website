@@ -1,10 +1,12 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
   Grid,
   IconButton,
+  Snackbar,
   Stack,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
@@ -22,10 +24,12 @@ import WorkExperienceDesign from "./design-portfolio/components/WorkExperienceDe
 
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
-  const { firestoreUser } = useFirestore();
+  const { firestoreUser, updateUser, createPortfolioDesign } = useFirestore();
+  const [open, setOpen] = useState(false);
   const [properties, setProperties] = useState(firestoreUser.design);
   const [expanded, setExpanded] = useState(false);
   const rafRef = useRef(null);
+  const firstRun = useRef(true);
 
   const handleChange = (value, name) => {
     setProperties({
@@ -102,6 +106,20 @@ export default function DesignPortfolio() {
     });
   };
 
+  async function saveDesign() {
+    await updateUser("design", properties);
+    setOpen(true);
+    setTimeout(() => {
+      setOpen(false);
+    }, 5000);
+  }
+
+  async function resetDesign() {
+    const defaultDesign = await createPortfolioDesign(firestoreUser.portfolio);
+    setProperties(defaultDesign);
+  }
+
+  //On Mount and Unmount
   useEffect(() => {
     return () => {
       cancelAnimationFrame(rafRef.current);
@@ -165,10 +183,31 @@ export default function DesignPortfolio() {
         </Grid>
         <Grid item xs={10}>
           <Stack spacing={2}>
-            <Stack className="customizeCard" direction="row" spacing={2}>
+            <Stack
+              className="customizeCard"
+              justifyContent="space-between"
+              direction="row"
+              spacing={2}
+            >
               <IconButton>
                 <Add />
               </IconButton>
+              <Box sx={{ width: "20%" }}>
+                <Button
+                  sx={{ width: "50%" }}
+                  variant="text"
+                  onClick={resetDesign}
+                >
+                  Reset
+                </Button>
+                <Button
+                  sx={{ width: "50%" }}
+                  variant="text"
+                  onClick={saveDesign}
+                >
+                  Save
+                </Button>
+              </Box>
             </Stack>
             <Card sx={{ width: 1, backgroundColor: "white" }}>
               <CardContent>
@@ -183,6 +222,7 @@ export default function DesignPortfolio() {
           </Stack>
         </Grid>
       </Grid>
+      <Snackbar open={open} message="New design Saved!" />
     </DrawerNavBar>
   );
 }
