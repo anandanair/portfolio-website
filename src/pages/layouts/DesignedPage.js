@@ -82,6 +82,7 @@ export default function DesignedPage(props) {
         dimensions={properties.primaryImage.dimensions}
         imageProperties={properties.primaryImage}
         imageURL={firestoreUser.portfolio.primaryPhotoURL || defaultPhotoURL}
+        dynamicColor={properties.backgroundColor1}
         onResizeStop={handleResizeStop}
         boxRef={boxRef}
         onClick={() => {
@@ -117,6 +118,7 @@ export default function DesignedPage(props) {
         onDragStop={handleDragStop}
         position={properties.summary.position}
         dimensions={properties.summary.dimensions}
+        dynamicColor={properties.backgroundColor1}
         imageProperties={{}}
         imageURL=""
         onResizeStop={handleResizeStop}
@@ -153,6 +155,7 @@ export default function DesignedPage(props) {
           id={exp.id}
           onDragStop={handleDragStop}
           position={properties[exp.id].position}
+          dynamicColor={properties.backgroundColor1}
           dimensions={properties[exp.id].dimensions}
           imageProperties={{}}
           imageURL=""

@@ -1,13 +1,16 @@
-import { Box } from "@mui/material";
+import { Edit } from "@mui/icons-material";
+import { Box, IconButton } from "@mui/material";
 import { Resizable } from "re-resizable";
 import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
+import { useLocalTheme } from "../../contexts/ThemeContext";
 
 export default function CustomDraggableResizable(props) {
   const nodeRef = useRef(null);
   const firstRun = useRef(true);
   const [parentWidth, setParentWidth] = useState(0);
   const [childWidth, setChildWidth] = useState(0);
+  const { getDynamicColor } = useLocalTheme();
   const [bounds, setBounds] = useState({
     left: 0,
     top: 0,
@@ -21,6 +24,10 @@ export default function CustomDraggableResizable(props) {
   const [lefLineTop, setLeftLineTop] = useState(0);
   const [topLineLeft, setTopLineLeft] = useState(0);
   const [rightLineLeft, setRightLineLeft] = useState(0);
+  const [editIconTop, setEditIconTop] = useState(props.position.y);
+  const [editIconLeft, setEditIconLeft] = useState(
+    props.position.x + props.dimensions.width
+  );
 
   const [isDragging, setIsDragging] = useState(false);
 
@@ -58,6 +65,8 @@ export default function CustomDraggableResizable(props) {
     setLeftLineTop(top - 10 + props.dimensions.height / 2);
     setTopLineLeft(left - 10 + props.dimensions.width / 2);
     setRightLineLeft(left + props.dimensions.width);
+    setEditIconTop(data.y);
+    setEditIconLeft(left + props.dimensions.width);
     setSpacing({
       left: left,
       right: right,
@@ -125,6 +134,17 @@ export default function CustomDraggableResizable(props) {
             {spacing.right}px
           </div>
         </React.Fragment>
+      )}
+      {!props.editable && (
+        <IconButton
+          style={{
+            position: "absolute",
+            left: `${editIconLeft}px`,
+            top: `${editIconTop}px`,
+          }}
+        >
+          <Edit style={{ color: getDynamicColor(props.dynamicColor) }} />
+        </IconButton>
       )}
       <Draggable
         nodeRef={nodeRef}
