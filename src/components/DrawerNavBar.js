@@ -88,9 +88,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function DrawerNavBar({ children }) {
   const [error, setError] = useState("");
-  const { currentUser, logout } = useAuth();
-  const { updateTheme } = useFirestore();
-  const { localTheme, toggleTheme } = useLocalTheme();
+  const { logout } = useAuth();
+  const { updateUser } = useFirestore();
+  const { localTheme } = useLocalTheme();
   const theme = useTheme();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerList = [
@@ -141,8 +141,8 @@ export default function DrawerNavBar({ children }) {
   };
 
   function changeTheme() {
-    const currentTheme = toggleTheme() === "light" ? "dark" : "light";
-    updateTheme(currentUser, currentTheme);
+    const newTheme = localTheme === "light" ? "dark" : "light";
+    updateUser("theme", newTheme);
   }
 
   return (

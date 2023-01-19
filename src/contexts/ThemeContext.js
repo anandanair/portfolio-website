@@ -12,11 +12,6 @@ export function LocalThemeProvider({ children }) {
   const [width, setWidth] = useState(window.innerWidth);
   const [isSmallSize, setIsSmallSize] = useState(false);
 
-  function toggleTheme() {
-    setLocalTheme(localTheme === "light" ? "dark" : "light");
-    return localTheme;
-  }
-
   function setTheme(theme) {
     setLocalTheme(theme);
   }
@@ -38,13 +33,12 @@ export function LocalThemeProvider({ children }) {
   }, [width]);
 
   const value = {
-    toggleTheme,
     localTheme,
     setTheme,
     viewportHeight,
     width,
     isSmallSize,
-    handleWindowSizeChange
+    handleWindowSizeChange,
   };
 
   return (

@@ -3,7 +3,6 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CircularProgress,
   Grid,
   IconButton,
   Stack,
@@ -23,7 +22,6 @@ import WorkExperienceDesign from "./design-portfolio/components/WorkExperienceDe
 
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
-  const [loading, setLoading] = useState(false);
   const { firestoreUser } = useFirestore();
   const [properties, setProperties] = useState(firestoreUser.design);
   const [expanded, setExpanded] = useState(false);
@@ -176,16 +174,12 @@ export default function DesignPortfolio() {
             </Stack>
             <Card sx={{ width: 1, backgroundColor: "white" }}>
               <CardContent>
-                {!loading ? (
-                  <DesignedPage
-                    properties={properties}
-                    onResize={handleResize}
-                    onDrag={handlePosition}
-                    onClick={handleClick}
-                  />
-                ) : (
-                  <CircularProgress />
-                )}
+                <DesignedPage
+                  properties={properties}
+                  onResize={handleResize}
+                  onDrag={handlePosition}
+                  onClick={handleClick}
+                />
               </CardContent>
             </Card>
           </Stack>

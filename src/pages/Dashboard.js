@@ -6,11 +6,12 @@ import { Security } from "@mui/icons-material";
 import { useFirestore } from "../contexts/FirestoreContext";
 import DrawerNavBar from "../components/DrawerNavBar";
 import HomePage from "./layouts/HomePage";
+import { serverTimestamp } from "firebase/firestore";
 
 export default function Dashboard() {
   const { currentUser, verifyEmail } = useAuth();
   const [timeLeft, setTimeLeft] = useState();
-  const { updateEmailVerification, getVerifyEmailSendTime } = useFirestore();
+  const { updateUser, getVerifyEmailSendTime } = useFirestore();
 
   const [open, setOpen] = useState(false);
 
@@ -25,7 +26,7 @@ export default function Dashboard() {
     const difference = now - sendTime;
     if (difference > 120000) {
       await verifyEmail();
-      await updateEmailVerification(currentUser);
+      await updateUser("emailVerificationSendTime", serverTimestamp());
     } else {
       setTimeLeft(Math.trunc(120 - difference / 1000));
       setOpen(true);

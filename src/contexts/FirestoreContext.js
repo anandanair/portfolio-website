@@ -49,13 +49,6 @@ export function FirestoreProvider({ children }) {
     }
   }
 
-  async function updateEmailVerification(user) {
-    await updateDoc(doc(firestore, "users", user.uid), {
-      emailVerificationSendTime: serverTimestamp(),
-    });
-    return;
-  }
-
   async function getVerifyEmailSendTime(user) {
     const docRef = await getDoc(doc(firestore, "users", user.uid));
     return docRef.data().emailVerificationSendTime;
@@ -72,23 +65,14 @@ export function FirestoreProvider({ children }) {
     );
   }
 
-  async function updateTheme(user, currentTheme) {
-    await updateDoc(doc(firestore, "users", user.uid), {
-      theme: currentTheme,
-    });
-    return;
-  }
-
   async function createPortfolio(portfolio) {
     setLoading(true);
     let newObject = Object.assign({}, portfolio);
     newObject.createdAt = serverTimestamp();
     newObject.primaryPhotoURL = "";
-    await updateDoc(doc(firestore, "users", currentUser.uid), {
-      portfolio: newObject,
-    });
+    await updateUser("portfolio", newObject);
     await createPortfolioDesign(newObject);
-    return await updatePortfolioDone();
+    return await updateUser("portfolioDone", true);
   }
 
   async function createPortfolioDesign(portfolio) {
@@ -146,16 +130,13 @@ export function FirestoreProvider({ children }) {
         borderRadius: 20,
       };
     }
-    await updateDoc(doc(firestore, "users", currentUser.uid), {
-      design: newObject,
-    });
+    await updateUser("design", newObject);
   }
 
-  async function updatePortfolioDone() {
+  async function updateUser(name, value) {
     await updateDoc(doc(firestore, "users", currentUser.uid), {
-      portfolioDone: true,
+      [name]: value,
     });
-    return;
   }
 
   async function getSkills(searchText, stop) {
@@ -198,10 +179,7 @@ export function FirestoreProvider({ children }) {
   }
 
   async function updatePortfolio(value, name) {
-    const docRef = doc(firestore, "users", currentUser.uid);
-    await updateDoc(docRef, {
-      [`portfolio.${name}`]: value,
-    });
+    await updateUser(`portfolio.${name}`, value);
     return;
   }
 
@@ -215,7 +193,7 @@ export function FirestoreProvider({ children }) {
           await setUser(currentUser);
           if (!currentUser.emailVerified) {
             await verifyEmail();
-            await updateEmailVerification(currentUser);
+            await updateUser("emailVerificationSendTime", serverTimestamp());
           }
         } else {
           //When user is already logging in
@@ -243,20 +221,18 @@ export function FirestoreProvider({ children }) {
     return () => {
       // second
     };
-  }, [firestoreUser]);
+  }, [firestoreUser, localTheme, setTheme]);
 
   const value = {
-    updateEmailVerification,
     getVerifyEmailSendTime,
-    updateTheme,
     firestoreUser,
     getSkills,
     skills,
     setSkills,
     addSkill,
     createPortfolio,
-    updatePortfolioDone,
     updatePortfolio,
+    updateUser,
   };
   return (
     <FirestoreContext.Provider value={value}>
