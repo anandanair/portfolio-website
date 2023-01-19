@@ -29,7 +29,6 @@ export default function DesignPortfolio() {
   const [properties, setProperties] = useState(firestoreUser.design);
   const [expanded, setExpanded] = useState(false);
   const rafRef = useRef(null);
-  const firstRun = useRef(true);
 
   const handleChange = (value, name) => {
     setProperties({

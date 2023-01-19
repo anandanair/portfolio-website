@@ -89,7 +89,7 @@ export default function CustomDraggableResizable(props) {
   }, [childWidth, parentWidth]);
 
   return (
-    <div>
+    <React.Fragment>
       {isDragging && (
         <React.Fragment>
           <div
@@ -157,6 +157,6 @@ export default function CustomDraggableResizable(props) {
           </Resizable>
         </Box>
       </Draggable>
-    </div>
+    </React.Fragment>
   );
 }

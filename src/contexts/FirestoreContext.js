@@ -28,7 +28,7 @@ export function FirestoreProvider({ children }) {
   const [firestoreUser, setFirestoreUser] = useState();
   const { setTheme, localTheme } = useLocalTheme();
   const [skills, setSkills] = useState([]);
-  const firstRun = useRef(true);
+  const userUnsubcribe = useRef(null);
 
   async function setUser(user) {
     const userObj = {
@@ -56,7 +56,7 @@ export function FirestoreProvider({ children }) {
   }
 
   function getUser() {
-    const unsubscribe = onSnapshot(
+    userUnsubcribe.current = onSnapshot(
       doc(firestore, "users", currentUser.uid),
       (doc) => {
         setFirestoreUser(doc.data());
@@ -186,31 +186,32 @@ export function FirestoreProvider({ children }) {
   }
 
   useEffect(() => {
-    if (firstRun.current) {
-      firstRun.current = false;
-      if (currentUser) {
-        setLoading(true);
-        (async () => {
-          const user = await getDoc(doc(firestore, "users", currentUser.uid));
-          if (!user.exists()) {
-            //When user sign up for first time
-            await setUser(currentUser);
-            if (!currentUser.emailVerified) {
-              await verifyEmail();
-              await updateUser("emailVerificationSendTime", serverTimestamp());
-            }
-          } else {
-            //When user is already logging in
-            getUser();
+    if (currentUser) {
+      setLoading(true);
+      (async () => {
+        const user = await getDoc(doc(firestore, "users", currentUser.uid));
+        if (!user.exists()) {
+          //When user sign up for first time
+          await setUser(currentUser);
+          if (!currentUser.emailVerified) {
+            await verifyEmail();
+            await updateUser("emailVerificationSendTime", serverTimestamp());
           }
-        })();
-      } else {
-        setLoading(false);
-      }
+        } else {
+          //When user is already logging in
+          getUser();
+        }
+      })();
+    } else {
+      //Calls only if user is not logged in
+      setLoading(false);
     }
 
+    // this now gets called when the component unmounts
     return () => {
-      // this now gets called when the component unmounts
+      if (userUnsubcribe.current) {
+        userUnsubcribe.current();
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser]);
