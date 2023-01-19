@@ -6,6 +6,7 @@ import {
   CardHeader,
   Grid,
   IconButton,
+  Slider,
   Snackbar,
   Stack,
 } from "@mui/material";
@@ -15,7 +16,7 @@ import DesignedPage from "./layouts/DesignedPage";
 import { useStorage } from "../contexts/StorageContext";
 import { useFirestore } from "../contexts/FirestoreContext";
 import Compressor from "compressorjs";
-import { Add } from "@mui/icons-material";
+import { Add, ZoomIn, ZoomOut } from "@mui/icons-material";
 import BackgroundColorCheckbox from "./design-portfolio/components/BackgroundColorCheckbox";
 import NameDesign from "./design-portfolio/components/NameDesign";
 import SummaryDesign from "./design-portfolio/components/SummaryDesign";
@@ -29,12 +30,17 @@ export default function DesignPortfolio() {
   const [properties, setProperties] = useState(firestoreUser.design);
   const [expanded, setExpanded] = useState(false);
   const rafRef = useRef(null);
+  const [zoomValue, setZoomValue] = useState(100);
 
   const handleChange = (value, name) => {
     setProperties({
       ...properties,
       [name]: value,
     });
+  };
+
+  const handleSlider = (event, newValue) => {
+    setZoomValue(newValue);
   };
 
   const handlePosition = (x, y, name) => {
@@ -133,7 +139,11 @@ export default function DesignPortfolio() {
             <CardHeader title="Customize" />
             <CardContent>
               <Box
-                sx={{ height: "76vh", overflowY: "auto", overflowX: "hidden" }}
+                sx={{
+                  height: "76vh",
+                  overflowY: "auto",
+                  overflowX: "hidden",
+                }}
               >
                 <Stack spacing={2}>
                   <BackgroundColorCheckbox
@@ -191,26 +201,40 @@ export default function DesignPortfolio() {
               <IconButton>
                 <Add />
               </IconButton>
-              <Box sx={{ width: "20%" }}>
-                <Button
-                  sx={{ width: "50%" }}
-                  variant="text"
-                  onClick={resetDesign}
-                >
-                  Reset
-                </Button>
-                <Button
-                  sx={{ width: "50%" }}
-                  variant="text"
-                  onClick={saveDesign}
-                >
-                  Save
-                </Button>
+              <Box sx={{ width: "25%" }}>
+                <Stack direction="row">
+                  <Stack
+                    spacing={2}
+                    direction="row"
+                    sx={{ mb: 1 }}
+                    alignItems="center"
+                    width="100%"
+                  >
+                    <ZoomOut />
+                    <Slider
+                      aria-label="Volume"
+                      max={300}
+                      min={0}
+                      step={10}
+                      value={zoomValue}
+                      onChange={handleSlider}
+                      valueLabelDisplay="auto"
+                    />
+                    <ZoomIn />
+                  </Stack>
+                  <Button variant="text" onClick={resetDesign}>
+                    Reset
+                  </Button>
+                  <Button variant="text" onClick={saveDesign}>
+                    Save
+                  </Button>
+                </Stack>
               </Box>
             </Stack>
             <Card sx={{ width: 1, backgroundColor: "white" }}>
-              <CardContent>
+              <CardContent sx={{ height: "81vh" }}>
                 <DesignedPage
+                  zoomValue={zoomValue}
                   properties={properties}
                   onResize={handleResize}
                   onDrag={handlePosition}

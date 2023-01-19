@@ -37,7 +37,7 @@ export default function DesignedPage(props) {
       ref={boxRef}
       sx={{
         position: "relative",
-        height: "77vh",
+        height: "100%",
         overflow: "auto",
         background:
           properties.backgroundColorType === "static"
@@ -49,6 +49,7 @@ export default function DesignedPage(props) {
                  ${properties.backgroundColor2}
               )`
             : `${properties.backgroundColorType}(at ${properties.colorXAxis}% ${properties.colorYAxis}%, ${properties.backgroundColor1}, ${properties.backgroundColor2})`,
+        transform: `scale(${props.zoomValue / 100})`,
       }}
     >
       {/* Draggable and Resizable Image Component */}
