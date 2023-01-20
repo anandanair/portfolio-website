@@ -22,6 +22,7 @@ import NameDesign from "./design-portfolio/components/NameDesign";
 import SummaryDesign from "./design-portfolio/components/SummaryDesign";
 import PrimaryImageDesign from "./design-portfolio/components/PrimaryImageDesign";
 import WorkExperienceDesign from "./design-portfolio/components/WorkExperienceDesign";
+import CustomTopMenu from "../components/design/CustomTopMenu";
 
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
@@ -145,7 +146,7 @@ export default function DesignPortfolio() {
                   overflowX: "hidden",
                 }}
               >
-                <Stack spacing={2}>
+                {/* <Stack spacing={2}>
                   <BackgroundColorCheckbox
                     expanded={expanded}
                     handleAccordionChange={handleAccordionChange}
@@ -185,62 +186,30 @@ export default function DesignPortfolio() {
                       onFileChange={handleFile}
                     />
                   ))}
-                </Stack>
+                </Stack> */}
               </Box>
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={10}>
-          <Stack spacing={2}>
-            <Stack
-              className="customizeCard"
-              justifyContent="space-between"
-              direction="row"
-              spacing={2}
-            >
-              <IconButton>
-                <Add />
-              </IconButton>
-              <Box sx={{ width: "25%" }}>
-                <Stack direction="row">
-                  <Stack
-                    spacing={2}
-                    direction="row"
-                    sx={{ mb: 1 }}
-                    alignItems="center"
-                    width="100%"
-                  >
-                    <ZoomOut />
-                    <Slider
-                      aria-label="Volume"
-                      max={300}
-                      min={0}
-                      step={10}
-                      value={zoomValue}
-                      onChange={handleSlider}
-                      valueLabelDisplay="auto"
-                    />
-                    <ZoomIn />
-                  </Stack>
-                  <Button variant="text" onClick={resetDesign}>
-                    Reset
-                  </Button>
-                  <Button variant="text" onClick={saveDesign}>
-                    Save
-                  </Button>
-                </Stack>
-              </Box>
-            </Stack>
-            <Card sx={{ width: 1, backgroundColor: "white" }}>
-              <CardContent sx={{ height: "81vh" }}>
-                <DesignedPage
+          <Stack spacing={2} position="relative">
+            <CustomTopMenu
+              zoomValue={zoomValue}
+              handleZoom={handleSlider}
+              resetDesign={resetDesign}
+              saveDesign={saveDesign}
+            />
+
+            <Card sx={{ width: 1, backgroundColor: "transparent" }}>
+              <CardContent className="customizeCard" sx={{ height: "81vh" }}>
+                {/* <DesignedPage
                   zoomValue={zoomValue}
                   properties={properties}
                   onResize={handleResize}
                   onDrag={handlePosition}
                   onClick={handleClick}
                   onUpdate={handleNestedChange}
-                />
+                /> */}
               </CardContent>
             </Card>
           </Stack>
