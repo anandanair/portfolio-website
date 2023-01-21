@@ -66,6 +66,19 @@ export default function WorkExperienceForm(props) {
     }
   }
 
+  function getDuration(startDate, endDate) {
+    let newStartDate = dayjs(startDate.toDate());
+    let newEndDate = dayjs(endDate.toDate());
+    const durationInMonths = newEndDate.diff(newStartDate, "month");
+
+    const years = Math.floor(durationInMonths / 12);
+    const months = durationInMonths % 12;
+    const durationString = `${years} ${
+      years > 1 ? "years" : "year"
+    } ${months} ${months > 1 ? "months" : "month"}`;
+    return durationString;
+  }
+
   function submitForm() {
     let valid = true;
     const validationArray = ["companyName", "position"];
@@ -78,6 +91,7 @@ export default function WorkExperienceForm(props) {
     }
     if (valid) {
       let newObject = Object.assign({}, workExp);
+      newObject.duration = getDuration(newObject.startDate, newObject.endDate);
       newObject.startDate = Timestamp.fromDate(newObject.startDate.toDate());
       newObject.endDate = Timestamp.fromDate(newObject.endDate.toDate());
       newObject.id = uuidv4();
@@ -93,19 +107,6 @@ export default function WorkExperienceForm(props) {
         )
       );
     }
-  }
-
-  function getDuration(startDate, endDate) {
-    let newStartDate = dayjs(startDate.toDate());
-    let newEndDate = dayjs(endDate.toDate());
-    const durationInMonths = newEndDate.diff(newStartDate, "month");
-
-    const years = Math.floor(durationInMonths / 12);
-    const months = durationInMonths % 12;
-    const durationString = `${years} ${
-      years > 1 ? "years" : "year"
-    } ${months} ${months > 1 ? "months" : "month"}`;
-    return durationString;
   }
 
   return (
