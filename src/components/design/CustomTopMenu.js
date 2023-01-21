@@ -1,8 +1,7 @@
 import { Add, ZoomIn, ZoomOut } from "@mui/icons-material";
 import { Box, Button, IconButton, Slider } from "@mui/material";
 import { Stack } from "@mui/system";
-import React, { useRef, useState } from "react";
-import useOnClickOutside from "../../utils/hooks/useOnClickOutside";
+import React, { useState } from "react";
 import CustomDropdownList from "./CustomDropdownList";
 
 export default function CustomTopMenu({
@@ -12,7 +11,6 @@ export default function CustomTopMenu({
   saveDesign,
 }) {
   const [showDropdown, setShowDropdown] = useState(false);
-  const contextMenuRef = useRef(null);
   const openDropdown = () => {
     setShowDropdown(!showDropdown);
   };
@@ -21,10 +19,8 @@ export default function CustomTopMenu({
     setShowDropdown(false);
   };
 
-  useOnClickOutside(contextMenuRef, closeDropdown);
-
   return (
-    <Box ref={contextMenuRef}>
+    <Box>
       <Stack
         className="customizeCard"
         justifyContent="space-between"
@@ -59,7 +55,7 @@ export default function CustomTopMenu({
           </Stack>
         </Box>
       </Stack>
-      {showDropdown && <CustomDropdownList />}
+      {showDropdown && <CustomDropdownList closeDropdown={closeDropdown} />}
     </Box>
   );
 }
