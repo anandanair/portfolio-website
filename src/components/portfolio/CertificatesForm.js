@@ -70,6 +70,9 @@ export default function EducationForm(props) {
     }
     if (valid) {
       let newObject = Object.assign({}, certificate);
+      newObject.issueDateString = dayjs(newObject.issueDate.toDate()).format(
+        "MMM YYYY"
+      );
       newObject.issueDate = Timestamp.fromDate(newObject.issueDate.toDate());
       props.onObjectAdd(newObject, "certificates");
       setCertificate(new CertificateModel("", "", dayjs(), ""));
