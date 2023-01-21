@@ -23,6 +23,7 @@ import SummaryDesign from "./design-portfolio/components/SummaryDesign";
 import PrimaryImageDesign from "./design-portfolio/components/PrimaryImageDesign";
 import WorkExperienceDesign from "./design-portfolio/components/WorkExperienceDesign";
 import CustomTopMenu from "../components/design/CustomTopMenu";
+import EditPage from "./layouts/EditPage";
 
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
@@ -121,7 +122,7 @@ export default function DesignPortfolio() {
   }
 
   async function resetDesign() {
-    const defaultDesign = await createPortfolioDesign(firestoreUser.portfolio);
+    const defaultDesign = await createPortfolioDesign();
     setProperties(defaultDesign);
   }
 
@@ -202,6 +203,11 @@ export default function DesignPortfolio() {
 
             <Card sx={{ width: 1, backgroundColor: "transparent" }}>
               <CardContent className="customizeCard" sx={{ height: "81vh" }}>
+                <EditPage
+                  properties={properties}
+                  zoomValue={zoomValue}
+                  handleZoom={setZoomValue}
+                />
                 {/* <DesignedPage
                   zoomValue={zoomValue}
                   properties={properties}

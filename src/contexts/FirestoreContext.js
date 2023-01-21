@@ -72,11 +72,11 @@ export function FirestoreProvider({ children }) {
     newObject.createdAt = serverTimestamp();
     newObject.primaryPhotoURL = "";
     await updateUser("portfolio", newObject);
-    await createPortfolioDesign(newObject);
+    await createPortfolioDesign();
     return await updateUser("portfolioDone", true);
   }
 
-  async function createPortfolioDesign(portfolio) {
+  async function createPortfolioDesign() {
     let newObject = {
       backgroundColorType: "linear-gradient",
       backgroundColor1: "black",
@@ -86,71 +86,8 @@ export function FirestoreProvider({ children }) {
       colorXAxis: 0,
       colorYAxis: 0,
       fontFamily: "'Antic Slab', serif",
+      children: {},
     };
-    newObject.primaryImage = {
-      dimensions: { width: 200, height: 200 },
-      position: { x: 195, y: 150 },
-      borderRadius: 20,
-      opacity: 100,
-      borderThickness: 5,
-      borderType: "solid",
-      borderColor: "white",
-      zIndex: 10,
-    };
-    newObject.name = {
-      fontSize: 72,
-      position: { x: 415, y: 150 },
-      dimensions: { width: 750, height: 120 },
-      opacity: 100,
-      color: "white",
-      zIndex: 10,
-    };
-    if (portfolio.summary !== "") {
-      newObject.summary = {
-        fontSize: 16,
-        position: { x: 415, y: 245 },
-        dimensions: { width: 700, height: 150 },
-        opacity: 100,
-        color: "white",
-        zIndex: 10,
-      };
-    }
-
-    for (let index in portfolio.education) {
-      const list = ["school", "field", "description", "duration"];
-      list.forEach((name, i) => {
-        newObject[`${portfolio.education[index].id}-${name}`] = {
-          fontSize: 20,
-          position: { x: 415, y: 245 },
-          dimensions: { width: 700, height: 150 },
-          opacity: 100,
-          color: "white",
-          zIndex: 10,
-        };
-      });
-    }
-
-    for (let index in portfolio.workExperience) {
-      newObject[portfolio.workExperience[index].id] = {
-        titleFontSize: 24,
-        titleTextColor: "white",
-        roleFontSize: 20,
-        roleTextColor: "white",
-        descriptionFontSize: 16,
-        descriptionTextColor: "white",
-        position: { x: 195 + index * 450, y: 420 },
-        dimensions: { width: 300, height: 300 },
-        opacity: 100,
-        backgroundColor1: "black",
-        backgroundColor2: "blue",
-        colorAngle: 110,
-        backgroundColorType: "linear-gradient",
-        colorXAxis: 0,
-        colorYAxis: 0,
-        borderRadius: 20,
-        zIndex: 10,
-      };
-    }
     updateUser("design", newObject);
     return newObject;
   }
