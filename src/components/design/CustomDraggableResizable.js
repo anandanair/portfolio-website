@@ -103,7 +103,7 @@ export default function CustomDraggableResizable(props) {
     setContextMenu(initialContextMenu);
   };
 
-  //Call once on initialization
+  // Call once on initialization
   useEffect(() => {
     if (firstRun.current) {
       firstRun.current = false;
@@ -138,7 +138,7 @@ export default function CustomDraggableResizable(props) {
 
   return (
     <React.Fragment>
-      {isDragging && (
+      {/* {isDragging && (
         <React.Fragment>
           <div
             className="horizontal-dotted-line"
@@ -173,19 +173,8 @@ export default function CustomDraggableResizable(props) {
             {spacing.right}px
           </div>
         </React.Fragment>
-      )}
-      {!props.editable && !isDragging && !isResizing && (
-        <IconButton
-          onClick={() => props.onClick(props.id)}
-          style={{
-            position: "absolute",
-            left: `${editIconLeft}px`,
-            top: `${editIconTop}px`,
-          }}
-        >
-          <Edit style={{ color: getDynamicColor(props.dynamicColor) }} />
-        </IconButton>
-      )}
+      )} */}
+
       <Draggable
         nodeRef={nodeRef}
         bounds={bounds}
@@ -193,13 +182,13 @@ export default function CustomDraggableResizable(props) {
         onStop={handleDragStop}
         onDrag={handleDrag}
         position={properties.position}
-        grid={[5, 5]}
-        disabled={props.editable}
+        grid={[25, 25]}
+        // disabled={props.editable}
       >
         <Box
           onContextMenu={handleRightClick}
           className={
-            props.component === "image" && !isResizing && "textContent"
+            properties.type === "image" && !isResizing && "textContent"
           }
           ref={nodeRef}
           sx={{
@@ -222,11 +211,21 @@ export default function CustomDraggableResizable(props) {
           <Resizable
             className="textContent"
             size={properties.dimensions}
-            style={props.component === "image" && imageStyleProps}
+            style={properties.type === "image" && imageStyleProps}
             onResizeStop={handleResizeStop}
             onResizeStart={handleResizeStart}
           >
-            {props.children}
+            <div
+              style={{
+                fontFamily: props.fontFamily,
+                color: properties.color,
+                fontSize: properties.fontSize,
+                opacity: properties.opacity / 100,
+                textAlign: "left",
+              }}
+            >
+              {properties.value}
+            </div>
           </Resizable>
         </Box>
       </Draggable>

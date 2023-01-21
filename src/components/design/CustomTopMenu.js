@@ -9,6 +9,7 @@ export default function CustomTopMenu({
   handleZoom,
   resetDesign,
   saveDesign,
+  onAddComponent,
 }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const openDropdown = () => {
@@ -17,6 +18,40 @@ export default function CustomTopMenu({
 
   const closeDropdown = () => {
     setShowDropdown(false);
+  };
+
+  const handleAddComponent = (type, value) => {
+    // Create a new default properties object
+    const newObject = {
+      type: type,
+      position: { x: 0, y: 0 },
+      dimensions: {
+        width: value.length > 80 ? 700 : value.length * 10,
+        height: value.length < 80 ? 30 : value.length / 2,
+      },
+      opacity: 100,
+      zIndex: 10,
+    };
+
+    // Add properties based on type
+    switch (type) {
+      case "text":
+        newObject.value = value;
+        newObject.fontSize = 16;
+        newObject.color = "white";
+        break;
+      case "image":
+        break;
+      case "rectangle":
+        break;
+      case "circle":
+        break;
+      case "line":
+        break;
+      default:
+        break;
+    }
+    onAddComponent(newObject, "children");
   };
 
   return (
@@ -55,7 +90,12 @@ export default function CustomTopMenu({
           </Stack>
         </Box>
       </Stack>
-      {showDropdown && <CustomDropdownList closeDropdown={closeDropdown} />}
+      {showDropdown && (
+        <CustomDropdownList
+          closeDropdown={closeDropdown}
+          onAdd={handleAddComponent}
+        />
+      )}
     </Box>
   );
 }

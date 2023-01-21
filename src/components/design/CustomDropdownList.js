@@ -40,7 +40,7 @@ const lightTheme = createTheme({
   palette: { mode: "light" },
 });
 
-export default function CustomDropdownList({ closeDropdown }) {
+export default function CustomDropdownList({ closeDropdown, onAdd }) {
   // State
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
@@ -87,6 +87,7 @@ export default function CustomDropdownList({ closeDropdown }) {
   const handleTextAdd = () => {
     closeTextDialog();
     closeDropdown();
+    onAdd("text", value);
   };
 
   // List of Items in Menu

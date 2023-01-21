@@ -24,6 +24,7 @@ import PrimaryImageDesign from "./design-portfolio/components/PrimaryImageDesign
 import WorkExperienceDesign from "./design-portfolio/components/WorkExperienceDesign";
 import CustomTopMenu from "../components/design/CustomTopMenu";
 import EditPage from "./layouts/EditPage";
+import { v4 as uuidv4 } from "uuid";
 
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
@@ -48,11 +49,14 @@ export default function DesignPortfolio() {
   const handlePosition = (x, y, name) => {
     setProperties({
       ...properties,
-      [name]: {
-        ...properties[name],
-        position: {
-          x: x,
-          y: y,
+      children: {
+        ...properties.children,
+        [name]: {
+          ...properties.children[name],
+          position: {
+            x: x,
+            y: y,
+          },
         },
       },
     });
@@ -61,11 +65,14 @@ export default function DesignPortfolio() {
   const handleResize = (width, height, name) => {
     setProperties({
       ...properties,
-      [name]: {
-        ...properties[name],
-        dimensions: {
-          width: width,
-          height: height,
+      children: {
+        ...properties.children,
+        [name]: {
+          ...properties.children[name],
+          dimensions: {
+            width: width,
+            height: height,
+          },
         },
       },
     });
@@ -99,6 +106,16 @@ export default function DesignPortfolio() {
       [name]: {
         ...properties[name],
         [nestedProp]: value,
+      },
+    });
+  };
+
+  const handleChildren = (value, name) => {
+    setProperties({
+      ...properties,
+      [name]: {
+        ...properties[name],
+        [uuidv4()]: value,
       },
     });
   };
@@ -199,6 +216,7 @@ export default function DesignPortfolio() {
               handleZoom={handleSlider}
               resetDesign={resetDesign}
               saveDesign={saveDesign}
+              onAddComponent={handleChildren}
             />
 
             <Card sx={{ width: 1, backgroundColor: "transparent" }}>
@@ -207,15 +225,9 @@ export default function DesignPortfolio() {
                   properties={properties}
                   zoomValue={zoomValue}
                   handleZoom={setZoomValue}
-                />
-                {/* <DesignedPage
-                  zoomValue={zoomValue}
-                  properties={properties}
                   onResize={handleResize}
                   onDrag={handlePosition}
-                  onClick={handleClick}
-                  onUpdate={handleNestedChange}
-                /> */}
+                />
               </CardContent>
             </Card>
           </Stack>

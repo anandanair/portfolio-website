@@ -1,16 +1,20 @@
 import { Box } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import Draggable from "react-draggable";
+import CustomDraggableResizable from "../../components/design/CustomDraggableResizable";
 
-export default function EditPage({ properties, zoomValue, handleZoom }) {
+export default function EditPage({
+  properties,
+  zoomValue,
+  handleZoom,
+  onResize,
+  onDrag,
+}) {
   // Refs
   const boxRef = useRef(null);
   const parentBoxRef = useRef(null);
 
   //States
   const [scrollOrigin, setScrollOrigin] = useState({ left: 0, top: 0 });
-  const [translate, setTranslate] = useState({ x: 0, y: 0 });
-  const [scale, setScale] = useState(1);
 
   //Functions
   const handleWheel = (event) => {
@@ -41,6 +45,16 @@ export default function EditPage({ properties, zoomValue, handleZoom }) {
     if (event.ctrlKey) {
       event.preventDefault();
     }
+  };
+
+  const handleResizeStop = (data, name) => {
+    const newWdith = properties.children[name].dimensions.width + data.width;
+    const newHeight = properties.children[name].dimensions.height + data.height;
+    onResize(newWdith, newHeight, name);
+  };
+
+  const handleDragStop = (data, name) => {
+    onDrag(data.x, data.y, name);
   };
 
   //Add Event Listener
@@ -91,20 +105,32 @@ export default function EditPage({ properties, zoomValue, handleZoom }) {
       {/* Child Box which contains the draggable component */}
       <Box
         ref={boxRef}
-        style={{
+        sx={{
+          position: "relative",
+          height: "100%",
+          width: "100%",
+          cursor: zoomValue !== 100 && "pointer",
           transform: `scale(${zoomValue / 100})`,
           transformOrigin:
             zoomValue === 100
               ? "center"
               : `${scrollOrigin.top}px ${scrollOrigin.left}px`,
         }}
-        sx={{
-          position: "absolute",
-          height: "100%",
-          width: "100%",
-          cursor: zoomValue !== 100 && "pointer",
-        }}
-      ></Box>
+      >
+        {Object.keys(properties.children).map((key, index) => (
+          //   <Box key={index}>
+          <CustomDraggableResizable
+            key={index}
+            id={key}
+            properties={properties.children[key]}
+            fontFamily={properties.fontFamily}
+            onResizeStop={handleResizeStop}
+            onDragStop={handleDragStop}
+            boxRef={boxRef}
+          />
+          //   </Box>
+        ))}
+      </Box>
     </Box>
   );
 }
