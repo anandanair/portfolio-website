@@ -70,6 +70,7 @@ export default function EditPage({ properties, zoomValue, handleZoom }) {
       sx={{
         position: "relative",
         overflow: "hidden",
+        overflowY: "auto",
         height: "100%",
         background:
           properties.backgroundColorType === "static"
@@ -101,15 +102,9 @@ export default function EditPage({ properties, zoomValue, handleZoom }) {
           position: "absolute",
           height: "100%",
           width: "100%",
-
-          backgroundColor: "yellow",
           cursor: zoomValue !== 100 && "pointer",
         }}
-      >
-        <Box
-          sx={{ width: "200px", height: "200px", backgroundColor: "red" }}
-        ></Box>
-      </Box>
+      ></Box>
     </Box>
   );
 }

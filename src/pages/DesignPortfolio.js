@@ -147,7 +147,7 @@ export default function DesignPortfolio() {
                   overflowX: "hidden",
                 }}
               >
-                {/* <Stack spacing={2}>
+                <Stack spacing={2}>
                   <BackgroundColorCheckbox
                     expanded={expanded}
                     handleAccordionChange={handleAccordionChange}
@@ -155,7 +155,7 @@ export default function DesignPortfolio() {
                     onChange={handleChange}
                   />
 
-                  <NameDesign
+                  {/* <NameDesign
                     expanded={expanded}
                     handleAccordionChange={handleAccordionChange}
                     properties={properties}
@@ -186,8 +186,8 @@ export default function DesignPortfolio() {
                       onChange={handleNestedChange}
                       onFileChange={handleFile}
                     />
-                  ))}
-                </Stack> */}
+                  ))} */}
+                </Stack>
               </Box>
             </CardContent>
           </Card>
