@@ -23,7 +23,7 @@ export default function ContextMenu({
   onClick,
 }) {
   const contextMenuRef = useRef(null);
-  useOnClickOutside(contextMenuRef, closeContextMenu);
+  useOnClickOutside(contextMenuRef, closeContextMenu, false);
 
   const handleClick = (label, name) => {
     let newIndex = 1;
