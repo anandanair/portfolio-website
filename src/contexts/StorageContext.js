@@ -1,6 +1,7 @@
 import { Box, CircularProgress } from "@mui/material";
 import {
   getDownloadURL,
+  list,
   ref,
   uploadBytes,
   uploadBytesResumable,
@@ -21,6 +22,10 @@ export function StorageProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAuth();
   const { updatePortfolio } = useFirestore();
+  const [images, setImages] = useState([]);
+  const [nextPageToken, setNextPageToken] = useState(null);
+  const [prevPageToken, setPrevPageToken] = useState(null);
+  const [pageTokens, setPageTokens] = useState([]);
 
   //provide any image name and will get the url
   async function getDefaultImageURL(path, imageName) {
@@ -63,6 +68,45 @@ export function StorageProvider({ children }) {
     });
   }
 
+  async function getImages(token, page) {
+    const listRef = ref(storage, `users/${currentUser.uid}/images`);
+    setImages([]);
+
+    if (!token || page === 0) {
+      const firstPage = await list(listRef, { maxResults: 5 });
+      // Use the first page results
+      // Get all images download URL
+      firstPage.items.forEach((itemRef) => {
+        getDownloadURL(itemRef).then((downloadURL) => {
+          setImages((prevState) => [...prevState, downloadURL]);
+        });
+      });
+      if (!pageTokens[0]) {
+        if (firstPage.nextPageToken) {
+          setPageTokens((prevState) => [...prevState, firstPage.nextPageToken]);
+        }
+      }
+    }
+    if (token) {
+      //Next Page
+      const nextPage = await list(listRef, {
+        maxResults: 5,
+        pageToken: token,
+      });
+      if (!pageTokens[page]) {
+        if (nextPage.nextPageToken) {
+          setPageTokens((prevState) => [...prevState, nextPage.nextPageToken]);
+        }
+      }
+      // Use the second page results
+      nextPage.items.forEach((itemRef) => {
+        getDownloadURL(itemRef).then((downloadURL) => {
+          setImages((prevState) => [...prevState, downloadURL]);
+        });
+      });
+    }
+  }
+
   useEffect(() => {
     (async () => {
       const url = await getDefaultImageURL(
@@ -74,7 +118,13 @@ export function StorageProvider({ children }) {
     })();
   }, []);
 
-  const value = { defaultPhotoURL, uploadImageFile };
+  const value = {
+    defaultPhotoURL,
+    uploadImageFile,
+    getImages,
+    images,
+    pageTokens,
+  };
   return (
     <StorageContext.Provider value={value}>
       {!loading ? (

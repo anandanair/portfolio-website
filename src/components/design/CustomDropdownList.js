@@ -1,4 +1,6 @@
 import {
+  ArrowBack,
+  ArrowForward,
   Circle,
   HorizontalRule,
   Image,
@@ -17,7 +19,10 @@ import {
   DialogContentText,
   DialogTitle,
   Divider,
+  Fade,
   Grid,
+  Grow,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -26,7 +31,7 @@ import {
   TextField,
   ThemeProvider,
 } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useFirestore } from "../../contexts/FirestoreContext";
 import { useLocalTheme } from "../../contexts/ThemeContext";
 import formatCamelCase from "../../utils/formatCamelCase";
@@ -35,6 +40,7 @@ import useOnClickOutside from "../../utils/hooks/useOnClickOutside";
 import { useStorage } from "../../contexts/StorageContext";
 import { v4 as uuidv4 } from "uuid";
 import LinearProgressWithLabel from "../LinearProgressWithLabel";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const darkTheme = createTheme({
   palette: { mode: "dark" },
@@ -52,6 +58,8 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
   const [currentDialog, setCurrentDialog] = useState("");
   const [imageUploading, setImageUploading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [imagePage, setImagePage] = useState(0);
+  const [userSelect, setUserSelect] = useState("next");
 
   // Refs
   const menuRef = useRef(null);
@@ -59,7 +67,7 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
   // Contexts
   const { firestoreUser } = useFirestore();
   const { localTheme } = useLocalTheme();
-  const { uploadImageFile } = useStorage();
+  const { uploadImageFile, getImages, images, pageTokens } = useStorage();
 
   //Functions
   const openTextDialog = (type) => {
@@ -120,6 +128,31 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
     }
   };
 
+  const selectImage = (imageURL) => {
+    closeTextDialog();
+    closeDropdown();
+    onAdd("image", imageURL);
+  };
+
+  const nextPage = () => {
+    setImagePage((prevState) => prevState + 1);
+    setUserSelect("next");
+  };
+  const previousPage = () => {
+    setImagePage((prevState) => prevState - 1);
+    setUserSelect("prev");
+  };
+
+  useEffect(() => {
+    if (open && currentDialog === "Image") {
+      getImages(pageTokens[imagePage - 1], imagePage);
+    }
+
+    return () => {
+      // Unmount
+    };
+  }, [open, currentDialog, imagePage, userSelect]);
+
   // List of Items in Menu
   const menuList = [
     { icon: Title, label: "Add Text", onclick: openTextDialog, type: "Text" },
@@ -178,7 +211,7 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
             <DialogContentText>
               {currentDialog === "Text"
                 ? "Select a text from the details you added or enter a custom text to add."
-                : "Upload an image from your device."}
+                : "Select from existing images or Upload an image from your device."}
             </DialogContentText>
             {currentDialog === "Text" ? (
               <React.Fragment>
@@ -254,6 +287,54 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
               </React.Fragment>
             ) : (
               <React.Fragment>
+                <Grow in={images.length > 0}>
+                  <Grid
+                    sx={{ my: 2 }}
+                    container
+                    spacing={1}
+                    direction="row"
+                    justifyContent="space-around"
+                    alignItems="center"
+                  >
+                    <Grid item>
+                      <IconButton
+                        onClick={previousPage}
+                        disabled={!pageTokens[imagePage - 1]}
+                      >
+                        <ArrowBack />
+                      </IconButton>
+                    </Grid>
+                    {images.map((url, index) => (
+                      <Grid item key={index}>
+                        <div
+                          onClick={() => selectImage(url)}
+                          style={{ cursor: "pointer" }}
+                        >
+                          <LazyLoadImage
+                            alt="image"
+                            effect="blur"
+                            height="80px"
+                            src={url}
+                            width="80px"
+                            style={{
+                              objectFit: "cover",
+                              pointerEvents: "none",
+                              borderRadius: "10px",
+                            }}
+                          />
+                        </div>
+                      </Grid>
+                    ))}
+                    <Grid item>
+                      <IconButton
+                        onClick={nextPage}
+                        disabled={!pageTokens[imagePage]}
+                      >
+                        <ArrowForward />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </Grow>
                 {imageUploading && <LinearProgressWithLabel value={progress} />}
                 <Button
                   disabled={imageUploading}
