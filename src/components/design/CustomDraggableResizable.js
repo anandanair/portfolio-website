@@ -136,6 +136,30 @@ export default function CustomDraggableResizable(props) {
     properties.dimensions.width,
   ]);
 
+  function renderSwitch(type) {
+    switch (type) {
+      case "text":
+        return (
+          <div
+            style={{
+              fontFamily: props.fontFamily,
+              color: properties.color,
+              fontSize: properties.fontSize,
+              opacity: properties.opacity / 100,
+              textAlign: "left",
+            }}
+          >
+            {properties.value}
+          </div>
+        );
+      case "image":
+        return;
+
+      default:
+        break;
+    }
+  }
+
   return (
     <React.Fragment>
       {/* {isDragging && (
@@ -216,19 +240,7 @@ export default function CustomDraggableResizable(props) {
             onResizeStop={handleResizeStop}
             onResizeStart={handleResizeStart}
           >
-            {properties.type === "text" && (
-              <div
-                style={{
-                  fontFamily: props.fontFamily,
-                  color: properties.color,
-                  fontSize: properties.fontSize,
-                  opacity: properties.opacity / 100,
-                  textAlign: "left",
-                }}
-              >
-                {properties.value}
-              </div>
-            )}
+            {renderSwitch(properties.type)}
           </Resizable>
         </Box>
       </Draggable>
