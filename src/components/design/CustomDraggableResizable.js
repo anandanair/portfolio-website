@@ -3,6 +3,7 @@ import { Box, IconButton } from "@mui/material";
 import { Resizable } from "re-resizable";
 import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useLocalTheme } from "../../contexts/ThemeContext";
 import ContextMenu from "../ContextMenu";
 
@@ -40,6 +41,10 @@ export default function CustomDraggableResizable(props) {
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [contextMenu, setContextMenu] = useState(initialContextMenu);
+  const [stateDimensions, setStateDimensions] = useState({
+    width: properties.dimensions.width,
+    height: properties.dimensions.height,
+  });
 
   const handleResizeStart = (event) => {
     event.stopPropagation();
@@ -47,18 +52,25 @@ export default function CustomDraggableResizable(props) {
   };
 
   const imageStyleProps = {
-    backgroundImage: `url(${properties.value})`,
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
+    objectFit: "cover",
     borderRadius: !isResizing && `${properties.borderRadius}px`,
     opacity: properties.opacity / 100,
     border: `${properties.borderThickness}px ${properties.borderType} ${properties.borderColor}`,
+    pointerEvents: "none",
   };
 
   const handleResizeStop = (e, direction, ref, d) => {
     setIsResizing(false);
     setChildWidth(childWidth + d.width);
     props.onResizeStop(d, `${props.id}`);
+  };
+
+  const handleResize = (e, direction, ref) => {
+    setStateDimensions((prevState) => ({
+      ...prevState,
+      width: ref.offsetWidth,
+      height: ref.offsetHeight,
+    }));
   };
 
   const handleDragStart = () => {
@@ -153,7 +165,16 @@ export default function CustomDraggableResizable(props) {
           </div>
         );
       case "image":
-        return;
+        return (
+          <LazyLoadImage
+            alt="image"
+            effect="blur"
+            height={stateDimensions.height}
+            src={properties.value}
+            width={stateDimensions.width}
+            style={imageStyleProps}
+          />
+        );
 
       default:
         break;
@@ -236,7 +257,8 @@ export default function CustomDraggableResizable(props) {
           <Resizable
             className="textContent"
             size={properties.dimensions}
-            style={properties.type === "image" && imageStyleProps}
+            onResize={handleResize}
+            // style={properties.type === "image" && imageStyleProps}
             onResizeStop={handleResizeStop}
             onResizeStart={handleResizeStart}
           >

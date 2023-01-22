@@ -43,10 +43,10 @@ export function StorageProvider({ children }) {
           progressCallback(progress);
           switch (snapshot.state) {
             case "paused":
-              console.log("Upload is paused");
+              // console.log("Upload is paused");
               break;
             case "running":
-              console.log("Upload is running");
+              // console.log("Upload is running");
               break;
           }
         },
@@ -57,17 +57,9 @@ export function StorageProvider({ children }) {
         async () => {
           // Upload completed successfully, now we can get the download URL
           const imageURL = await getDefaultImageURL(path, fileName);
-          console.log("File available at", imageURL);
           resolve(imageURL);
-          // getDefaultImageURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          //   console.log("File available at", downloadURL);
-          // });
         }
       );
-      // await uploadBytes(storageRef, file);
-      // const imageURL = await getDefaultImageURL(path, fileName);
-      // return imageURL;
-      // return await updatePortfolio(imageURL, "primaryPhotoURL");
     });
   }
 
