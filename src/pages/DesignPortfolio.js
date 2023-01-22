@@ -135,6 +135,17 @@ export default function DesignPortfolio() {
     });
   };
 
+  const handleDelete = () => {
+    // let newItems = Object.keys(properties.children)
+    //   .filter((key) => key !== customizeObject.id)
+    //   .reduce((obj, key) => {
+    //     obj[key] = properties.children[key];
+    //     return obj;
+    //   });
+    // console.log(newItems);
+    // console.log(customizeObject.id);
+  };
+
   const handleAccordionChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -182,6 +193,7 @@ export default function DesignPortfolio() {
             properties={properties.children}
             onChange={handleChildren}
             customizeObject={customizeObject}
+            onDelete={handleDelete}
           />
         );
 
@@ -214,14 +226,7 @@ export default function DesignPortfolio() {
 
                   {Object.keys(customizeObject).length > 0 && (
                     <Fade in={Object.keys(customizeObject).length > 0}>
-                      <Box>
-                        {renderSwitch(customizeObject.type)}
-                        {/* <TextDesign
-                          properties={properties.children}
-                          handleChildren={handleChildren}
-                          customizeObject={customizeObject}
-                        /> */}
-                      </Box>
+                      <Box>{renderSwitch(customizeObject.type)}</Box>
                     </Fade>
                   )}
 

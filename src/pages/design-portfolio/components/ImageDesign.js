@@ -1,8 +1,9 @@
-import { Circle, LineWeight, Opacity } from "@mui/icons-material";
+import { Circle, Delete, LineWeight, Opacity } from "@mui/icons-material";
 import {
   Box,
   Button,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -23,7 +24,12 @@ const borderTypes = [
   { value: "outset", label: "Outset" },
 ];
 
-export default function ImageDesign({ properties, onChange, customizeObject }) {
+export default function ImageDesign({
+  properties,
+  onChange,
+  customizeObject,
+  onDelete,
+}) {
   return (
     <Box className="customizeForm">
       <Stack spacing={2} sx={{ m: 2 }}>
@@ -84,6 +90,9 @@ export default function ImageDesign({ properties, onChange, customizeObject }) {
             onChange(newValue, [customizeObject.id], "borderThickness")
           }
         />
+        <IconButton onClick={onDelete}>
+          <Delete />
+        </IconButton>
       </Stack>
     </Box>
   );
