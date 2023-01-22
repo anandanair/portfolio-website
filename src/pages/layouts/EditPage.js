@@ -8,6 +8,7 @@ export default function EditPage({
   handleZoom,
   onResize,
   onDrag,
+  onClick,
 }) {
   // Refs
   const boxRef = useRef(null);
@@ -127,6 +128,7 @@ export default function EditPage({
             onResizeStop={handleResizeStop}
             onDragStop={handleDragStop}
             boxRef={boxRef}
+            onClick={() => onClick(properties.children[key], key)}
           />
           //   </Box>
         ))}

@@ -187,6 +187,7 @@ export default function CustomDraggableResizable(props) {
       >
         <Box
           onContextMenu={handleRightClick}
+          onClick={props.onClick}
           className={
             properties.type === "image" && !isResizing && "textContent"
           }

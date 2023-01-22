@@ -51,7 +51,7 @@ export default function CustomTopMenu({
       default:
         break;
     }
-    onAddComponent(newObject, "children");
+    onAddComponent(newObject);
   };
 
   return (

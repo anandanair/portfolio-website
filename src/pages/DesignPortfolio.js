@@ -4,6 +4,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Fade,
   Grid,
   IconButton,
   Slider,
@@ -16,7 +17,7 @@ import DesignedPage from "./layouts/DesignedPage";
 import { useStorage } from "../contexts/StorageContext";
 import { useFirestore } from "../contexts/FirestoreContext";
 import Compressor from "compressorjs";
-import { Add, ZoomIn, ZoomOut } from "@mui/icons-material";
+import { Add, FormatSize, Opacity, ZoomIn, ZoomOut } from "@mui/icons-material";
 import BackgroundColorCheckbox from "./design-portfolio/components/BackgroundColorCheckbox";
 import NameDesign from "./design-portfolio/components/NameDesign";
 import SummaryDesign from "./design-portfolio/components/SummaryDesign";
@@ -25,6 +26,8 @@ import WorkExperienceDesign from "./design-portfolio/components/WorkExperienceDe
 import CustomTopMenu from "../components/design/CustomTopMenu";
 import EditPage from "./layouts/EditPage";
 import { v4 as uuidv4 } from "uuid";
+import { MuiColorInput } from "mui-color-input";
+import CustomSlider from "../components/CustomSlider";
 
 export default function DesignPortfolio() {
   const { uploadImageFile } = useStorage();
@@ -34,6 +37,7 @@ export default function DesignPortfolio() {
   const [expanded, setExpanded] = useState(false);
   const rafRef = useRef(null);
   const [zoomValue, setZoomValue] = useState(100);
+  const [customizeObject, setCustomizeObject] = useState({});
 
   const handleChange = (value, name) => {
     setProperties({
@@ -63,12 +67,14 @@ export default function DesignPortfolio() {
   };
 
   const handleResize = (width, height, name) => {
+    //  Set state
     setProperties({
       ...properties,
       children: {
         ...properties.children,
         [name]: {
           ...properties.children[name],
+          // fontSize: newFontSize,
           dimensions: {
             width: width,
             height: height,
@@ -76,6 +82,12 @@ export default function DesignPortfolio() {
         },
       },
     });
+  };
+
+  const handleOnClick = (object, key) => {
+    const newObject = object;
+    newObject.id = key;
+    setCustomizeObject(newObject);
   };
 
   const handleFile = async (event) => {
@@ -100,22 +112,25 @@ export default function DesignPortfolio() {
     });
   };
 
-  const handleNestedChange = (value, name, nestedProp) => {
+  const addChildren = (value) => {
     setProperties({
       ...properties,
-      [name]: {
-        ...properties[name],
-        [nestedProp]: value,
+      children: {
+        ...properties.children,
+        [uuidv4()]: value,
       },
     });
   };
 
-  const handleChildren = (value, name) => {
+  const handleChildren = (value, name, nestedProp) => {
     setProperties({
       ...properties,
-      [name]: {
-        ...properties[name],
-        [uuidv4()]: value,
+      children: {
+        ...properties.children,
+        [name]: {
+          ...properties.children[name],
+          [nestedProp]: value,
+        },
       },
     });
   };
@@ -164,13 +179,59 @@ export default function DesignPortfolio() {
                   overflowX: "hidden",
                 }}
               >
-                <Stack spacing={2}>
+                <Stack spacing={3}>
                   <BackgroundColorCheckbox
                     expanded={expanded}
                     handleAccordionChange={handleAccordionChange}
                     properties={properties}
                     onChange={handleChange}
                   />
+
+                  {Object.keys(customizeObject).length > 0 && (
+                    <Fade in={Object.keys(customizeObject).length > 0}>
+                      <Stack
+                        spacing={2}
+                        style={{ marginRight: "16px", marginLeft: "16px" }}
+                      >
+                        <MuiColorInput
+                          label="Text Color"
+                          fullWidth
+                          value={properties.children[customizeObject.id].color}
+                          onChange={(color) =>
+                            handleChildren(color, customizeObject.id, "color")
+                          }
+                        />
+                        <CustomSlider
+                          icon={FormatSize}
+                          value={
+                            properties.children[customizeObject.id].fontSize
+                          }
+                          max={100}
+                          onChange={(event, newValue) =>
+                            handleChildren(
+                              newValue,
+                              customizeObject.id,
+                              "fontSize"
+                            )
+                          }
+                        />
+                        <CustomSlider
+                          icon={Opacity}
+                          value={
+                            properties.children[customizeObject.id].opacity
+                          }
+                          max={100}
+                          onChange={(event, newValue) =>
+                            handleChildren(
+                              newValue,
+                              customizeObject.id,
+                              "opacity"
+                            )
+                          }
+                        />
+                      </Stack>
+                    </Fade>
+                  )}
 
                   {/* <NameDesign
                     expanded={expanded}
@@ -216,7 +277,7 @@ export default function DesignPortfolio() {
               handleZoom={handleSlider}
               resetDesign={resetDesign}
               saveDesign={saveDesign}
-              onAddComponent={handleChildren}
+              onAddComponent={addChildren}
             />
 
             <Card sx={{ width: 1, backgroundColor: "transparent" }}>
@@ -227,6 +288,7 @@ export default function DesignPortfolio() {
                   handleZoom={setZoomValue}
                   onResize={handleResize}
                   onDrag={handlePosition}
+                  onClick={handleOnClick}
                 />
               </CardContent>
             </Card>
