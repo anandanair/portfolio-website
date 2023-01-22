@@ -47,7 +47,7 @@ export default function CustomDraggableResizable(props) {
   };
 
   const imageStyleProps = {
-    backgroundImage: `url(${props.imageURL})`,
+    backgroundImage: `url(${properties.value})`,
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     borderRadius: !isResizing && `${properties.borderRadius}px`,
@@ -216,17 +216,19 @@ export default function CustomDraggableResizable(props) {
             onResizeStop={handleResizeStop}
             onResizeStart={handleResizeStart}
           >
-            <div
-              style={{
-                fontFamily: props.fontFamily,
-                color: properties.color,
-                fontSize: properties.fontSize,
-                opacity: properties.opacity / 100,
-                textAlign: "left",
-              }}
-            >
-              {properties.value}
-            </div>
+            {properties.type === "text" && (
+              <div
+                style={{
+                  fontFamily: props.fontFamily,
+                  color: properties.color,
+                  fontSize: properties.fontSize,
+                  opacity: properties.opacity / 100,
+                  textAlign: "left",
+                }}
+              >
+                {properties.value}
+              </div>
+            )}
           </Resizable>
         </Box>
       </Draggable>

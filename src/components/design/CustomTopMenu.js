@@ -25,22 +25,27 @@ export default function CustomTopMenu({
     const newObject = {
       type: type,
       position: { x: 0, y: 0 },
-      dimensions: {
-        width: value.length > 80 ? 700 : value.length * 10,
-        height: value.length < 80 ? 30 : value.length / 2,
-      },
       opacity: 100,
       zIndex: 10,
+      value: value,
     };
 
     // Add properties based on type
     switch (type) {
       case "text":
-        newObject.value = value;
         newObject.fontSize = 16;
         newObject.color = "white";
+        newObject.dimensions = {
+          width: value.length > 80 ? 700 : value.length * 10,
+          height: value.length < 80 ? 30 : value.length / 2,
+        };
         break;
       case "image":
+        newObject.dimensions = { width: 200, height: 200 };
+        newObject.borderRadius = 20;
+        newObject.borderThickness = 5;
+        newObject.borderType = "solid";
+        newObject.borderColor = "white";
         break;
       case "rectangle":
         break;

@@ -1,5 +1,10 @@
 import { Box, CircularProgress } from "@mui/material";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  uploadBytesResumable,
+} from "firebase/storage";
 import React, { useContext, useEffect, useState } from "react";
 import { storage } from "../firebase";
 import { useFirestore } from "./FirestoreContext";
@@ -23,12 +28,47 @@ export function StorageProvider({ children }) {
   }
 
   //upload image to users specified collection with the specified file name
-  async function uploadImageFile(file, fileName) {
+  async function uploadImageFile(file, fileName, progressCallback) {
     const path = `users/${currentUser.uid}/images`;
     const storageRef = ref(storage, `${path}/${fileName}`);
-    await uploadBytes(storageRef, file);
-    const imageURL = await getDefaultImageURL(path, fileName);
-    return await updatePortfolio(imageURL, "primaryPhotoURL");
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    return new Promise((resolve, reject) => {
+      //Listener for progress
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          progressCallback(progress);
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          // Handle unsuccessful uploads
+          reject(error);
+        },
+        async () => {
+          // Upload completed successfully, now we can get the download URL
+          const imageURL = await getDefaultImageURL(path, fileName);
+          console.log("File available at", imageURL);
+          resolve(imageURL);
+          // getDefaultImageURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          //   console.log("File available at", downloadURL);
+          // });
+        }
+      );
+      // await uploadBytes(storageRef, file);
+      // const imageURL = await getDefaultImageURL(path, fileName);
+      // return imageURL;
+      // return await updatePortfolio(imageURL, "primaryPhotoURL");
+    });
   }
 
   useEffect(() => {

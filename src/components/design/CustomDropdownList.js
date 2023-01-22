@@ -30,7 +30,11 @@ import React, { useRef, useState } from "react";
 import { useFirestore } from "../../contexts/FirestoreContext";
 import { useLocalTheme } from "../../contexts/ThemeContext";
 import formatCamelCase from "../../utils/formatCamelCase";
+import Compressor from "compressorjs";
 import useOnClickOutside from "../../utils/hooks/useOnClickOutside";
+import { useStorage } from "../../contexts/StorageContext";
+import { v4 as uuidv4 } from "uuid";
+import LinearProgressWithLabel from "../LinearProgressWithLabel";
 
 const darkTheme = createTheme({
   palette: { mode: "dark" },
@@ -45,6 +49,9 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
   const [nestedObjects, setNestedObjects] = useState([]);
+  const [currentDialog, setCurrentDialog] = useState("");
+  const [imageUploading, setImageUploading] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   // Refs
   const menuRef = useRef(null);
@@ -52,9 +59,11 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
   // Contexts
   const { firestoreUser } = useFirestore();
   const { localTheme } = useLocalTheme();
+  const { uploadImageFile } = useStorage();
 
   //Functions
-  const openTextDialog = () => {
+  const openTextDialog = (type) => {
+    setCurrentDialog(type);
     setOpen(true);
   };
 
@@ -90,13 +99,49 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
     onAdd("text", value);
   };
 
+  const handleImageAdd = (event) => {
+    const file = event.target.files[0];
+    let imageURL = "";
+    if (file) {
+      setImageUploading(true);
+      new Compressor(file, {
+        quality: 0.5,
+        success: async (result) => {
+          // imageURL = await uploadImageFile(result, uuidv4());
+          imageURL = await uploadImageFile(result, uuidv4(), (progress) => {
+            setProgress(progress);
+          });
+          setImageUploading(false);
+          closeTextDialog();
+          closeDropdown();
+          onAdd("image", imageURL);
+        },
+      });
+    }
+  };
+
   // List of Items in Menu
   const menuList = [
-    { icon: Title, label: "Add Text", onclick: openTextDialog },
-    { icon: Image, label: "Add Image", onclick: openTextDialog },
-    { icon: Rectangle, label: "Add Rectangle", onclick: openTextDialog },
-    { icon: Circle, label: "Add Cirlce", onclick: openTextDialog },
-    { icon: HorizontalRule, label: "Add Line", onclick: openTextDialog },
+    { icon: Title, label: "Add Text", onclick: openTextDialog, type: "Text" },
+    { icon: Image, label: "Add Image", onclick: openTextDialog, type: "Image" },
+    {
+      icon: Rectangle,
+      label: "Add Rectangle",
+      onclick: openTextDialog,
+      type: "text",
+    },
+    {
+      icon: Circle,
+      label: "Add Cirlce",
+      onclick: openTextDialog,
+      type: "text",
+    },
+    {
+      icon: HorizontalRule,
+      label: "Add Line",
+      onclick: openTextDialog,
+      type: "text",
+    },
   ];
 
   return (
@@ -115,7 +160,7 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
         <List dense>
           {menuList.map((menu, index) => (
             <ListItem key={index} disableGutters>
-              <ListItemButton onClick={menu.onclick}>
+              <ListItemButton onClick={() => menu.onclick(menu.type)}>
                 <ListItemIcon>
                   <menu.icon />
                 </ListItemIcon>
@@ -128,85 +173,111 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
       <ThemeProvider theme={localTheme === "dark" ? darkTheme : lightTheme}>
         <CssBaseline />
         <Dialog open={open} onClose={closeTextDialog}>
-          <DialogTitle>Text</DialogTitle>
+          <DialogTitle>{currentDialog}</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Select a text from the details you added or enter a custom text to
-              add.
+              {currentDialog === "Text"
+                ? "Select a text from the details you added or enter a custom text to add."
+                : "Upload an image from your device."}
             </DialogContentText>
-            <Grid
-              sx={{ my: 2 }}
-              container
-              spacing={1}
-              direction="row"
-              justifyContent="space-around"
-              alignItems="center"
-            >
-              {Object.keys(firestoreUser.portfolio)
-                .filter(
-                  (key) => key !== "primaryPhotoURL" && key !== "createdAt"
-                )
-                .map((key, index) => (
-                  <Grid key={index} item>
-                    <Chip
-                      label={formatCamelCase(key)}
-                      onClick={() => handleChip(key)}
-                    />
-                  </Grid>
-                ))}
-            </Grid>
-
-            {nestedObjects.map((object, index) => (
-              <Box key={index}>
-                <Divider />
+            {currentDialog === "Text" ? (
+              <React.Fragment>
                 <Grid
                   sx={{ my: 2 }}
                   container
                   spacing={1}
                   direction="row"
-                  // justifyContent="space-around"
+                  justifyContent="space-around"
                   alignItems="center"
                 >
-                  {Object.keys(object)
+                  {Object.keys(firestoreUser.portfolio)
                     .filter(
-                      (key) =>
-                        key !== "startDate" &&
-                        key !== "endDate" &&
-                        key !== "id" &&
-                        key !== "issueDate" &&
-                        key !== "credentialURL"
+                      (key) => key !== "primaryPhotoURL" && key !== "createdAt"
                     )
                     .map((key, index) => (
                       <Grid key={index} item>
                         <Chip
-                          label={
-                            object[key].length < 80
-                              ? object[key]
-                              : "Description"
-                          }
-                          onClick={() => handleNestedChip(object[key])}
+                          label={formatCamelCase(key)}
+                          onClick={() => handleChip(key)}
                         />
                       </Grid>
                     ))}
                 </Grid>
-              </Box>
-            ))}
 
-            <TextField
-              autoFocus
-              margin="dense"
-              id="addText"
-              label="Text to Add"
-              multiline={value.length > 50}
-              value={value}
-              onChange={handleChange}
-              fullWidth
-              variant="outlined"
-            />
+                {nestedObjects.map((object, index) => (
+                  <Box key={index}>
+                    <Divider />
+                    <Grid
+                      sx={{ my: 2 }}
+                      container
+                      spacing={1}
+                      direction="row"
+                      // justifyContent="space-around"
+                      alignItems="center"
+                    >
+                      {Object.keys(object)
+                        .filter(
+                          (key) =>
+                            key !== "startDate" &&
+                            key !== "endDate" &&
+                            key !== "id" &&
+                            key !== "issueDate" &&
+                            key !== "credentialURL"
+                        )
+                        .map((key, index) => (
+                          <Grid key={index} item>
+                            <Chip
+                              label={
+                                object[key].length < 80
+                                  ? object[key]
+                                  : "Description"
+                              }
+                              onClick={() => handleNestedChip(object[key])}
+                            />
+                          </Grid>
+                        ))}
+                    </Grid>
+                  </Box>
+                ))}
+
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="addText"
+                  label="Text to Add"
+                  multiline={value.length > 50}
+                  value={value}
+                  onChange={handleChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                {imageUploading && <LinearProgressWithLabel value={progress} />}
+                <Button
+                  disabled={imageUploading}
+                  fullWidth
+                  variant="outlined"
+                  component="label"
+                  sx={{ mt: 2 }}
+                >
+                  Upload Image
+                  <input
+                    type="file"
+                    hidden
+                    accept=".jpg, .png, .jpeg"
+                    onChange={handleImageAdd}
+                  />
+                </Button>
+              </React.Fragment>
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={closeTextDialog}>Cancel</Button>
-            <Button onClick={handleTextAdd}>Add</Button>
+            {currentDialog === "Text" && (
+              <Button onClick={handleTextAdd}>Add</Button>
+            )}
           </DialogActions>
         </Dialog>
       </ThemeProvider>

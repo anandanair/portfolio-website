@@ -1,5 +1,6 @@
 import { Circle, LineWeight, Opacity } from "@mui/icons-material";
 import {
+  Box,
   Button,
   FormControl,
   InputLabel,
@@ -9,7 +10,6 @@ import {
 } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
 import React from "react";
-import CustomAccordion from "../../../components/CustomAccordion";
 import CustomSlider from "../../../components/CustomSlider";
 
 const borderTypes = [
@@ -23,25 +23,20 @@ const borderTypes = [
   { value: "outset", label: "Outset" },
 ];
 
-export default function PrimaryImageDesign(props) {
+export default function ImageDesign({ properties, onChange, customizeObject }) {
   return (
-    <CustomAccordion
-      id="primaryImage"
-      title="Primary Image"
-      expanded={props.expanded}
-      onChange={props.handleAccordionChange}
-    >
-      <Stack spacing={2}>
+    <Box className="customizeForm">
+      <Stack spacing={2} sx={{ m: 2 }}>
         <Stack direction="row" spacing={2}>
           <FormControl fullWidth>
             <InputLabel id="borderType">Border Type</InputLabel>
             <Select
               labelId="borderType"
               id="borderTypeSelect"
-              value={props.properties.primaryImage.borderType}
+              value={properties[customizeObject.id].borderType}
               label="Border Type"
               onChange={(event) =>
-                props.onChange(event.target.value, "borderType")
+                onChange(event.target.value, [customizeObject.id], "borderType")
               }
             >
               {borderTypes.map((type, index) => (
@@ -54,47 +49,42 @@ export default function PrimaryImageDesign(props) {
           <MuiColorInput
             label="Border Color"
             fullWidth
-            value={props.properties.primaryImage.borderColor}
-            onChange={(color) => props.onChange(color, "borderColor")}
+            value={properties[customizeObject.id].borderColor}
+            onChange={(color) =>
+              onChange(color, [customizeObject.id], "borderColor")
+            }
           />
         </Stack>
         <CustomSlider
           icon={Opacity}
-          value={props.properties.primaryImage.opacity}
+          value={properties[customizeObject.id].opacity}
           max={100}
-          onChange={(event, newValue) => props.onChange(newValue, "opacity")}
+          onChange={(event, newValue) =>
+            onChange(newValue, [customizeObject.id], "opacity")
+          }
         />
         <CustomSlider
           icon={Circle}
           max={
             Math.min(
-              props.properties.primaryImage.dimensions.width,
-              props.properties.primaryImage.dimensions.height
+              properties[customizeObject.id].dimensions.width,
+              properties[customizeObject.id].dimensions.height
             ) / 2
           }
-          value={props.properties.primaryImage.borderRadius}
+          value={properties[customizeObject.id].borderRadius}
           onChange={(event, newValue) =>
-            props.onChange(newValue, "borderRadius")
+            onChange(newValue, [customizeObject.id], "borderRadius")
           }
         />
         <CustomSlider
           icon={LineWeight}
-          value={props.properties.primaryImage.borderThickness}
+          value={properties[customizeObject.id].borderThickness}
           max={30}
           onChange={(event, newValue) =>
-            props.onChange(newValue, "borderThickness")
+            onChange(newValue, [customizeObject.id], "borderThickness")
           }
         />
-        <Button variant="outlined" component="label">
-          Change Primary Image
-          <input
-            type="file"
-            hidden
-            accept=".jpg, .png, .jpeg"
-            onChange={props.onFileChange}
-          />
-        </Button>
       </Stack>
-    </CustomAccordion>
+    </Box>
   );
 }

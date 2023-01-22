@@ -21,7 +21,7 @@ import { Add, FormatSize, Opacity, ZoomIn, ZoomOut } from "@mui/icons-material";
 import BackgroundColorCheckbox from "./design-portfolio/components/BackgroundColorCheckbox";
 import TextDesign from "./design-portfolio/components/TextDesign";
 import SummaryDesign from "./design-portfolio/components/SummaryDesign";
-import PrimaryImageDesign from "./design-portfolio/components/PrimaryImageDesign";
+import ImageDesign from "./design-portfolio/components/ImageDesign";
 import WorkExperienceDesign from "./design-portfolio/components/WorkExperienceDesign";
 import CustomTopMenu from "../components/design/CustomTopMenu";
 import EditPage from "./layouts/EditPage";
@@ -155,6 +155,7 @@ export default function DesignPortfolio() {
 
   async function resetDesign() {
     const defaultDesign = await createPortfolioDesign();
+    setCustomizeObject({});
     setProperties(defaultDesign);
   }
 
@@ -164,6 +165,30 @@ export default function DesignPortfolio() {
       cancelAnimationFrame(rafRef.current);
     };
   }, []);
+
+  function renderSwitch(type) {
+    switch (type) {
+      case "text":
+        return (
+          <TextDesign
+            properties={properties.children}
+            handleChildren={handleChildren}
+            customizeObject={customizeObject}
+          />
+        );
+      case "image":
+        return (
+          <ImageDesign
+            properties={properties.children}
+            onChange={handleChildren}
+            customizeObject={customizeObject}
+          />
+        );
+
+      default:
+        break;
+    }
+  }
 
   return (
     <DrawerNavBar>
@@ -190,11 +215,12 @@ export default function DesignPortfolio() {
                   {Object.keys(customizeObject).length > 0 && (
                     <Fade in={Object.keys(customizeObject).length > 0}>
                       <Box>
-                        <TextDesign
+                        {renderSwitch(customizeObject.type)}
+                        {/* <TextDesign
                           properties={properties.children}
                           handleChildren={handleChildren}
                           customizeObject={customizeObject}
-                        />
+                        /> */}
                       </Box>
                     </Fade>
                   )}
