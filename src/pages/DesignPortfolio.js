@@ -19,7 +19,7 @@ import { useFirestore } from "../contexts/FirestoreContext";
 import Compressor from "compressorjs";
 import { Add, FormatSize, Opacity, ZoomIn, ZoomOut } from "@mui/icons-material";
 import BackgroundColorCheckbox from "./design-portfolio/components/BackgroundColorCheckbox";
-import NameDesign from "./design-portfolio/components/NameDesign";
+import TextDesign from "./design-portfolio/components/TextDesign";
 import SummaryDesign from "./design-portfolio/components/SummaryDesign";
 import PrimaryImageDesign from "./design-portfolio/components/PrimaryImageDesign";
 import WorkExperienceDesign from "./design-portfolio/components/WorkExperienceDesign";
@@ -189,47 +189,13 @@ export default function DesignPortfolio() {
 
                   {Object.keys(customizeObject).length > 0 && (
                     <Fade in={Object.keys(customizeObject).length > 0}>
-                      <Stack
-                        spacing={2}
-                        style={{ marginRight: "16px", marginLeft: "16px" }}
-                      >
-                        <MuiColorInput
-                          label="Text Color"
-                          fullWidth
-                          value={properties.children[customizeObject.id].color}
-                          onChange={(color) =>
-                            handleChildren(color, customizeObject.id, "color")
-                          }
+                      <Box>
+                        <TextDesign
+                          properties={properties.children}
+                          handleChildren={handleChildren}
+                          customizeObject={customizeObject}
                         />
-                        <CustomSlider
-                          icon={FormatSize}
-                          value={
-                            properties.children[customizeObject.id].fontSize
-                          }
-                          max={100}
-                          onChange={(event, newValue) =>
-                            handleChildren(
-                              newValue,
-                              customizeObject.id,
-                              "fontSize"
-                            )
-                          }
-                        />
-                        <CustomSlider
-                          icon={Opacity}
-                          value={
-                            properties.children[customizeObject.id].opacity
-                          }
-                          max={100}
-                          onChange={(event, newValue) =>
-                            handleChildren(
-                              newValue,
-                              customizeObject.id,
-                              "opacity"
-                            )
-                          }
-                        />
-                      </Stack>
+                      </Box>
                     </Fade>
                   )}
 
