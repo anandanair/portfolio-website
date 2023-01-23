@@ -1,7 +1,6 @@
 import {
   ArrowBack,
   ArrowForward,
-  Circle,
   HorizontalRule,
   Image,
   Rectangle,
