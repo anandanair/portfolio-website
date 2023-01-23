@@ -173,6 +173,20 @@ export default function CustomDraggableResizable(props) {
           />
         );
 
+      case "shape":
+        return (
+          <div
+            style={{
+              backgroundColor: properties.color,
+              width: stateDimensions.width,
+              height: stateDimensions.height,
+              borderRadius: properties.borderRadius,
+              border: `${properties.borderThickness}px ${properties.borderType} ${properties.borderColor}`,
+              opacity: properties.opacity / 100,
+            }}
+          ></div>
+        );
+
       default:
         break;
     }
@@ -223,6 +237,7 @@ export default function CustomDraggableResizable(props) {
             onResize={handleResize}
             onResizeStop={handleResizeStop}
             onResizeStart={handleResizeStart}
+            grid={[25, 25]}
           >
             {renderSwitch(properties.type)}
           </Resizable>

@@ -17,6 +17,7 @@ import ImageDesign from "./design-portfolio/components/ImageDesign";
 import CustomTopMenu from "../components/design/CustomTopMenu";
 import EditPage from "./layouts/EditPage";
 import { v4 as uuidv4 } from "uuid";
+import ShapeDesign from "./design-portfolio/components/ShapeDesign";
 
 export default function DesignPortfolio() {
   // Contexts
@@ -174,6 +175,14 @@ export default function DesignPortfolio() {
       case "image":
         return (
           <ImageDesign
+            properties={properties.children}
+            onChange={handleChildren}
+            customizeObject={customizeObject}
+          />
+        );
+      case "shape":
+        return (
+          <ShapeDesign
             properties={properties.children}
             onChange={handleChildren}
             customizeObject={customizeObject}

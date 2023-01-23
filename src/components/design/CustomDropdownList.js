@@ -19,7 +19,6 @@ import {
   DialogContentText,
   DialogTitle,
   Divider,
-  Fade,
   Grid,
   Grow,
   IconButton,
@@ -31,7 +30,7 @@ import {
   TextField,
   ThemeProvider,
 } from "@mui/material";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFirestore } from "../../contexts/FirestoreContext";
 import { useLocalTheme } from "../../contexts/ThemeContext";
 import formatCamelCase from "../../utils/formatCamelCase";
@@ -59,7 +58,6 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
   const [imageUploading, setImageUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [imagePage, setImagePage] = useState(0);
-  const [userSelect, setUserSelect] = useState("next");
 
   // Refs
   const menuRef = useRef(null);
@@ -74,6 +72,11 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
     setCurrentDialog(type);
     setOpen(true);
   };
+
+  function addShape(type) {
+    closeDropdown();
+    onAdd(type, "");
+  }
 
   const closeTextDialog = () => {
     setOpen(false);
@@ -136,11 +139,9 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
 
   const nextPage = () => {
     setImagePage((prevState) => prevState + 1);
-    setUserSelect("next");
   };
   const previousPage = () => {
     setImagePage((prevState) => prevState - 1);
-    setUserSelect("prev");
   };
 
   useEffect(() => {
@@ -151,7 +152,8 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
     return () => {
       // Unmount
     };
-  }, [open, currentDialog, imagePage, userSelect]);
+    // eslint-disable-next-line
+  }, [open, currentDialog, imagePage]);
 
   // List of Items in Menu
   const menuList = [
@@ -159,21 +161,15 @@ export default function CustomDropdownList({ closeDropdown, onAdd }) {
     { icon: Image, label: "Add Image", onclick: openTextDialog, type: "Image" },
     {
       icon: Rectangle,
-      label: "Add Rectangle",
-      onclick: openTextDialog,
-      type: "text",
-    },
-    {
-      icon: Circle,
-      label: "Add Cirlce",
-      onclick: openTextDialog,
-      type: "text",
+      label: "Add Shape",
+      onclick: addShape,
+      type: "shape",
     },
     {
       icon: HorizontalRule,
       label: "Add Line",
-      onclick: openTextDialog,
-      type: "text",
+      onclick: addShape,
+      type: "line",
     },
   ];
 

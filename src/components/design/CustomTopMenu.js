@@ -47,7 +47,13 @@ export default function CustomTopMenu({
         newObject.borderType = "solid";
         newObject.borderColor = "white";
         break;
-      case "rectangle":
+      case "shape":
+        newObject.dimensions = { width: 200, height: 200 };
+        newObject.color = "white";
+        newObject.borderRadius = 0;
+        newObject.borderThickness = 0;
+        newObject.borderType = "solid";
+        newObject.borderColor = "black";
         break;
       case "circle":
         break;
