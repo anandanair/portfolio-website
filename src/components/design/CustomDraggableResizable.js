@@ -16,7 +16,6 @@ export default function CustomDraggableResizable(props) {
   const nodeRef = useRef(null);
   const firstRun = useRef(true);
   const [parentWidth, setParentWidth] = useState(0);
-  const [childWidth, setChildWidth] = useState(0);
   const [bounds, setBounds] = useState({
     left: 0,
     top: 0,
@@ -50,7 +49,6 @@ export default function CustomDraggableResizable(props) {
 
   const handleResizeStop = (e, direction, ref, d) => {
     setIsResizing(false);
-    setChildWidth(childWidth + d.width);
     props.onResizeStop(d, `${props.id}`);
   };
 
@@ -68,7 +66,7 @@ export default function CustomDraggableResizable(props) {
 
   const handleDrag = (event, data) => {
     const left = data.x;
-    const right = parentWidth - (data.x + childWidth);
+    const right = parentWidth - (data.x + properties.dimensions.width);
     const top = data.y;
     setSpacing({
       left: left,
@@ -102,6 +100,16 @@ export default function CustomDraggableResizable(props) {
     setContextMenu(initialContextMenu);
   }
 
+  function handleUndo() {
+    props.onUndo();
+    setContextMenu(initialContextMenu);
+  }
+
+  function handleRedo() {
+    props.onRedo();
+    setContextMenu(initialContextMenu);
+  }
+
   const contextMenuClose = () => {
     setContextMenu(initialContextMenu);
   };
@@ -110,28 +118,32 @@ export default function CustomDraggableResizable(props) {
   useEffect(() => {
     if (firstRun.current) {
       firstRun.current = false;
-      const componentWidth = nodeRef.current.offsetWidth;
+      // const componentWidth = nodeRef.current.offsetWidth;
       const boxWidth = props.boxRef.current.offsetWidth;
       setParentWidth(boxWidth);
-      setChildWidth(componentWidth);
+      // setChildWidth(componentWidth);
     }
   }, [props.boxRef]);
 
   //call whenever childWidth or parentWidth value changes
   useEffect(() => {
-    if (childWidth !== 0) {
+    if (properties.dimensions.width !== 0) {
       setBounds((prevState) => {
         return {
           ...prevState,
-          right: parentWidth - childWidth,
+          right: parentWidth - properties.dimensions.width,
         };
       });
     }
-  }, [childWidth, parentWidth]);
+  }, [properties.dimensions.width, parentWidth]);
 
   useEffect(() => {
     //SHow the spacing between elements
   }, [spacing]);
+
+  useEffect(() => {
+    setStateDimensions(properties.dimensions);
+  }, [properties.dimensions]);
 
   function renderSwitch(type) {
     switch (type) {
@@ -175,6 +187,7 @@ export default function CustomDraggableResizable(props) {
         onDrag={handleDrag}
         position={properties.position}
         grid={[25, 25]}
+        disabled={contextMenu.show}
       >
         <Box
           onContextMenu={handleRightClick}
@@ -200,6 +213,8 @@ export default function CustomDraggableResizable(props) {
               onZIndexChange={handleChildrenChange}
               onDelete={handleDelete}
               onCopy={handleCopy}
+              onUndo={handleUndo}
+              onRedo={handleRedo}
             />
           )}
           <Resizable

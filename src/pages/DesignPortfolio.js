@@ -19,13 +19,19 @@ import EditPage from "./layouts/EditPage";
 import { v4 as uuidv4 } from "uuid";
 
 export default function DesignPortfolio() {
+  // Contexts
   const { firestoreUser, updateUser, createPortfolioDesign } = useFirestore();
+
+  // State
   const [open, setOpen] = useState(false);
   const [properties, setProperties] = useState(firestoreUser.design);
   const [expanded, setExpanded] = useState(false);
   const [zoomValue, setZoomValue] = useState(100);
   const [customizeObject, setCustomizeObject] = useState({});
+  const [history, setHistory] = useState([properties.children]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Functions
   const handleChange = (value, name) => {
     setProperties({
       ...properties,
@@ -38,37 +44,65 @@ export default function DesignPortfolio() {
   };
 
   const handlePosition = (x, y, name) => {
+    let update = {
+      ...properties.children,
+      [name]: { ...properties.children[name], position: { x: x, y: y } },
+    };
     setProperties({
       ...properties,
-      children: {
-        ...properties.children,
-        [name]: {
-          ...properties.children[name],
-          position: {
-            x: x,
-            y: y,
-          },
-        },
-      },
+      children: update,
     });
+    addHistory(update);
   };
 
+  // Add's the previous state to history array
+  function addHistory(update) {
+    setHistory((prevHistory) => {
+      if (prevHistory.length === 20) {
+        setCurrentIndex(19);
+        prevHistory.shift();
+      } else {
+        setCurrentIndex(currentIndex + 1);
+      }
+      return [...prevHistory.slice(0, currentIndex + 1), update];
+    });
+  }
+
+  // When user click undo button
+  function handleUndo() {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1);
+      setProperties({
+        ...properties,
+        children: history[currentIndex - 1],
+      });
+    }
+  }
+
+  // When user click redo button
+  function handleRedo() {
+    if (currentIndex < history.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+      setProperties({
+        ...properties,
+        children: history[currentIndex + 1],
+      });
+    }
+  }
+
   const handleResize = (width, height, name) => {
-    //  Set state
+    let update = {
+      ...properties.children,
+      [name]: {
+        ...properties.children[name],
+        dimensions: { width: width, height: height },
+      },
+    };
     setProperties({
       ...properties,
-      children: {
-        ...properties.children,
-        [name]: {
-          ...properties.children[name],
-          // fontSize: newFontSize,
-          dimensions: {
-            width: width,
-            height: height,
-          },
-        },
-      },
+      children: update,
     });
+    addHistory(update);
   };
 
   const handleOnClick = (object, key) => {
@@ -135,7 +169,6 @@ export default function DesignPortfolio() {
             properties={properties.children}
             handleChildren={handleChildren}
             customizeObject={customizeObject}
-            // onDelete={handleDelete}
           />
         );
       case "image":
@@ -144,7 +177,6 @@ export default function DesignPortfolio() {
             properties={properties.children}
             onChange={handleChildren}
             customizeObject={customizeObject}
-            // onDelete={handleDelete}
           />
         );
 
@@ -207,6 +239,8 @@ export default function DesignPortfolio() {
                   onChange={handleChildren}
                   onDelete={handleDelete}
                   onCopy={addChildren}
+                  onUndo={handleUndo}
+                  onRedo={handleRedo}
                 />
               </CardContent>
             </Card>

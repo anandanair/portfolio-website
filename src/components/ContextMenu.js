@@ -31,6 +31,8 @@ export default function ContextMenu({
   onZIndexChange,
   onDelete,
   onCopy,
+  onUndo,
+  onRedo,
 }) {
   const contextMenuRef = useRef(null);
   useOnClickOutside(contextMenuRef, closeContextMenu, false);
@@ -47,8 +49,8 @@ export default function ContextMenu({
   ];
 
   const topIconsList = [
-    { icon: Undo, onClick: handleEditClick },
-    { icon: Redo, onClick: handleEditClick },
+    { icon: Undo, onClick: onUndo },
+    { icon: Redo, onClick: onRedo },
     { icon: ContentCopy, onClick: onCopy },
     { icon: Edit, onClick: handleEditClick },
     { icon: Delete, onClick: onDelete },

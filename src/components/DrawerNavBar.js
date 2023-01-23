@@ -163,6 +163,7 @@ export default function DrawerNavBar({ children }) {
               sx={{
                 height: 50,
                 width: 50,
+                cursor: "pointer",
               }}
               src={logo}
               onClick={() => navigate("/")}
@@ -171,7 +172,7 @@ export default function DrawerNavBar({ children }) {
               variant="h6"
               noWrap
               component="a"
-              href="/"
+              onClick={() => navigate("/")}
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
@@ -180,6 +181,7 @@ export default function DrawerNavBar({ children }) {
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",
+                cursor: "pointer",
               }}
             >
               APW

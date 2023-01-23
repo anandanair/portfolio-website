@@ -12,6 +12,8 @@ export default function EditPage({
   onChange,
   onDelete,
   onCopy,
+  onUndo,
+  onRedo,
 }) {
   // Refs
   const boxRef = useRef(null);
@@ -138,6 +140,8 @@ export default function EditPage({
             onChildrenChange={onChange}
             onDelete={() => onDelete(key)}
             onCopy={() => onCopy(properties.children[key])}
+            onUndo={onUndo}
+            onRedo={onRedo}
           />
           //   </Box>
         ))}
