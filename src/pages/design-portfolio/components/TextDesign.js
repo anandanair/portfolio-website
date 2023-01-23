@@ -8,7 +8,7 @@ export default function TextDesign({
   properties,
   handleChildren,
   customizeObject,
-  onDelete,
+  // onDelete,
 }) {
   return (
     <Box className="customizeForm">
@@ -37,9 +37,9 @@ export default function TextDesign({
             handleChildren(newValue, customizeObject.id, "opacity")
           }
         />
-        <IconButton onClick={onDelete}>
+        {/* <IconButton onClick={onDelete}>
           <Delete />
-        </IconButton>
+        </IconButton> */}
       </Stack>
     </Box>
   );

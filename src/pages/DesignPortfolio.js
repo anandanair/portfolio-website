@@ -135,11 +135,9 @@ export default function DesignPortfolio() {
     });
   };
 
-  const handleDelete = () => {
-    const { [customizeObject.id]: removedChild, ...children } =
-      properties.children;
+  const handleDelete = (id) => {
     setCustomizeObject({});
-
+    const { [id]: removedChild, ...children } = properties.children;
     setProperties({
       ...properties,
       children,
@@ -185,7 +183,7 @@ export default function DesignPortfolio() {
             properties={properties.children}
             handleChildren={handleChildren}
             customizeObject={customizeObject}
-            onDelete={handleDelete}
+            // onDelete={handleDelete}
           />
         );
       case "image":
@@ -194,7 +192,7 @@ export default function DesignPortfolio() {
             properties={properties.children}
             onChange={handleChildren}
             customizeObject={customizeObject}
-            onDelete={handleDelete}
+            // onDelete={handleDelete}
           />
         );
 
@@ -287,6 +285,9 @@ export default function DesignPortfolio() {
                   onResize={handleResize}
                   onDrag={handlePosition}
                   onClick={handleOnClick}
+                  onChange={handleChildren}
+                  onDelete={handleDelete}
+                  onCopy={addChildren}
                 />
               </CardContent>
             </Card>

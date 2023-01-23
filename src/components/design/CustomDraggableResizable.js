@@ -111,6 +111,21 @@ export default function CustomDraggableResizable(props) {
     setContextMenu(initialContextMenu);
   };
 
+  function handleChildrenChange(value, name) {
+    props.onChildrenChange(value, props.id, name);
+    setContextMenu(initialContextMenu);
+  }
+
+  function handleDelete() {
+    props.onDelete();
+    setContextMenu(initialContextMenu);
+  }
+
+  function handleCopy() {
+    props.onCopy();
+    setContextMenu(initialContextMenu);
+  }
+
   const contextMenuClose = () => {
     setContextMenu(initialContextMenu);
   };
@@ -232,7 +247,7 @@ export default function CustomDraggableResizable(props) {
       >
         <Box
           onContextMenu={handleRightClick}
-          onClick={props.onClick}
+          onClick={!contextMenu.show ? props.onClick : () => {}}
           className={
             properties.type === "image" && !isResizing && "textContent"
           }
@@ -242,7 +257,7 @@ export default function CustomDraggableResizable(props) {
             width: properties.dimensions.width + "px",
             cursor: "pointer",
             position: "absolute",
-            zIndex: properties.zIndex,
+            zIndex: !contextMenu.show ? properties.zIndex : 9999,
           }}
         >
           {contextMenu.show && (
@@ -251,7 +266,9 @@ export default function CustomDraggableResizable(props) {
               y={contextMenu.y}
               closeContextMenu={contextMenuClose}
               properties={properties}
-              onClick={handleRightClickSelection}
+              onZIndexChange={handleChildrenChange}
+              onDelete={handleDelete}
+              onCopy={handleCopy}
             />
           )}
           <Resizable

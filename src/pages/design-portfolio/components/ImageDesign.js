@@ -28,7 +28,7 @@ export default function ImageDesign({
   properties,
   onChange,
   customizeObject,
-  onDelete,
+  // onDelete,
 }) {
   return (
     <Box className="customizeForm">
@@ -90,9 +90,9 @@ export default function ImageDesign({
             onChange(newValue, [customizeObject.id], "borderThickness")
           }
         />
-        <IconButton onClick={onDelete}>
+        {/* <IconButton onClick={onDelete}>
           <Delete />
-        </IconButton>
+        </IconButton> */}
       </Stack>
     </Box>
   );

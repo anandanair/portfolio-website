@@ -9,6 +9,9 @@ export default function EditPage({
   onResize,
   onDrag,
   onClick,
+  onChange,
+  onDelete,
+  onCopy,
 }) {
   // Refs
   const boxRef = useRef(null);
@@ -129,6 +132,9 @@ export default function EditPage({
             onDragStop={handleDragStop}
             boxRef={boxRef}
             onClick={() => onClick(properties.children[key], key)}
+            onChildrenChange={onChange}
+            onDelete={() => onDelete(key)}
+            onCopy={() => onCopy(properties.children[key])}
           />
           //   </Box>
         ))}
