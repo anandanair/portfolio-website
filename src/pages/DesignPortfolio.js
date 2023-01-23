@@ -136,14 +136,14 @@ export default function DesignPortfolio() {
   };
 
   const handleDelete = () => {
-    // let newItems = Object.keys(properties.children)
-    //   .filter((key) => key !== customizeObject.id)
-    //   .reduce((obj, key) => {
-    //     obj[key] = properties.children[key];
-    //     return obj;
-    //   });
-    // console.log(newItems);
-    // console.log(customizeObject.id);
+    const { [customizeObject.id]: removedChild, ...children } =
+      properties.children;
+    setCustomizeObject({});
+
+    setProperties({
+      ...properties,
+      children,
+    });
   };
 
   const handleAccordionChange = (panel) => (event, isExpanded) => {
@@ -185,6 +185,7 @@ export default function DesignPortfolio() {
             properties={properties.children}
             handleChildren={handleChildren}
             customizeObject={customizeObject}
+            onDelete={handleDelete}
           />
         );
       case "image":

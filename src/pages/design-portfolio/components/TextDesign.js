@@ -1,5 +1,5 @@
-import { FormatSize, Opacity } from "@mui/icons-material";
-import { Box, Stack } from "@mui/material";
+import { Delete, FormatSize, Opacity } from "@mui/icons-material";
+import { Box, IconButton, Stack } from "@mui/material";
 import { MuiColorInput } from "mui-color-input";
 import React from "react";
 import CustomSlider from "../../../components/CustomSlider";
@@ -8,6 +8,7 @@ export default function TextDesign({
   properties,
   handleChildren,
   customizeObject,
+  onDelete,
 }) {
   return (
     <Box className="customizeForm">
@@ -36,6 +37,9 @@ export default function TextDesign({
             handleChildren(newValue, customizeObject.id, "opacity")
           }
         />
+        <IconButton onClick={onDelete}>
+          <Delete />
+        </IconButton>
       </Stack>
     </Box>
   );
