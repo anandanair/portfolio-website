@@ -1,41 +1,28 @@
 import {
   Box,
-  Button,
   Card,
   CardContent,
   CardHeader,
   Fade,
   Grid,
-  IconButton,
-  Slider,
   Snackbar,
   Stack,
 } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import DrawerNavBar from "../components/DrawerNavBar";
-import DesignedPage from "./layouts/DesignedPage";
-import { useStorage } from "../contexts/StorageContext";
 import { useFirestore } from "../contexts/FirestoreContext";
-import Compressor from "compressorjs";
-import { Add, FormatSize, Opacity, ZoomIn, ZoomOut } from "@mui/icons-material";
 import BackgroundColorCheckbox from "./design-portfolio/components/BackgroundColorCheckbox";
 import TextDesign from "./design-portfolio/components/TextDesign";
-import SummaryDesign from "./design-portfolio/components/SummaryDesign";
 import ImageDesign from "./design-portfolio/components/ImageDesign";
-import WorkExperienceDesign from "./design-portfolio/components/WorkExperienceDesign";
 import CustomTopMenu from "../components/design/CustomTopMenu";
 import EditPage from "./layouts/EditPage";
 import { v4 as uuidv4 } from "uuid";
-import { MuiColorInput } from "mui-color-input";
-import CustomSlider from "../components/CustomSlider";
 
 export default function DesignPortfolio() {
-  const { uploadImageFile } = useStorage();
   const { firestoreUser, updateUser, createPortfolioDesign } = useFirestore();
   const [open, setOpen] = useState(false);
   const [properties, setProperties] = useState(firestoreUser.design);
   const [expanded, setExpanded] = useState(false);
-  const rafRef = useRef(null);
   const [zoomValue, setZoomValue] = useState(100);
   const [customizeObject, setCustomizeObject] = useState({});
 
@@ -90,28 +77,6 @@ export default function DesignPortfolio() {
     setCustomizeObject(newObject);
   };
 
-  const handleFile = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      new Compressor(file, {
-        quality: 0.5,
-        success: async (result) => {
-          await uploadImageFile(result, "primaryImage");
-        },
-      });
-    }
-  };
-
-  const handleImageProperties = (value, name) => {
-    setProperties({
-      ...properties,
-      primaryImage: {
-        ...properties.primaryImage,
-        [name]: value,
-      },
-    });
-  };
-
   const addChildren = (value) => {
     setProperties({
       ...properties,
@@ -148,12 +113,6 @@ export default function DesignPortfolio() {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const handleClick = (id) => {
-    rafRef.current = requestAnimationFrame(() => {
-      setExpanded(id);
-    });
-  };
-
   async function saveDesign() {
     await updateUser("design", properties);
     setOpen(true);
@@ -167,13 +126,6 @@ export default function DesignPortfolio() {
     setCustomizeObject({});
     setProperties(defaultDesign);
   }
-
-  //On Mount and Unmount
-  useEffect(() => {
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
 
   function renderSwitch(type) {
     switch (type) {
@@ -228,39 +180,6 @@ export default function DesignPortfolio() {
                       <Box>{renderSwitch(customizeObject.type)}</Box>
                     </Fade>
                   )}
-
-                  {/* <NameDesign
-                    expanded={expanded}
-                    handleAccordionChange={handleAccordionChange}
-                    properties={properties}
-                    onChange={handleNestedChange}
-                  />
-                  <SummaryDesign
-                    expanded={expanded}
-                    handleAccordionChange={handleAccordionChange}
-                    properties={properties}
-                    onChange={handleNestedChange}
-                  />
-                  <PrimaryImageDesign
-                    expanded={expanded}
-                    handleAccordionChange={handleAccordionChange}
-                    properties={properties}
-                    onChange={handleImageProperties}
-                    onFileChange={handleFile}
-                  />
-
-                  {firestoreUser.portfolio.workExperience.map((exp, index) => (
-                    <WorkExperienceDesign
-                      key={index}
-                      exp={exp}
-                      index={index}
-                      expanded={expanded}
-                      handleAccordionChange={handleAccordionChange}
-                      properties={properties[exp.id]}
-                      onChange={handleNestedChange}
-                      onFileChange={handleFile}
-                    />
-                  ))} */}
                 </Stack>
               </Box>
             </CardContent>

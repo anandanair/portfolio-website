@@ -1,10 +1,8 @@
-import { Edit } from "@mui/icons-material";
-import { Box, IconButton } from "@mui/material";
+import { Box } from "@mui/material";
 import { Resizable } from "re-resizable";
 import React, { useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useLocalTheme } from "../../contexts/ThemeContext";
 import ContextMenu from "../ContextMenu";
 
 const initialContextMenu = {
@@ -19,7 +17,6 @@ export default function CustomDraggableResizable(props) {
   const firstRun = useRef(true);
   const [parentWidth, setParentWidth] = useState(0);
   const [childWidth, setChildWidth] = useState(0);
-  const { getDynamicColor } = useLocalTheme();
   const [bounds, setBounds] = useState({
     left: 0,
     top: 0,
@@ -30,15 +27,7 @@ export default function CustomDraggableResizable(props) {
     right: 0,
     top: 0,
   });
-  const [lefLineTop, setLeftLineTop] = useState(0);
-  const [topLineLeft, setTopLineLeft] = useState(0);
-  const [rightLineLeft, setRightLineLeft] = useState(0);
-  const [editIconTop, setEditIconTop] = useState(properties.position.y);
-  const [editIconLeft, setEditIconLeft] = useState(
-    properties.position.x + properties.dimensions.width
-  );
 
-  const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
   const [contextMenu, setContextMenu] = useState(initialContextMenu);
   const [stateDimensions, setStateDimensions] = useState({
@@ -73,12 +62,7 @@ export default function CustomDraggableResizable(props) {
     }));
   };
 
-  const handleDragStart = () => {
-    setIsDragging(true);
-  };
-
   const handleDragStop = (event, data) => {
-    setIsDragging(false);
     props.onDragStop(data, `${props.id}`);
   };
 
@@ -86,9 +70,6 @@ export default function CustomDraggableResizable(props) {
     const left = data.x;
     const right = parentWidth - (data.x + childWidth);
     const top = data.y;
-    setLeftLineTop(top - 10 + properties.dimensions.height / 2);
-    setTopLineLeft(left - 10 + properties.dimensions.width / 2);
-    setRightLineLeft(left + properties.dimensions.width);
     setSpacing({
       left: left,
       right: right,
@@ -104,11 +85,6 @@ export default function CustomDraggableResizable(props) {
     const x = event.clientX - left;
     const y = event.clientY - top;
     setContextMenu({ show: true, x, y });
-  };
-
-  const handleRightClickSelection = (value, name) => {
-    props.onRightClick(value, props.id, name);
-    setContextMenu(initialContextMenu);
   };
 
   function handleChildrenChange(value, name) {
@@ -153,15 +129,9 @@ export default function CustomDraggableResizable(props) {
     }
   }, [childWidth, parentWidth]);
 
-  //calls whenever position or width of element changes
   useEffect(() => {
-    setEditIconTop(properties.position.y);
-    setEditIconLeft(properties.position.x + properties.dimensions.width);
-  }, [
-    properties.position.y,
-    properties.position.x,
-    properties.dimensions.width,
-  ]);
+    //SHow the spacing between elements
+  }, [spacing]);
 
   function renderSwitch(type) {
     switch (type) {
@@ -198,52 +168,13 @@ export default function CustomDraggableResizable(props) {
 
   return (
     <React.Fragment>
-      {/* {isDragging && (
-        <React.Fragment>
-          <div
-            className="horizontal-dotted-line"
-            style={{
-              top: `${lefLineTop}px`,
-              width: spacing.left,
-              color: "white",
-            }}
-          >
-            {spacing.left}px
-          </div>
-          <div
-            className="vertical-dotted-line"
-            style={{
-              left: `${topLineLeft}px`,
-              height: spacing.top,
-              color: "white",
-            }}
-          >
-            {spacing.top}px
-          </div>
-          <div
-            className="horizontal-dotted-line"
-            style={{
-              top: `${lefLineTop}px`,
-              left: `${rightLineLeft}px`,
-              right: 0,
-              width: spacing.right,
-              color: "white",
-            }}
-          >
-            {spacing.right}px
-          </div>
-        </React.Fragment>
-      )} */}
-
       <Draggable
         nodeRef={nodeRef}
         bounds={bounds}
-        onStart={handleDragStart}
         onStop={handleDragStop}
         onDrag={handleDrag}
         position={properties.position}
         grid={[25, 25]}
-        // disabled={props.editable}
       >
         <Box
           onContextMenu={handleRightClick}
@@ -275,7 +206,6 @@ export default function CustomDraggableResizable(props) {
             className="textContent"
             size={properties.dimensions}
             onResize={handleResize}
-            // style={properties.type === "image" && imageStyleProps}
             onResizeStop={handleResizeStop}
             onResizeStart={handleResizeStart}
           >

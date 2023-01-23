@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import CustomDraggableResizable from "../../components/design/CustomDraggableResizable";
 
 export default function EditPage({
@@ -21,29 +21,32 @@ export default function EditPage({
   const [scrollOrigin, setScrollOrigin] = useState({ left: 0, top: 0 });
 
   //Functions
-  const handleWheel = (event) => {
-    // get bounding values of the DIV
-    const child = event.currentTarget;
-    const { left, top } = child.getBoundingClientRect();
+  const handleWheel = useCallback(
+    (event) => {
+      // get bounding values of the DIV
+      const child = event.currentTarget;
+      const { left, top } = child.getBoundingClientRect();
 
-    //Get Top and Left values relative to the div
-    const leftRelativeToChild = parseInt(event.clientX - left);
-    const topRelativeToChild = parseInt(event.clientY - top);
+      //Get Top and Left values relative to the div
+      const leftRelativeToChild = parseInt(event.clientX - left);
+      const topRelativeToChild = parseInt(event.clientY - top);
 
-    //control key is pressed
-    if (event.ctrlKey) {
-      event.preventDefault();
+      //control key is pressed
+      if (event.ctrlKey) {
+        event.preventDefault();
 
-      setScrollOrigin({ left: leftRelativeToChild, top: topRelativeToChild });
-      if (event.deltaY > 0) {
-        //scrolled down
-        handleZoom(zoomValue - 10);
-      } else {
-        //scrolled up
-        handleZoom(zoomValue + 10);
+        setScrollOrigin({ left: leftRelativeToChild, top: topRelativeToChild });
+        if (event.deltaY > 0) {
+          //scrolled down
+          handleZoom(zoomValue - 10);
+        } else {
+          //scrolled up
+          handleZoom(zoomValue + 10);
+        }
       }
-    }
-  };
+    },
+    [zoomValue, handleZoom]
+  );
 
   const disableWheel = (event) => {
     if (event.ctrlKey) {
