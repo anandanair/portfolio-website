@@ -18,7 +18,7 @@ export default function PublicHandleRoute() {
       setVerified(true);
     };
     fetchData();
-  }, [handle, getHandle]);
+  }, []);
 
   return verified ? (
     exists ? (

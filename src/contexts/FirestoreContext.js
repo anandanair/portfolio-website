@@ -28,6 +28,7 @@ export function FirestoreProvider({ children }) {
   const [firestoreUser, setFirestoreUser] = useState();
   const { setTheme, localTheme } = useLocalTheme();
   const [skills, setSkills] = useState([]);
+  const [handleData, setHandleData] = useState({});
   const userUnsubcribe = useRef(null);
 
   async function setUser(user) {
@@ -180,7 +181,11 @@ export function FirestoreProvider({ children }) {
   }
 
   async function getHandle(handle) {
+    console.log("getting handle");
     const firestoreHandle = await getDoc(doc(firestore, "handles", handle));
+    if (firestoreHandle.exists()) {
+      setHandleData(firestoreHandle.data());
+    }
     return firestoreHandle;
   }
 
@@ -242,6 +247,7 @@ export function FirestoreProvider({ children }) {
     createHandle,
     updatePublish,
     getHandle,
+    handleData,
   };
   return (
     <FirestoreContext.Provider value={value}>

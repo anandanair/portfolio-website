@@ -14,6 +14,7 @@ export default function EditPage({
   onCopy,
   onUndo,
   onRedo,
+  onParentDimensions,
 }) {
   // Refs
   const boxRef = useRef(null);
@@ -66,10 +67,21 @@ export default function EditPage({
     onDrag(data.x, data.y, name);
   };
 
+  //Call on initialization
+  useEffect(() => {
+    const parentDimensions = {
+      width: parentBoxRef.current.offsetWidth,
+      height: parentBoxRef.current.offsetHeight,
+    };
+    console.log(parentDimensions);
+    onParentDimensions(parentDimensions, "parentDimensions");
+  }, [parentBoxRef]);
+
   //Add Event Listener
   useEffect(() => {
     const element = boxRef.current;
     const parentElement = parentBoxRef.current;
+
     if (element && parentElement) {
       element.addEventListener("wheel", handleWheel, {
         capture: true,

@@ -14,6 +14,7 @@ import {
   DialogTitle,
   Fade,
   Grid,
+  Link,
   Snackbar,
   Stack,
   TextField,
@@ -238,6 +239,12 @@ export default function DesignPortfolio() {
   }
 
   function closePublishDialog() {
+    setHandle("");
+    setHandleTextError("");
+    setHandleResponse({
+      error: true,
+      message: "",
+    });
     setDialogOpen(false);
   }
 
@@ -339,6 +346,7 @@ export default function DesignPortfolio() {
                   onCopy={addChildren}
                   onUndo={handleUndo}
                   onRedo={handleRedo}
+                  onParentDimensions={handleChange}
                 />
               </CardContent>
             </Card>
@@ -354,7 +362,14 @@ export default function DesignPortfolio() {
             {firestoreUser.handle ? (
               <React.Fragment>
                 <Alert severity="info" sx={{ mb: 2 }}>
-                  You have already created your handle!.
+                  You have already created your handle!. Check your page at{" "}
+                  <Link
+                    target="_blank"
+                    href={`/handles/${firestoreUser.handle}`}
+                    underline="hover"
+                  >
+                    {firestoreUser.handle}
+                  </Link>
                 </Alert>
                 <DialogContentText>
                   You can publish your latest changes here!.
