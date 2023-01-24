@@ -2,6 +2,7 @@ import { CircularProgress } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Outlet, useParams } from "react-router-dom";
 import { useFirestore } from "../contexts/FirestoreContext";
+import NoHandleFound from "../pages/NoHandleFound";
 
 export default function PublicHandleRoute() {
   const { handle } = useParams();
@@ -25,7 +26,7 @@ export default function PublicHandleRoute() {
     exists ? (
       <Outlet />
     ) : (
-      <div>No handle found</div>
+      <NoHandleFound handle={handle} />
     )
   ) : (
     <CircularProgress />
