@@ -1,11 +1,28 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useFirestore } from "../contexts/FirestoreContext";
 
 export default function PublicPortfolio() {
   //Contexts
   const { handleData } = useFirestore();
+
+  // Ref
+  const boxRef = useRef();
+
+  // State
+  const [scaleFactor, setScaleFactor] = useState(1);
+
+  useEffect(() => {
+    if (boxRef.current) {
+      console.log("inside");
+      const widthScale =
+        boxRef.current.offsetWidth / handleData.parentDimensions.width;
+      const heightScale =
+        boxRef.current.offsetHeight / handleData.parentDimensions.height;
+      setScaleFactor(Math.min(widthScale, heightScale));
+    }
+  }, [handleData, boxRef]);
 
   // render function
   function renderSwitch(child) {
@@ -16,13 +33,8 @@ export default function PublicPortfolio() {
             style={{
               position: "absolute",
               top: child.position.y,
-              left: `${
-                (child.position.x / handleData.parentDimensions.width) * 100
-              }%`,
-              width: `${
-                (child.dimensions.width / handleData.parentDimensions.width) *
-                100
-              }%`,
+              left: child.position.x,
+              width: child.dimensions.width,
               height: child.dimensions.height,
               fontFamily: handleData.fontFamily,
               color: child.color,
@@ -40,20 +52,13 @@ export default function PublicPortfolio() {
           <LazyLoadImage
             alt="image"
             effect="blur"
-            width={`${
-              (child.dimensions.width / handleData.parentDimensions.width) * 100
-            }%`}
-            height={`${
-              (child.dimensions.height / handleData.parentDimensions.height) *
-              100
-            }%`}
+            width={child.dimensions.width}
+            height={child.dimensions.height}
             src={child.value}
             style={{
               position: "absolute",
               top: child.position.y,
-              left: `${
-                (child.position.x / handleData.parentDimensions.width) * 100
-              }%`,
+              left: child.position.x,
               objectFit: "cover",
               borderRadius: `${child.borderRadius}px`,
               opacity: child.opacity / 100,
@@ -70,14 +75,9 @@ export default function PublicPortfolio() {
             style={{
               position: "absolute",
               top: child.position.y,
-              left: `${
-                (child.position.x / handleData.parentDimensions.width) * 100
-              }%`,
+              left: child.position.x,
               backgroundColor: child.color,
-              width: `${
-                (child.dimensions.width / handleData.parentDimensions.width) *
-                100
-              }%`,
+              width: child.dimensions.width,
               height: child.dimensions.height,
               borderRadius: child.borderRadius,
               border: `${child.borderThickness}px ${child.borderType} ${child.borderColor}`,
@@ -93,13 +93,8 @@ export default function PublicPortfolio() {
             style={{
               position: "absolute",
               top: child.position.y,
-              left: `${
-                (child.position.x / handleData.parentDimensions.width) * 100
-              }%`,
-              width: `${
-                (child.dimensions.width / handleData.parentDimensions.width) *
-                100
-              }%`,
+              left: child.position.x,
+              width: child.dimensions.width,
               height: child.thickness,
               backgroundColor: child.color,
               transform: `rotate(${child.rotate}deg)`,
@@ -114,12 +109,10 @@ export default function PublicPortfolio() {
 
   return (
     <Box
+      ref={boxRef}
       sx={{
-        position: "relative",
         width: "100vw",
         height: "100vh",
-        overflow: "hidden",
-        overflowY: "auto",
         background:
           handleData.backgroundColorType === "static"
             ? handleData.backgroundColor1
@@ -136,9 +129,23 @@ export default function PublicPortfolio() {
         ${handleData.backgroundColor2})`,
       }}
     >
-      {Object.keys(handleData.children).map((key, index) =>
-        renderSwitch(handleData.children[key])
-      )}
+      <Box
+        sx={{
+          position: "relative",
+          height: handleData.parentDimensions.height,
+          width: handleData.parentDimensions.width,
+          overflow: "hidden",
+          overflowY: "auto",
+          transform: `scale(${scaleFactor})`,
+          transformOrigin: "top left",
+        }}
+      >
+        {Object.keys(handleData.children).map((key, index) => (
+          <React.Fragment key={index}>
+            {renderSwitch(handleData.children[key])}
+          </React.Fragment>
+        ))}
+      </Box>
     </Box>
   );
 }
