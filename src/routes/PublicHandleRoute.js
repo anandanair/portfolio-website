@@ -18,6 +18,7 @@ export default function PublicHandleRoute() {
       setVerified(true);
     };
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   return verified ? (

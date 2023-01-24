@@ -73,8 +73,8 @@ export default function EditPage({
       width: parentBoxRef.current.offsetWidth,
       height: parentBoxRef.current.offsetHeight,
     };
-    console.log(parentDimensions);
     onParentDimensions(parentDimensions, "parentDimensions");
+    // eslint-disable-next-line
   }, [parentBoxRef]);
 
   //Add Event Listener

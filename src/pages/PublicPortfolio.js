@@ -104,6 +104,8 @@ export default function PublicPortfolio() {
             }}
           ></div>
         );
+      default:
+        break;
     }
   }
 
