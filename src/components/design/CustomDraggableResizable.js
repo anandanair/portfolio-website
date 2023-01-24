@@ -211,7 +211,7 @@ export default function CustomDraggableResizable(props) {
         onStop={handleDragStop}
         onDrag={handleDrag}
         position={properties.position}
-        grid={[5, 5]}
+        grid={[10, 10]}
         disabled={contextMenu.show}
       >
         <Box
@@ -248,7 +248,7 @@ export default function CustomDraggableResizable(props) {
             onResize={handleResize}
             onResizeStop={handleResizeStop}
             onResizeStart={handleResizeStart}
-            grid={[5, 5]}
+            grid={[10, 10]}
             style={{
               display: properties.type === "line" && "flex",
               alignItems: properties.type === "line" && "center",
