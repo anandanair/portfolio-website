@@ -12,8 +12,10 @@ import { AuthenticatedRoute } from "./routes/AuthenticatedRoute";
 import { PortfolioSetupRoute } from "./routes/PortfolioSetupRoute";
 import CreatePortfolio from "./pages/CreatePortfolio";
 import DesignPortfolio from "./pages/DesignPortfolio";
+import PublicPortfolio from "./pages/PublicPortfolio";
 import Signup from "./pages/Signup";
 import { StorageProvider } from "./contexts/StorageContext";
+import PublicHandleRoute from "./routes/PublicHandleRoute";
 
 function App() {
   const { localTheme } = useLocalTheme();
@@ -24,6 +26,13 @@ function App() {
           <FirestoreProvider>
             <StorageProvider>
               <Routes>
+                {/* Route on handles - public*/}
+                <Route path="/handles/:handle" element={<PublicHandleRoute />}>
+                  <Route
+                    path="/handles/:handle"
+                    element={<PublicPortfolio />}
+                  />
+                </Route>
                 {/* Route only if user is logged in and portfolio is created */}
                 <Route path="/" element={<PrivateRoute />}>
                   <Route path="/" element={<Dashboard />} />

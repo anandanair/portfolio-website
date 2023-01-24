@@ -179,6 +179,11 @@ export function FirestoreProvider({ children }) {
     return response;
   }
 
+  async function getHandle(handle) {
+    const firestoreHandle = await getDoc(doc(firestore, "handles", handle));
+    return firestoreHandle;
+  }
+
   useEffect(() => {
     if (currentUser) {
       setLoading(true);
@@ -236,6 +241,7 @@ export function FirestoreProvider({ children }) {
     createPortfolioDesign,
     createHandle,
     updatePublish,
+    getHandle,
   };
   return (
     <FirestoreContext.Provider value={value}>
