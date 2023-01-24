@@ -14,11 +14,10 @@ export default function EditPage({
   onCopy,
   onUndo,
   onRedo,
-  onParentDimensions,
+  parentBoxRef,
 }) {
   // Refs
   const boxRef = useRef(null);
-  const parentBoxRef = useRef(null);
 
   //States
   const [scrollOrigin, setScrollOrigin] = useState({ left: 0, top: 0 });
@@ -66,16 +65,6 @@ export default function EditPage({
   const handleDragStop = (data, name) => {
     onDrag(data.x, data.y, name);
   };
-
-  //Call on initialization
-  useEffect(() => {
-    const parentDimensions = {
-      width: parentBoxRef.current.offsetWidth,
-      height: parentBoxRef.current.offsetHeight,
-    };
-    onParentDimensions(parentDimensions, "parentDimensions");
-    // eslint-disable-next-line
-  }, [parentBoxRef]);
 
   //Add Event Listener
   useEffect(() => {

@@ -43,7 +43,10 @@ export default function PublicPortfolio() {
             width={`${
               (child.dimensions.width / handleData.parentDimensions.width) * 100
             }%`}
-            height={child.dimensions.height}
+            height={`${
+              (child.dimensions.height / handleData.parentDimensions.height) *
+              100
+            }%`}
             src={child.value}
             style={{
               position: "absolute",

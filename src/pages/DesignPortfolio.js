@@ -20,7 +20,7 @@ import {
   TextField,
   ThemeProvider,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import DrawerNavBar from "../components/DrawerNavBar";
 import { useFirestore } from "../contexts/FirestoreContext";
 import BackgroundColorCheckbox from "./design-portfolio/components/BackgroundColorCheckbox";
@@ -68,6 +68,9 @@ export default function DesignPortfolio() {
     error: true,
     message: "",
   });
+
+  // Refs
+  const parentBoxRef = useRef(null);
 
   // Functions
   const handleChange = (value, name) => {
@@ -212,7 +215,12 @@ export default function DesignPortfolio() {
       if (handle.length > 2) {
         //Publish
         setLoading(true);
-        const response = await createHandle(handle, properties);
+        const newObject = { ...properties };
+        newObject.parentDimensions = {
+          width: parentBoxRef.current.offsetWidth,
+          height: parentBoxRef.current.offsetHeight,
+        };
+        const response = await createHandle(handle, newObject);
         setHandleResponse(response);
         setLoading(false);
         return;
@@ -223,7 +231,12 @@ export default function DesignPortfolio() {
 
   async function updatePublishDesign() {
     setLoading(true);
-    const response = await updatePublish(properties);
+    const newObject = { ...properties };
+    newObject.parentDimensions = {
+      width: parentBoxRef.current.offsetWidth,
+      height: parentBoxRef.current.offsetHeight,
+    };
+    const response = await updatePublish(newObject);
     setHandleResponse(response);
     setLoading(false);
   }
@@ -346,7 +359,7 @@ export default function DesignPortfolio() {
                   onCopy={addChildren}
                   onUndo={handleUndo}
                   onRedo={handleRedo}
-                  onParentDimensions={handleChange}
+                  parentBoxRef={parentBoxRef}
                 />
               </CardContent>
             </Card>
