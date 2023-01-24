@@ -97,6 +97,7 @@ export default function EducationForm(props) {
 
   useEffect(() => {
     props.setValidationArray(["education"]);
+    // eslint-disable-next-line
   }, []);
 
   return (

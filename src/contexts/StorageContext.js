@@ -3,12 +3,10 @@ import {
   getDownloadURL,
   list,
   ref,
-  uploadBytes,
   uploadBytesResumable,
 } from "firebase/storage";
 import React, { useContext, useEffect, useState } from "react";
 import { storage } from "../firebase";
-import { useFirestore } from "./FirestoreContext";
 import { useAuth } from "./AuthContext";
 
 const StorageContext = React.createContext();
@@ -21,10 +19,7 @@ export function StorageProvider({ children }) {
   const [defaultPhotoURL, setDefaultPhotoURL] = useState("");
   const [loading, setLoading] = useState(true);
   const { currentUser } = useAuth();
-  const { updatePortfolio } = useFirestore();
   const [images, setImages] = useState([]);
-  const [nextPageToken, setNextPageToken] = useState(null);
-  const [prevPageToken, setPrevPageToken] = useState(null);
   const [pageTokens, setPageTokens] = useState([]);
 
   //provide any image name and will get the url
@@ -46,14 +41,14 @@ export function StorageProvider({ children }) {
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           progressCallback(progress);
-          switch (snapshot.state) {
-            case "paused":
-              // console.log("Upload is paused");
-              break;
-            case "running":
-              // console.log("Upload is running");
-              break;
-          }
+          // switch (snapshot.state) {
+          //   case "paused":
+          //     // console.log("Upload is paused");
+          //     break;
+          //   case "running":
+          //     // console.log("Upload is running");
+          //     break;
+          // }
         },
         (error) => {
           // Handle unsuccessful uploads
