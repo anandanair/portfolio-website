@@ -187,6 +187,17 @@ export default function CustomDraggableResizable(props) {
           ></div>
         );
 
+      case "line":
+        return (
+          <div
+            style={{
+              backgroundColor: properties.color,
+              width: stateDimensions.width,
+              height: properties.thickness,
+            }}
+          ></div>
+        );
+
       default:
         break;
     }
@@ -196,7 +207,7 @@ export default function CustomDraggableResizable(props) {
     <React.Fragment>
       <Draggable
         nodeRef={nodeRef}
-        bounds={bounds}
+        bounds={properties.type !== "line" && bounds}
         onStop={handleDragStop}
         onDrag={handleDrag}
         position={properties.position}
@@ -238,6 +249,12 @@ export default function CustomDraggableResizable(props) {
             onResizeStop={handleResizeStop}
             onResizeStart={handleResizeStart}
             grid={[25, 25]}
+            style={{
+              display: properties.type === "line" && "flex",
+              alignItems: properties.type === "line" && "center",
+              transform:
+                properties.type === "line" && `rotate(${properties.rotate}deg)`,
+            }}
           >
             {renderSwitch(properties.type)}
           </Resizable>

@@ -1,12 +1,21 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardHeader,
+  createTheme,
+  CssBaseline,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Fade,
   Grid,
   Snackbar,
   Stack,
+  ThemeProvider,
 } from "@mui/material";
 import React, { useState } from "react";
 import DrawerNavBar from "../components/DrawerNavBar";
@@ -18,10 +27,21 @@ import CustomTopMenu from "../components/design/CustomTopMenu";
 import EditPage from "./layouts/EditPage";
 import { v4 as uuidv4 } from "uuid";
 import ShapeDesign from "./design-portfolio/components/ShapeDesign";
+import LineDesign from "./design-portfolio/components/LineDesign";
+import { useLocalTheme } from "../contexts/ThemeContext";
+
+const darkTheme = createTheme({
+  palette: { mode: "dark" },
+});
+
+const lightTheme = createTheme({
+  palette: { mode: "light" },
+});
 
 export default function DesignPortfolio() {
   // Contexts
   const { firestoreUser, updateUser, createPortfolioDesign } = useFirestore();
+  const { localTheme } = useLocalTheme();
 
   // State
   const [open, setOpen] = useState(false);
@@ -31,6 +51,7 @@ export default function DesignPortfolio() {
   const [customizeObject, setCustomizeObject] = useState({});
   const [history, setHistory] = useState([properties.children]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   // Functions
   const handleChange = (value, name) => {
@@ -162,6 +183,14 @@ export default function DesignPortfolio() {
     setProperties(defaultDesign);
   }
 
+  function openPublishDialog() {
+    setDialogOpen(true);
+  }
+
+  function closePublishDialog() {
+    setDialogOpen(false);
+  }
+
   function renderSwitch(type) {
     switch (type) {
       case "text":
@@ -183,6 +212,15 @@ export default function DesignPortfolio() {
       case "shape":
         return (
           <ShapeDesign
+            properties={properties.children}
+            onChange={handleChildren}
+            customizeObject={customizeObject}
+          />
+        );
+
+      case "line":
+        return (
+          <LineDesign
             properties={properties.children}
             onChange={handleChildren}
             customizeObject={customizeObject}
@@ -234,6 +272,7 @@ export default function DesignPortfolio() {
               resetDesign={resetDesign}
               saveDesign={saveDesign}
               onAddComponent={addChildren}
+              openPublishDialog={openPublishDialog}
             />
 
             <Card sx={{ width: 1, backgroundColor: "transparent" }}>
@@ -257,6 +296,22 @@ export default function DesignPortfolio() {
         </Grid>
       </Grid>
       <Snackbar open={open} message="New design Saved!" />
+      <ThemeProvider theme={localTheme === "dark" ? darkTheme : lightTheme}>
+        <CssBaseline />
+        <Dialog open={dialogOpen} onClose={closePublishDialog}>
+          <DialogTitle>Publish</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Your Portfolio Website will be available publically after you
+              publish!.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={closePublishDialog}>Cancel</Button>
+            <Button onClick={() => {}}>Publish</Button>
+          </DialogActions>
+        </Dialog>
+      </ThemeProvider>
     </DrawerNavBar>
   );
 }

@@ -10,6 +10,7 @@ export default function CustomTopMenu({
   resetDesign,
   saveDesign,
   onAddComponent,
+  openPublishDialog,
 }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const openDropdown = () => {
@@ -58,6 +59,10 @@ export default function CustomTopMenu({
       case "circle":
         break;
       case "line":
+        newObject.dimensions = { width: 600, height: 25 };
+        newObject.color = "white";
+        newObject.rotate = 0;
+        newObject.thickness = 2;
         break;
       default:
         break;
@@ -77,8 +82,11 @@ export default function CustomTopMenu({
         <IconButton onClick={openDropdown}>
           <Add />
         </IconButton>
-        <Box sx={{ width: "25%" }}>
+        <Box sx={{ width: "30%" }}>
           <Stack direction="row">
+            <Button variant="text" onClick={openPublishDialog} sx={{ mr: 2 }}>
+              Publish
+            </Button>
             <Stack spacing={2} direction="row" alignItems="center" width="100%">
               <ZoomOut />
               <Slider
