@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -15,6 +16,7 @@ import {
   Grid,
   Snackbar,
   Stack,
+  TextField,
   ThemeProvider,
 } from "@mui/material";
 import React, { useState } from "react";
@@ -40,7 +42,13 @@ const lightTheme = createTheme({
 
 export default function DesignPortfolio() {
   // Contexts
-  const { firestoreUser, updateUser, createPortfolioDesign } = useFirestore();
+  const {
+    firestoreUser,
+    updateUser,
+    createPortfolioDesign,
+    createHandle,
+    updatePublish,
+  } = useFirestore();
   const { localTheme } = useLocalTheme();
 
   // State
@@ -52,6 +60,13 @@ export default function DesignPortfolio() {
   const [history, setHistory] = useState([properties.children]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [handle, setHandle] = useState("");
+  const [handleTextError, setHandleTextError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [handleResponse, setHandleResponse] = useState({
+    error: true,
+    message: "",
+  });
 
   // Functions
   const handleChange = (value, name) => {
@@ -175,6 +190,41 @@ export default function DesignPortfolio() {
     setTimeout(() => {
       setOpen(false);
     }, 5000);
+  }
+
+  function handleText(event) {
+    const input = event.target.value;
+    const pattern = /^[a-zA-Z][a-zA-Z0-9_-]*$/;
+    setHandle(event.target.value);
+
+    if (pattern.test(input)) {
+      setHandleTextError("");
+      return;
+    }
+    setHandleTextError(
+      "Invalid input. The handle must start with a letter and can only contain letters, numbers, dashes, and underscores."
+    );
+  }
+
+  async function publishDesign() {
+    if (handleTextError === "") {
+      if (handle.length > 2) {
+        //Publish
+        setLoading(true);
+        const response = await createHandle(handle, properties);
+        setHandleResponse(response);
+        setLoading(false);
+        return;
+      }
+      setHandleTextError("The handle must have minimum 3 characters");
+    }
+  }
+
+  async function updatePublishDesign() {
+    setLoading(true);
+    const response = await updatePublish(properties);
+    setHandleResponse(response);
+    setLoading(false);
   }
 
   async function resetDesign() {
@@ -301,14 +351,55 @@ export default function DesignPortfolio() {
         <Dialog open={dialogOpen} onClose={closePublishDialog}>
           <DialogTitle>Publish</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              Your Portfolio Website will be available publically after you
-              publish!.
-            </DialogContentText>
+            {firestoreUser.handle ? (
+              <React.Fragment>
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  You have already created your handle!.
+                </Alert>
+                <DialogContentText>
+                  You can publish your latest changes here!.
+                </DialogContentText>
+              </React.Fragment>
+            ) : (
+              <React.Fragment>
+                <DialogContentText>
+                  Your Portfolio Website will be available publically after you
+                  publish!. You won't be able to change your handle once you
+                  have published.
+                </DialogContentText>
+                {handleResponse.error && (
+                  <TextField
+                    error={handleTextError !== ""}
+                    required
+                    fullWidth
+                    label="Handle"
+                    value={handle}
+                    onChange={handleText}
+                    sx={{ mt: 2 }}
+                    helperText={handleTextError}
+                  />
+                )}
+              </React.Fragment>
+            )}
+            {handleResponse.message !== "" && (
+              <Alert
+                severity={handleResponse.error ? "error" : "success"}
+                sx={{ mt: 2 }}
+              >
+                {handleResponse.message}
+              </Alert>
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={closePublishDialog}>Cancel</Button>
-            <Button onClick={() => {}}>Publish</Button>
+            <Button
+              disabled={loading}
+              onClick={
+                firestoreUser.handle ? updatePublishDesign : publishDesign
+              }
+            >
+              Publish
+            </Button>
           </DialogActions>
         </Dialog>
       </ThemeProvider>

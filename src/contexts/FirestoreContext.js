@@ -142,6 +142,43 @@ export function FirestoreProvider({ children }) {
     return;
   }
 
+  async function createHandle(handle, properties) {
+    let response = {};
+
+    //Check if user has already created a handle
+    if (firestoreUser.handle) {
+      response.error = false;
+      response.message = "You have already created a handle!";
+      return response;
+    }
+
+    //Check if a handle already exists with same name
+    const firestoreHandle = await getDoc(doc(firestore, "handles", handle));
+    if (firestoreHandle.exists()) {
+      response.error = true;
+      response.message = "Handle already exists!";
+      return response;
+    }
+
+    //Add handle to firestore
+    await updateUser("design", properties);
+    await setDoc(doc(firestore, "handles", handle), properties);
+    await updateUser("handle", handle);
+    response.error = false;
+    response.message = "Handle successfully created!";
+    return response;
+  }
+
+  async function updatePublish(properties) {
+    await updateUser("design", properties);
+    await setDoc(doc(firestore, "handles", firestoreUser.handle), properties);
+    const response = {
+      error: false,
+      message: "Latest changes published successfully!.",
+    };
+    return response;
+  }
+
   useEffect(() => {
     if (currentUser) {
       setLoading(true);
@@ -197,6 +234,8 @@ export function FirestoreProvider({ children }) {
     updatePortfolio,
     updateUser,
     createPortfolioDesign,
+    createHandle,
+    updatePublish,
   };
   return (
     <FirestoreContext.Provider value={value}>
