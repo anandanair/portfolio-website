@@ -231,7 +231,7 @@ export function FirestoreProvider({ children }) {
     return () => {
       // second
     };
-  }, [firestoreUser, localTheme, setTheme]);
+  }, [firestoreUser, localTheme, setTheme]);  
 
   const value = {
     getVerifyEmailSendTime,
